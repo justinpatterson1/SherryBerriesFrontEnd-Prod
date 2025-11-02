@@ -1,0 +1,192 @@
+'use client';
+import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
+import { RxCross2 } from 'react-icons/rx';
+
+function AddAftercareModule({ openAddForm, setOpenAddForm, fetchAftercare }) {
+  const { data: session } = useSession();
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageError, setImageError] = useState('');
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    ItemType: 'Aftercare'
+  });
+
+  const notify = () => toast('Aftercare was successfully added!');
+
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setImageError('');
+
+    const submissionData = new FormData();
+    for (const key in formData) {
+      submissionData.append(key, formData[key]);
+    }
+
+    if (imageFile) {
+      const formImage = new FormData();
+      formImage.append('files', imageFile);
+
+      try {
+        const imageUpload = await fetch(
+          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/upload`,
+          {
+            method: 'POST',
+            headers: {
+              authorization: `Bearer ${session?.jwt}`
+            },
+            body: formImage
+          }
+        );
+
+        if (imageUpload.ok) {
+          const resp = await imageUpload.json();
+          const payload = {
+            name: formData.name,
+            description: formData.description,
+            price: parseInt(formData.price),
+            ItemType: formData.ItemType,
+            image: resp[0].id || ''
+          };
+
+          console.log(payload);
+
+          const resp2 = await fetch(
+            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${session?.jwt}`
+              },
+              body: JSON.stringify({ data: payload })
+            }
+          );
+
+          if (resp2.ok) {
+            setFormData({
+              name: '',
+              description: '',
+              price: '',
+              ItemType: 'Jewelry'
+            });
+
+            setImageFile(null);
+            setImagePreview(null);
+            fetchAftercare();
+            notify();
+          }
+        } else {
+          alert('Image upload failed');
+          setImageError('Select an image less than 5MB');
+        }
+      } catch (error) {
+        console.log('Upload error:', error);
+      }
+    }
+  };
+  return (
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-auto p-4'>
+      <div className='w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative '>
+        {/* Absolute Close Button */}
+        <button
+          className='absolute top-3 right-3 text-2xl text-gray-600 hover:text-red-500 z-50'
+          onClick={() => setOpenAddForm(false)}
+        >
+          <RxCross2 />
+        </button>
+
+        {/* Header */}
+        <div className='mb-4'>
+          <h2 className='text-lg sm:text-2xl font-semibold text-gray-800 text-center'>
+            Add Jewelry
+          </h2>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className='grid grid-cols-1 md:grid-cols-2 gap-4'
+        >
+          {[
+            { label: 'Name', name: 'name' },
+            { label: 'Item Type', name: 'ItemType' },
+            { label: 'Price', name: 'price' },
+            { label: 'Description', name: 'description' }
+          ].map(field => (
+            <div key={field.name} className='flex flex-col'>
+              <label className='text-sm font-medium text-gray-700 mb-1'>
+                {field.label}
+              </label>
+              <input
+                placeholder={field.label === 'Discount' ? '-5' : ''}
+                type='text'
+                name={field.name}
+                value={formData[field.name] || ''}
+                onChange={handleInputChange}
+                className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+              />
+            </div>
+          ))}
+
+          {/* Image Upload */}
+          <div className='flex flex-col md:col-span-2'>
+            <label className='text-sm font-medium text-gray-700 mb-1'>
+              Upload Image
+            </label>
+            <input
+              type='file'
+              accept='image/*'
+              onChange={handleImageChange}
+              className='border border-gray-300 p-2 rounded-md text-sm'
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt='Preview'
+                className='mt-4 h-48 w-full object-cover rounded-md'
+              />
+            )}
+            {imageError && (
+              <span className='text-red-500 mt-2 text-sm'>{imageError}</span>
+            )}
+          </div>
+
+          {/* Submit */}
+          <div className='md:col-span-2 mt-6 flex justify-end'>
+            <button
+              type='submit'
+              className='bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition'
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+      <ToastContainer />
+    </div>
+  );
+}
+
+export default AddAftercareModule;
