@@ -13,12 +13,20 @@ import { setConfig } from 'next/config';
 import { RxCross2 } from 'react-icons/rx';
 import Jewelry from '../product/jewelry/page';
 import { calculateDiscountedPrice } from '../lib/func';
+import PayPalButton from '../components/paypalButtons/PayPalButton';
 
-const customId = customAlphabet(
-  '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_',
-  10
-);
-console.log(`oid_${customId()}`);
+// const customId = customAlphabet(
+//   '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_',
+//   10
+// );
+
+const full = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 5);
+const safeEnd = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 4);
+
+function generateOrderId() {
+  return full() +"_"+ safeEnd();
+}
+console.log(`oid_${generateOrderId()}`);
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required('First name is required'),
@@ -137,7 +145,7 @@ function Page() {
           payload: json.data?.[0]?.deliveryFee?.toFixed(2) || 0
         });
         setCartId(json.data[0].documentId);
-        setOrderId(`oid_${customId()}`);
+        setOrderId(`oid_${generateOrderId()}`);
         setCoupon(
           json.data[0].code
             ? {
@@ -1061,6 +1069,14 @@ function Page() {
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
+                <div className={
+                    state.address.paymentType === 'CC'
+                      ? 'mt-8 p-4 border border-gray-300 rounded-xl bg-gray-50 text-sm text-gray-700 shadow-sm'
+                      : 'hidden'
+                  }>
+                    {/* <PayPalButton /> */}
+                </div>
+
                 <div
                   className={
                     state.address.paymentType === 'BT'
