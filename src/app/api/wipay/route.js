@@ -1,53 +1,48 @@
 export async function POST(req) {
   try {
-    const rawBody = await req.text(); // Reads the raw body as string
-    const params = new URLSearchParams(rawBody).toString();
+    // Read the raw incoming body exactly as client sent it
+    const rawBody = await req.text();
 
-    // const parsedBody = {};
-    // for (const [key, value] of params.entries()) {
-    //     if(key==='data'){
-    //         parsedBody[key] = JSON.stringify(value);
-    //     } else {
-    //         parsedBody[key] = value;
-    //     }
-
-    // }
-
+    // Pass body EXACTLY as received to WiPay
     const response = await fetch(
-      'https://tt.wipayfinancial.com/plugins/payments/request',
+      "https://tt.wipayfinancial.com/plugins/payments/request",
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          Accept: "application/json", // forces JSON response from WiPay
+          "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: params
+        body: rawBody
       }
     );
 
-    const data = await response.json();
-
-    console.log('Get Data: ' + data);
-
-    if (data) {
+    // WiPay might return non JSON on error, so we guard against parsing failure
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      const fallbackText = await response.text();
       return new Response(
         JSON.stringify({
-          message: 'Successfully received body',
-          data,
-          status: 200
+          error: "WiPay returned non JSON response",
+          raw: fallbackText
         }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 400 }
       );
     }
+
+    return new Response(JSON.stringify({ data }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+
   } catch (error) {
     return new Response(
       JSON.stringify({
-        error: 'WiPay Payment Failed: ',
+        error: "WiPay Payment Failed",
         details: error.message
-      })
+      }),
+      { status: 500 }
     );
   }
 }
