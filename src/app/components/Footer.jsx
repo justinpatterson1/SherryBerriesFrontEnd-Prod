@@ -51,6 +51,11 @@ export default function Footer() {
         body: JSON.stringify({ email })
       });
 
+      if (response.status === 429) {
+        toast.error('Too many requests. Please try again in 1 minute.');
+        return;
+      }
+
       const data = await response.json();
 
       if (data.status === 201) {

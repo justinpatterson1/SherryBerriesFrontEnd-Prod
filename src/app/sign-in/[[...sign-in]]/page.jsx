@@ -45,13 +45,15 @@ export default function Page() {
         'http://localhost:3000/'
     });
 
+    if (result?.status === 429) {
+      setError('Too many login attempts. Please try again in 1 minute.');
+      return;
+    }
+
     if (result?.ok) {
-      console.log(result);
       setUser(result);
       router.push('/');
-    }
-    if (result.error) {
-      console.log(result);
+    } else if (result?.error) {
       setError(result.error);
     }
   };

@@ -97,13 +97,17 @@ export default function ContactForm() {
         body: JSON.stringify(formData)
       });
 
+      if (response.status === 429) {
+        toast.error('Too many requests. Please try again in 1 minute.');
+        return;
+      }
+
       if (response.ok) {
-        console.log('Message sent successfully');
         success();
         setIsSubmitted(true);
         setFormData({ name: '', email: '', message: '' });
         setErrors({});
-        
+
         //Reset submitted state after 3 seconds
         setTimeout(() => setIsSubmitted(false), 3000);
       } else {
