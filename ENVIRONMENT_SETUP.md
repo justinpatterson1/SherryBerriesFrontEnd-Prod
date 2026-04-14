@@ -12,23 +12,37 @@ NEXT_PUBLIC_SHERRYBERRIES_FRONTEND_URL=http://localhost:3000
 NEXT_PUBLIC_SHERRYBERRIES_URL=http://localhost:1337
 
 # Email Configuration (Choose one service)
-# Current Mailgun setup
-NEXT_PUBLIC_MAILGUN_API_KEY=your_mailgun_api_key
-NEXT_PUBLIC_MAILGUN_DOMAIN=your_verified_domain.mailgun.org
+# Mailgun (server-side only — API key must NOT be exposed to the client)
+MAILGUN_API_KEY=your_mailgun_api_key
+MAILGUN_DOMAIN=your_verified_domain.mailgun.org
 NEXT_PUBLIC_EMAIL=your_email@domain.com
 
-# Alternative: Postmark (Recommended for transactional emails)
+# Postmark (Recommended for transactional emails — server-side only)
 POSTMARK_SERVER_TOKEN=your_postmark_server_token
 
-# Alternative: SendGrid
+# Alternative: SendGrid (server-side only)
 SENDGRID_API_KEY=your_sendgrid_api_key
 
-# Alternative: Resend
+# Alternative: Resend (server-side only)
 RESEND_API_KEY=your_resend_api_key
 
 # Your verified sending domain
 VERIFIED_DOMAIN=sherryberries.com
+
+# PayPal
+# Client ID is public (used by the frontend PayPal button)
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=your_paypal_client_id
+# Client secret must NEVER be public — server-side only
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 ```
+
+## Important: NEXT_PUBLIC_ Prefix
+
+Any environment variable prefixed with `NEXT_PUBLIC_` is bundled into the
+client-side JavaScript and is visible to anyone inspecting your site. Only
+use this prefix for values that are safe to expose publicly (URLs, public
+keys, feature flags). Server-side secrets (API tokens, private keys,
+database credentials, email service tokens) must never use this prefix.
 
 ## Production Environment
 

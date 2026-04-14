@@ -4,7 +4,7 @@ import { ServerClient } from 'postmark';
 import FormData from 'form-data';
 
 
-const client = new ServerClient(process.env.NEXT_PUBLIC_POSTMARK_SERVER_TOKEN);
+const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
 // const mailGenerator = new Mailgen({
 //   theme: 'default',

@@ -1,14 +1,14 @@
 import Mailgun from 'mailgun.js';
 import FormData from 'form-data';
-import postmark from "postmark";
+import { ServerClient } from "postmark";
 import { generateOrderConfirmationTemplate, generatePlainTextOrderConfirmation } from '../../../utils/emailTemplates';
 
 // const mailgun = new Mailgun(FormData);
 // const mgClient = mailgun.client({
 //   username: 'api',
-//   key: process.env.NEXT_PUBLIC_MAILGUN_API_KEY // Ensure the key is correct in .env.local
+//   key: process.env.MAILGUN_API_KEY // Ensure the key is correct in .env.local
 // });
-var client = new postmark.ServerClient("4eea790b-6b50-40d1-8261-cf81aecf15a4")
+var client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 export async function POST(req) {
   try {
     const { email, order, orderId } = await req.json();

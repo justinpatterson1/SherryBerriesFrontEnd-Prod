@@ -68,5 +68,5 @@ export const authOptions = {
   pages: {
     signIn: '/sign-in'
   },
-  debug: true
+  debug: process.env.NODE_ENV === 'development'
 };

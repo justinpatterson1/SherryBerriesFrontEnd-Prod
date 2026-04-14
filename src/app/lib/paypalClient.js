@@ -10,20 +10,20 @@ import {
   
   const {
     NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-    NEXT_PUBLIC_PAYPAL_CLIENT_SECRET,
+    PAYPAL_CLIENT_SECRET,
   } = process.env;
-  
-  if (!NEXT_PUBLIC_PAYPAL_CLIENT_ID || !NEXT_PUBLIC_PAYPAL_CLIENT_SECRET) {
+
+  if (!NEXT_PUBLIC_PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
     throw new Error(
       "Missing PAYPAL_CLIENT_ID or PAYPAL_CLIENT_SECRET environment variables"
     );
   }
-  
+
   // Create a single shared PayPal client instance
   const client = new Client({
     clientCredentialsAuthCredentials: {
       oAuthClientId: NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-      oAuthClientSecret: NEXT_PUBLIC_PAYPAL_CLIENT_SECRET,
+      oAuthClientSecret: PAYPAL_CLIENT_SECRET,
     },
     timeout: 0,
     environment: Environment.Sandbox, // Change to Environment.Live in production

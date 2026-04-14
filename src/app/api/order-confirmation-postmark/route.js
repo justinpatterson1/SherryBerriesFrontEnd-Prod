@@ -5,7 +5,7 @@ import { ServerClient } from 'postmark';
 import { generateOrderConfirmationTemplate, generatePlainTextOrderConfirmation } from '../../../utils/emailTemplates';
 
 // Initialize Postmark client
-const client = new ServerClient(process.env.NEXT_PUBLIC_POSTMARK_SERVER_TOKEN);
+const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
 export async function POST(req) {
   try {
