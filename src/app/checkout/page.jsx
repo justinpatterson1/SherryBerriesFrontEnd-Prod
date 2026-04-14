@@ -575,11 +575,8 @@ function Page() {
   };
 
   const wiPayAPI = async() => {
-    console.log('Check Order: ' + orderId);
     const headers = new Headers();
-    headers.append('Authorization', '123');
     headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
     const parameters = new URLSearchParams();
     parameters.append(
@@ -589,7 +586,7 @@ function Page() {
     parameters.append('avs', '0');
     parameters.append('country_code', 'TT');
     parameters.append('currency', 'TTD');
-    parameters.append('data', JSON.stringify({ a: 'b' })); // JSON string inside data
+    parameters.append('data', JSON.stringify({ cartId, orderId }));
     parameters.append('environment', 'live');
     parameters.append('fee_structure', 'customer_pay');
     parameters.append('method', 'credit_card');
@@ -599,7 +596,7 @@ function Page() {
       'response_url',
       `${process.env.NEXT_PUBLIC_SHERRYBERRIES_FRONTEND_URL}/checkout/thank-you`
     );
-    parameters.append('total', '5.00');
+    parameters.append('total', parseFloat(state.subtotal).toFixed(2));
 
     try {
       const response = await fetch('/api/wipay', {

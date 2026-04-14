@@ -34,6 +34,12 @@ VERIFIED_DOMAIN=sherryberries.com
 NEXT_PUBLIC_PAYPAL_CLIENT_ID=your_paypal_client_id
 # Client secret must NEVER be public — server-side only
 PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+
+# WiPay
+NEXT_PUBLIC_WIPAY_ACCOUNT_NUMBER=your_wipay_account_number
+# API Key from WiPay Developer portal — server-side only, used for hash verification
+# Sandbox API Key is 123
+WIPAY_API_KEY=your_wipay_api_key
 ```
 
 ## Important: NEXT_PUBLIC_ Prefix
