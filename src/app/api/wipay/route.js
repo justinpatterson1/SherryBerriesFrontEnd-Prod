@@ -1,4 +1,9 @@
+import { requireAuth } from '@/lib/auth';
+
 export async function POST(req) {
+  const { session, unauthorized } = await requireAuth();
+  if (unauthorized) return unauthorized;
+
   try {
     // Read the raw incoming body exactly as client sent it
     const rawBody = await req.text();

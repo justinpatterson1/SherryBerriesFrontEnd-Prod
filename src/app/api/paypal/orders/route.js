@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { createOrder } from "../../../lib/paypalClient.js";
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(request) {
+  const { unauthorized } = await requireAuth();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await request.json();
     const { cart } = body;

@@ -1,17 +1,15 @@
-// Alternative implementation using Postmark for better deliverability
-// Install with: npm install postmark
-
 import { ServerClient } from 'postmark';
 import { generateOrderConfirmationTemplate, generatePlainTextOrderConfirmation } from '../../../utils/emailTemplates';
+import { requireAuth } from '@/lib/auth';
 
-// Initialize Postmark client
 const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
 export async function POST(req) {
+  const { unauthorized } = await requireAuth();
+  if (unauthorized) return unauthorized;
+
   try {
-    console.log('Received POST body:', req);
     const { email, order, orderId } = await req.json();
-    console.log('Received POST body:', { email, order, orderId });
 
     // Send email using Postmark
     const response = await client.sendEmail({

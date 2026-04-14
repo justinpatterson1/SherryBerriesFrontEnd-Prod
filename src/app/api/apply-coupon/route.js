@@ -1,4 +1,9 @@
+import { requireAuth } from '@/lib/auth';
+
 export async function POST(req) {
+  const { session, unauthorized } = await requireAuth();
+  if (unauthorized) return unauthorized;
+
   const { code } = await req.json().catch(() => ({}));
   if (!code) {
     return Response.json({ error: 'Coupon code is required.' }, { status: 400 });

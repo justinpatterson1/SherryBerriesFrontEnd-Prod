@@ -1,11 +1,16 @@
 // app/api/subscribe/route.js
 import { NextResponse } from 'next/server';
+import { createRateLimiter } from '@/lib/rate-limit';
+
+const limiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
 export async function POST(req) {
+  const limited = limiter(req);
+  if (limited) return limited;
+
   try {
     // 1. parse body
     const { email } = await req.json();
-    console.log('Incoming email:', email);
 
     // 2. validate
     if (!email || typeof email !== 'string' || !email.includes('@')) {

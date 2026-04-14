@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { captureOrder } from "../../../../../lib/paypalClient";
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(request, { params }) {
+  const { unauthorized } = await requireAuth();
+  if (unauthorized) return unauthorized;
+
   const { orderID } = params;
 
   try {
