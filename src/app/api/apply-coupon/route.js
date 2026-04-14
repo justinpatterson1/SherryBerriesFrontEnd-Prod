@@ -1,13 +1,7 @@
-// pages/api/apply-coupon.js
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { code } = req.body || {};
+export async function POST(req) {
+  const { code } = await req.json().catch(() => ({}));
   if (!code) {
-    return res.status(400).json({ error: 'Coupon code is required.' });
+    return Response.json({ error: 'Coupon code is required.' }, { status: 400 });
   }
 
   try {
@@ -22,15 +16,14 @@ export default async function handler(req, res) {
 
     const data = await strapiRes.json();
     if (!strapiRes.ok) {
-      return res
-        .status(strapiRes.status)
-        .json({ error: data.message || 'Failed to validate coupon.' });
+      return Response.json(
+        { error: data.message || 'Failed to validate coupon.' },
+        { status: strapiRes.status }
+      );
     }
 
-    // { valid: true, discountType, discountValue }
-    return res.status(200).json({ discount: data });
+    return Response.json({ discount: data });
   } catch (err) {
-    console.error('Error calling Strapi /coupons/validate:', err);
-    return res.status(500).json({ error: 'Internal server error.' });
+    return Response.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }
