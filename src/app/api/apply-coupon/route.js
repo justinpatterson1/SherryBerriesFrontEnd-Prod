@@ -1,13 +1,15 @@
 import { requireAuth } from '@/lib/auth';
+import { couponSchema, validateBody } from '@/lib/validation';
 
 export async function POST(req) {
-  const { session, unauthorized } = await requireAuth();
+  const { unauthorized } = await requireAuth();
   if (unauthorized) return unauthorized;
 
-  const { code } = await req.json().catch(() => ({}));
-  if (!code) {
-    return Response.json({ error: 'Coupon code is required.' }, { status: 400 });
-  }
+  const body = await req.json().catch(() => ({}));
+  const { data: validated, error: validationError } = validateBody(body, couponSchema);
+  if (validationError) return validationError;
+
+  const { code } = validated;
 
   try {
     const strapiRes = await fetch(

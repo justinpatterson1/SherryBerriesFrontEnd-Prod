@@ -1,12 +1,27 @@
 import { requireAuth } from '@/lib/auth';
 
+const REQUIRED_WIPAY_PARAMS = [
+  'account_number', 'country_code', 'currency', 'environment',
+  'fee_structure', 'method', 'order_id', 'origin', 'response_url', 'total'
+];
+
 export async function POST(req) {
-  const { session, unauthorized } = await requireAuth();
+  const { unauthorized } = await requireAuth();
   if (unauthorized) return unauthorized;
 
   try {
     // Read the raw incoming body exactly as client sent it
     const rawBody = await req.text();
+
+    // Validate required WiPay params are present
+    const params = new URLSearchParams(rawBody);
+    const missing = REQUIRED_WIPAY_PARAMS.filter(p => !params.get(p));
+    if (missing.length > 0) {
+      return Response.json(
+        { error: 'Invalid request', details: `Missing required parameters: ${missing.join(', ')}` },
+        { status: 400 }
+      );
+    }
 
     // Pass body EXACTLY as received to WiPay
     const response = await fetch(

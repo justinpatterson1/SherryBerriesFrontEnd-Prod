@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createOrder } from "../../../lib/paypalClient.js";
 import { requireAuth } from '@/lib/auth';
+import { paypalOrderSchema, validateBody } from '@/lib/validation';
 
 export async function POST(request) {
   const { unauthorized } = await requireAuth();
@@ -8,7 +9,10 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { cart } = body;
+    const { data: validated, error: validationError } = validateBody(body, paypalOrderSchema);
+    if (validationError) return validationError;
+
+    const { cart } = validated;
 
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
 

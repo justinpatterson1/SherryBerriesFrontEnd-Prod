@@ -1,5 +1,6 @@
 import { ServerClient } from 'postmark';
 import { createRateLimiter } from '@/lib/rate-limit';
+import { contactEmailSchema, validateBody } from '@/lib/validation';
 
 const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 const limiter = createRateLimiter({ windowMs: 60_000, max: 3 });
@@ -9,7 +10,11 @@ export async function POST(req) {
   if (limited) return limited;
 
   try {
-    const { name, email, message } = await req.json();
+    const body = await req.json();
+    const { data: validated, error: validationError } = validateBody(body, contactEmailSchema);
+    if (validationError) return validationError;
+
+    const { name, email, message } = validated;
 
     const response = await client.sendEmail({
       From: 'info@sherry-berries.com',

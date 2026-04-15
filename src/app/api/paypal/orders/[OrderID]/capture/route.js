@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { captureOrder } from "../../../../../lib/paypalClient";
 import { requireAuth } from '@/lib/auth';
+import { paypalCaptureParamsSchema, validateBody } from '@/lib/validation';
 
 export async function POST(request, { params }) {
   const { unauthorized } = await requireAuth();
   if (unauthorized) return unauthorized;
 
-  const { orderID } = params;
+  const { data: validatedParams, error: validationError } = validateBody(params, paypalCaptureParamsSchema);
+  if (validationError) return validationError;
+
+  const { OrderID: orderID } = validatedParams;
 
   try {
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);

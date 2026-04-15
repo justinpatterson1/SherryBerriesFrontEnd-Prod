@@ -1,6 +1,7 @@
 import { ServerClient } from 'postmark';
 import { generateOrderConfirmationTemplate, generatePlainTextOrderConfirmation } from '../../../utils/emailTemplates';
 import { requireAuth } from '@/lib/auth';
+import { orderConfirmationSchema, validateBody } from '@/lib/validation';
 
 const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
@@ -9,7 +10,11 @@ export async function POST(req) {
   if (unauthorized) return unauthorized;
 
   try {
-    const { email, order, orderId } = await req.json();
+    const body = await req.json();
+    const { data: validated, error: validationError } = validateBody(body, orderConfirmationSchema);
+    if (validationError) return validationError;
+
+    const { email, order, orderId } = validated;
 
     // Send email using Postmark
     const response = await client.sendEmail({

@@ -1,6 +1,7 @@
 // app/api/subscribe/route.js
 import { NextResponse } from 'next/server';
 import { createRateLimiter } from '@/lib/rate-limit';
+import { subscribeSchema, validateBody } from '@/lib/validation';
 
 const limiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
@@ -9,13 +10,11 @@ export async function POST(req) {
   if (limited) return limited;
 
   try {
-    // 1. parse body
-    const { email } = await req.json();
+    const body = await req.json();
+    const { data: validated, error: validationError } = validateBody(body, subscribeSchema);
+    if (validationError) return validationError;
 
-    // 2. validate
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return NextResponse.json({ error: 'Email is not valid', status: 400 });
-    }
+    const { email } = validated;
 
     const apiUrl = process.env.NEXT_PUBLIC_SHERRYBERRIES_URL;
     if (!apiUrl) {
@@ -90,6 +89,6 @@ export async function POST(req) {
     });
   } catch (err) {
     console.error('Subscribe route error:', err);
-    return NextResponse.json({ error: 'Internal Servers Error', status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
