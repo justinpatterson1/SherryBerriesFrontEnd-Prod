@@ -2,7 +2,7 @@
 import ProductLayout from '../../../components/ProductLayout';
 
 function page({ params }) {
-  const productId = params?.id || window.location.pathname.split('/').pop();
+  const productId = params?.id;
   
   return (
     <ProductLayout

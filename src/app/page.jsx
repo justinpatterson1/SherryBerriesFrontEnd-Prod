@@ -1,5 +1,3 @@
-'use server';
-
 import Hero from './components/homepage/Hero';
 import PopularCategories from './components/homepage/PopularCategories';
 import FeaturedProducts from './components/homepage/FeaturedProducts';

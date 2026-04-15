@@ -1,4 +1,3 @@
-'use server';
 import Image from 'next/image';
 import Link from 'next/link';
 import FadeInSection from '../components/FadeInSection';

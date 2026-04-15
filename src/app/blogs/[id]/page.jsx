@@ -4,6 +4,27 @@ import { FiArrowLeft, FiCalendar, FiClock, FiShare2, FiHeart } from 'react-icons
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '../../components/Breadcrumbs';
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs/${id}?populate=image`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return { title: 'Blog Post' };
+    const { data } = await res.json();
+    return {
+      title: data?.title || 'Blog Post',
+      description: data?.description?.slice(0, 160) || 'Read this article on the SherryBerries blog.',
+      openGraph: {
+        images: data?.image?.url ? [{ url: data.image.url }] : []
+      }
+    };
+  } catch {
+    return { title: 'Blog Post' };
+  }
+}
+
 async function page({ params }) {
   const { id } = await params;
 
