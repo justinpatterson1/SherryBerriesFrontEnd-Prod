@@ -28,7 +28,6 @@ const OrderItem = ({ order, setOrders }) => {
         prevOrders.map(o => (o.id === order.id ? updatedOrder : o))
       );
     } catch (error) {
-      console.error('Error updating order:', error);
     } finally {
       setUpdating(false);
     }

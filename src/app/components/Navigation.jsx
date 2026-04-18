@@ -27,7 +27,6 @@ export default function Navigation() {
 
   useEffect(() => {
     const cartItemCount = currentCart?.reduce((total, item) => total + (item.quantity || 0), 0) || 0;
-    console.log("currentCart: " + JSON.stringify(currentCart,null,2));
     setCartCount(cartItemCount);
   }, [currentCart]);
 

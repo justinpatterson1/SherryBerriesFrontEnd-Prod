@@ -30,7 +30,7 @@ export default function Page() {
         setImage(json.data.Image.url);
         setLoading(false);
       })
-      .catch(err => console.log(err));
+      .catch(() => {});
   }, []);
 
   const signup = async event => {
@@ -38,7 +38,6 @@ export default function Page() {
 
     if (password !== confirmPassword) {
       setError('Passwords Do Not Match');
-      console.log('Bye');
       return;
     }
 
@@ -59,10 +58,8 @@ export default function Page() {
         }
       );
 
-      console.log(response);
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Backend error:', errorData);
         throw new Error('Failed to register user');
       }
 
@@ -72,9 +69,7 @@ export default function Page() {
         // setJwt(data.user.jwt)
         setStatus(true);
 
-        //   console.log(data)
 
-        //     console.log(data.user.id)
         //   const response2 = await fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/users/${data.user.id}`,{
         //     method:"PUT",
         //     headers:{
@@ -88,7 +83,6 @@ export default function Page() {
         //     })
         // })
 
-        // console.log(response2)
         // if (!response2.ok) {
         //   const errorData = await response2.json();
         //   setError( "Failed to update user data");
@@ -96,10 +90,8 @@ export default function Page() {
       }
 
       //   const updateUserData  = await response2.json();
-      // console.log(JSON.stringify(updateUserData))
 
       //     if(updateUserData){
-      //       console.log("Hello")
 
       //       try {
       //         const result = await signIn("credentials", {
@@ -109,15 +101,12 @@ export default function Page() {
       //           // callbackUrl: process.env.NEXT_PUBLIC_SHERRYBERRIES_FRONTEND_URL
       //         });
       //         if (result?.error) {
-      //           console.error("Sign-in failed:", result.error);
       //         } else {
-      //           console.log("User logged in successfully");
       //           router.push("/")
       //         }
 
       //       } catch (error) {
 
-      //         console.error("Registration error:", error.message);
       //       }
 
       //     }

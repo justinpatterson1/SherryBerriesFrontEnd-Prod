@@ -21,7 +21,6 @@ function Page() {
   const [updatingItem, setUpdatingItem] = useState(null);
   const [removingItem, setRemovingItem] = useState(null);
 
-  console.log(JSON.stringify(session,null,2));
   const getCartItem = item => {
     const arr = [];
 
@@ -42,12 +41,10 @@ function Page() {
         arr.push({ info: i, item: i.aftercares[0] });
       }
     });
-    console.log(arr);
     return arr;
   };
 
   useEffect(() => {
-    console.log('sessions: ' + session?.user?.documentId);
     if (session?.user?.documentId) {
       fetch(
         `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items?filters[User][documentId][$eq]=${session?.user?.documentId}&filters[isCompleted][$eq]=false&filters[active][$eq]=true&populate[Items][populate][jewelries][populate][image]=true&populate[Items][populate][merchandises][populate][image]=true&populate[Items][populate][waistbeads][populate][image]=true&populate[Items][populate][aftercares][populate][image]=true`,
@@ -61,17 +58,14 @@ function Page() {
       )
         .then(res => res.json())
         .then(json => {
-          console.log("Cart data: " + JSON.stringify(json));
           setIsCartEmpty(json?.data[0]?.Items ? false : true);
           setCartId(json?.data[0]?.documentId);
           setCart(json?.data[0]?.Items ? getCartItem(json.data[0].Items) : []);
           setShowEmptyModal(json?.data[0]?.Items.length !== 0);
           setDelivery(json?.data[0]?.deliveryFee?.toFixed(2));
           setLoading(false);
-          console.log(JSON.stringify(json.data[0]?.Items));
         })
         .catch(err => {
-          console.error(err);
         });
     }
   }, [session]);
@@ -199,7 +193,6 @@ function Page() {
       }
     };
 
-    console.log(updatedPayload);
 
     try {
       const response = await fetch(
@@ -215,10 +208,8 @@ function Page() {
       );
 
       if (!response.ok) {
-        console.error('Failed to update cart:', response.statusText);
       }
     } catch (error) {
-      console.error('Error updating cart:', error);
     }
   };
 
@@ -237,16 +228,13 @@ function Page() {
   //       // Remove item from the local cart state
   //       setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   //     } else {
-  //       console.error('Failed to delete item:', response.statusText);
   //     }
   //   } catch (error) {
-  //     console.error('Error deleting item:', error);
   //   }
   // };
 
   const deleteRepeatableComponent = async(parentId, componentId) => {
     setRemovingItem(componentId);
-    console.log('Parent id: ' + parentId);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${parentId}?populate[0]=Items.jewelries&populate[1]=Items.merchandises&populate[2]=Items.waistbeads&populate[3]=Items.aftercares&filters[isCompleted][$eq]=false&filters[active][$eq]=true`,
@@ -260,7 +248,6 @@ function Page() {
 
       const parentData = await response.json();
       if (!parentData?.data) {
-        console.error('Parent entry not found');
         return;
       }
 
@@ -269,7 +256,6 @@ function Page() {
         item => item.info.id !== componentId
       );
 
-      console.log(existingItems);
 
       const newTotalPrice = updatedItems.reduce((total, item) => {
         const discountedPrice = parseFloat(calculateDiscountedPrice(item.item?.price || 0, item.item?.discount || 0));
@@ -320,7 +306,6 @@ function Page() {
         }
       };
 
-      console.log('Updated Payload:', JSON.stringify(updatedPayload, null, 2)); // Debugging the payload
 
       const updateResponse = await fetch(
         `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${parentId}`,
@@ -335,7 +320,6 @@ function Page() {
       );
 
       if (updateResponse.ok) {
-        console.log('Item deleted successfully');
         toast.success('Item removed from cart');
         setCart(prevCart =>
           prevCart.filter(item => item.info.id !== componentId)
@@ -344,15 +328,12 @@ function Page() {
         window.dispatchEvent(new CustomEvent('cartUpdated'));
       } else {
         const errorResponse = await updateResponse.json();
-        console.error('Failed to update cart:', errorResponse);
         toast.error('Failed to remove item');
       }
     } catch (error) {
-      console.error('Error deleting item:', error);
       toast.error('Error removing item');
     } finally {
       setRemovingItem(null);
-      console.log('Process Completed');
     }
   }; // Parent entry ID: 1, Component ID: 102
 

@@ -6,7 +6,6 @@ export default function InactivityHandler({ children }) {
   const { data: session, status } = useSession();
   useEffect(() => {
     if (session) {
-      console.log(session);
       let timeout;
 
       const logoutAfterInactivity = () => {

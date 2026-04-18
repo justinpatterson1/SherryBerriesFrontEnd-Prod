@@ -29,7 +29,6 @@ const CartButton = ({
         setShowSuccess(false);
       }, 2000);
     } catch (error) {
-      console.error('Error adding to cart:', error);
     } finally {
       setIsAdding(false);
     }

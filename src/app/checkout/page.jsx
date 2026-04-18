@@ -26,7 +26,6 @@ const safeEnd = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 function generateOrderId() {
   return full() +"_"+ safeEnd();
 }
-console.log(`oid_${generateOrderId()}`);
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required('First name is required'),
@@ -135,7 +134,6 @@ function Page() {
         );
 
         const json = await res.json();
-        console.log(json.data[0].documentId);
         dispatch({
           type: 'SET_CART',
           payload: getCartItem(json.data?.[0]?.Items) || []
@@ -156,7 +154,6 @@ function Page() {
             : null
         );
       } catch (err) {
-        console.error('Error fetching cart:', err);
       } finally {
         setLoading(false);
       }
@@ -171,7 +168,6 @@ function Page() {
 
   useEffect(() => {
     if (coupon) {
-      console.log('In coupon');
       if (coupon?.discountType === 'fixed') {
         const newSubtotal = state.cart.reduce(
           (total, item) => {
@@ -243,9 +239,7 @@ function Page() {
         }
       );
 
-      console.log(code);
 
-      console.log(resp);
 
       // if(!resp.data){
       //   setCouponError("Coupon Is Invalid");
@@ -255,7 +249,6 @@ function Page() {
 
       const result = await resp.json();
 
-      console.log(result);
 
       if (
         result.data.length > 0 &&
@@ -302,7 +295,6 @@ function Page() {
               }
             );
 
-            console.log(result);
 
             if (couponUpdateResp.ok) {
               setCoupon(result.data[0]);
@@ -343,10 +335,8 @@ function Page() {
   };
 
   const reduceQuantity = async() => {
-    console.log('Cart stuff: ' + JSON.stringify(state.cart));
     for (let i = 0; i < state.cart.length; i++) {
       if (state.cart[i].info.ItemType === 'Jewelry') {
-        console.log(
           'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
         );
         const resp = await fetch(
@@ -363,7 +353,6 @@ function Page() {
         const jewelry = await resp?.json();
 
         if (jewelry) {
-          console.log('Jewelry Sizes: ' + JSON.stringify(jewelry));
 
           const updatedSizes = jewelry.data.sizes.map(({ id, ...sizeObj }) => {
             if (sizeObj.Size === state.cart[i].info.size) {
@@ -375,7 +364,6 @@ function Page() {
             return { Size: sizeObj.Size, quantity: sizeObj.quantity };
           });
 
-          console.log(updatedSizes);
           const resp = await fetch(
             `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries/${state.cart[i].item.documentId}`,
             {
@@ -389,13 +377,11 @@ function Page() {
           );
 
           if (!resp.ok) {
-            console.log('Error occured reducing quantity');
           }
         }
       }
 
       if (state.cart[i].info.ItemType === 'Merchandise') {
-        console.log(
           'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
         );
         const resp = await fetch(
@@ -424,7 +410,6 @@ function Page() {
             }
           );
 
-          console.log(updatedSizes);
           const resp = await fetch(
             `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises/${state.cart[i].item.documentId}`,
             {
@@ -438,13 +423,11 @@ function Page() {
           );
 
           if (!resp.ok) {
-            console.log('Error occured reducing quantity');
           }
         }
       }
 
       if (state.cart[i].info.ItemType === 'Aftercare') {
-        console.log(
           'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
         );
         const resp = await fetch(
@@ -469,7 +452,6 @@ function Page() {
           //   return { Size: sizeObj.Size, quantity: sizeObj.quantity };
           // });
 
-          console.log(updatedSizes);
           const resp = await fetch(
             `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${state.cart[i].item.documentId}`,
             {
@@ -483,7 +465,6 @@ function Page() {
           );
 
           if (!resp.ok) {
-            console.log('Error occured reducing quantity');
           }
         }
       }
@@ -549,7 +530,6 @@ function Page() {
       orderId
     };
 
-    console.log('Body: ' + JSON.stringify(body));
 
     const resp = await fetch('/api/order-confirmation-postmark', {
       method: 'POST',
@@ -569,8 +549,6 @@ function Page() {
 
     if (resp.ok) {
       const order = await resp.json();
-      console.log(order);
-      console.log('Confirmation Email sent');
     }
   };
 
@@ -581,13 +559,13 @@ function Page() {
     const parameters = new URLSearchParams();
     parameters.append(
       'account_number',
-      process.env.NEXT_PUBLIC_WIPAY_ACCOUNT_NUMBER
+      process.env.NEXT_PUBLIC_WIPAY_ACCOUNT_NUMBER_TEST
     );
     parameters.append('avs', '0');
     parameters.append('country_code', 'TT');
     parameters.append('currency', 'TTD');
     parameters.append('data', JSON.stringify({ cartId, orderId }));
-    parameters.append('environment', 'live');
+    parameters.append('environment', 'sandbox');
     parameters.append('fee_structure', 'customer_pay');
     parameters.append('method', 'credit_card');
     parameters.append('order_id', orderId);
@@ -609,20 +587,16 @@ function Page() {
       const result = await response.json();
 
       if (result?.data?.url) {
-        console.log(result);
         window.location.href = result.data.url; // Redirect to WiPay payment page
       } else {
-        console.error('WiPay error response:', result);
         alert('Failed to initiate payment.');
       }
     } catch (error) {
-      console.error('Request error:', error);
       alert('Something went wrong. Please try again.');
     }
   };
 
   const sendOrderToDB = async() => {
-    console.log(state.cart);
     if (state.address.paymentType == 'C.O.D') {
       setIsSubmitted(true);
       const payload = {
@@ -640,7 +614,6 @@ function Page() {
         }
       };
 
-      console.log("Payload: " + JSON.stringify(payload, null, 2));
 
       try {
         const response = await fetch(
@@ -656,7 +629,6 @@ function Page() {
         );
 
         if (response.ok) {
-          console.log('Successfull addition to orders');
           try {
             await sendConfirmationEmail();
             setIsSubmitted(false);
@@ -671,10 +643,8 @@ function Page() {
           router.push(`/checkout/thank-you?order_id=${orderId}`);
         }
         if (!response.ok) {
-          console.log('Failed to complete order', response.statusText);
         }
       } catch (error) {
-        console.log('Order Failed: ' + error);
       }
     }
 
@@ -694,7 +664,6 @@ function Page() {
         }
       };
 
-      console.log(payload);
 
       try {
         const response = await fetch(
@@ -724,11 +693,9 @@ function Page() {
           router.push(`/checkout/thank-you?order_id=${orderId}&status=success`);
         }
         if (!response.ok) {
-          console.log('Failed to complete order', response.statusText);
           router.push(`/checkout/thank-you?order_id=${orderId}&status=failed`)
         }
       } catch (error) {
-        console.log('Order Failed: ' + error);
       }
     }
 
@@ -748,8 +715,6 @@ function Page() {
         }
       };
 
-      console.log("Payload: " + JSON.stringify(payload, null, 2));
-      console.log(process.env.NEXT_PUBLIC_SHERRYBERRIES_URL);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders`,
@@ -763,7 +728,6 @@ function Page() {
           }
         );
 
-        console.log('CC user added to DB');
 
         if (response.ok) {
           try {
@@ -777,16 +741,13 @@ function Page() {
           //   router.push(`/checkout/thank-you?orderId=${orderId}`)
         }
         if (!response.ok) {
-          console.log('Failed to complete order', response.statusText);
         }
       } catch (error) {
-        console.log('Order Failed: ' + error);
       }
     }
   };
 
   useEffect(() => {
-    console.log(state);
   }, [state]);
 
   if (status === 'loading' || loading) return <Loader />;
@@ -812,7 +773,6 @@ function Page() {
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log('Form submitted successfully', values);
 
               setTimeout(setSubmitting(false), 3000);
             }}

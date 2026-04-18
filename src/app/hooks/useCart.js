@@ -32,7 +32,6 @@ export function useCart() {
       if (response.ok) {
         const json = await response.json();
 
-        console.log("Json data line 35: " + JSON.stringify(json.data));
         if (json.data && json.data.length > 0 && json.data[0].active) {
           setCartId(json.data[0].documentId);
           setCurrentCart(json.data[0].Items || []);
@@ -44,7 +43,6 @@ export function useCart() {
         }
       }
     } catch (error) {
-      console.error('Error fetching cart:', error);
     }
   };
 
@@ -53,7 +51,6 @@ export function useCart() {
       throw new Error('Please sign in to add items to cart');
     }
 
-    console.log("Product data line 50: " + JSON.stringify(productData));
 
     setLoading(true);
     try {
@@ -70,7 +67,6 @@ export function useCart() {
         window.dispatchEvent(new CustomEvent('cartUpdated'));
       }
     } catch (error) {
-      console.error('Error adding to cart:', error);
       toast.error(error.message || 'Failed to add item to cart');
       throw error;
     } finally {
@@ -79,7 +75,6 @@ export function useCart() {
   };
 
   const updateExistingCart = async (productData) => {
-    console.log("Cart supposed to be updated");
     const updatedItems = currentCart.map(item => ({
       ItemType: item.ItemType,
       ...(item.ItemType === 'Jewelry' && item.jewelries?.length > 0
@@ -147,8 +142,6 @@ export function useCart() {
   };
 
   const createNewCart = async (productData) => {
-    console.log("Cart supposed to be created");
-    console.log("Product data: " + JSON.stringify(productData,null,2));
     const payload = {
       data: {
         Items: [productData],

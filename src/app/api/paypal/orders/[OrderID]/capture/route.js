@@ -17,7 +17,6 @@ export async function POST(request, { params }) {
 
     return NextResponse.json(jsonResponse, { status: httpStatusCode });
   } catch (error) {
-    console.error("Failed to capture order:", error);
     return NextResponse.json(
       { error: "Failed to capture order" },
       { status: 500 }

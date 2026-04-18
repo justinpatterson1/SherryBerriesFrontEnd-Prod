@@ -17,7 +17,6 @@ function Blog() {
   const [openAddForm, setOpenAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  console.log('blog page:' + JSON.stringify(session));
   const toggleblog = blog => {
     if (expandedBlogId === blog.id) {
       setExpandedBlogId(null);
@@ -40,14 +39,12 @@ function Blog() {
       .then(json => {
         if (json?.data.length !== 0) {
           setBlog(json?.data);
-          console.log(json?.data);
           setLoading(false);
         } else {
           setPage(prev => prev - 1);
         }
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
       });
   };
@@ -84,10 +81,7 @@ function Blog() {
         alert('Failed to update blog.');
       }
     } catch (err) {
-      console.error('Update error:', err);
     }
-    console.log(id);
-    console.log(formData);
   };
 
   if (status === 'loading') return <Loader />;
@@ -131,7 +125,7 @@ function Blog() {
               className='flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition p-2 rounded'
               onClick={() => toggleblog(blog)}
             >
-              {console.log(JSON.stringify(blog.image.formats))}
+              
               <Image
                 src={blog?.image?.formats?.thumbnail?.url || blog?.image?.url}
                 width={blog?.image?.formats?.thumbnail?.width || 200}

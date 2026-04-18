@@ -70,7 +70,6 @@ function AddAftercareModule({ openAddForm, setOpenAddForm, fetchAftercare }) {
             image: resp[0].id || ''
           };
 
-          console.log(payload);
 
           const resp2 = await fetch(
             `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares`,
@@ -102,7 +101,6 @@ function AddAftercareModule({ openAddForm, setOpenAddForm, fetchAftercare }) {
           setImageError('Select an image less than 5MB');
         }
       } catch (error) {
-        console.log('Upload error:', error);
       }
     }
   };

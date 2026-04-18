@@ -17,7 +17,6 @@ function Jewelry() {
   const [openAddForm, setOpenAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  console.log('Jewelry page:' + JSON.stringify(session));
   const toggleJewelry = jewel => {
     if (expandedJewelryId === jewel.id) {
       setExpandedJewelryId(null);
@@ -52,7 +51,6 @@ function Jewelry() {
         }
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
       });
   };
@@ -89,10 +87,7 @@ function Jewelry() {
         alert('Failed to update jewelry.');
       }
     } catch (err) {
-      console.error('Update error:', err);
     }
-    console.log(id);
-    console.log(formData);
   };
 
   if (status === 'loading') return <Loader />;
@@ -136,7 +131,7 @@ function Jewelry() {
               className='flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition p-2 rounded'
               onClick={() => toggleJewelry(jewel)}
             >
-              {console.log(JSON.stringify(jewel.image.formats))}
+              
               <Image
                 src={jewel?.image?.formats?.thumbnail?.url || jewel?.image?.url}
                 width={jewel?.image?.formats?.thumbnail?.width || 200}

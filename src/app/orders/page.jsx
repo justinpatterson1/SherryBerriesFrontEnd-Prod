@@ -57,11 +57,9 @@ function Page() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log('Orders data:', data);
 
         if (data.data && data.data.length !== 0) {
           data.data.map((item, index) => {
-            console.log(index);
             const cart = getCartItem(item.cart.Items || []);
             data.data[index].newCart = cart;
           });
@@ -74,7 +72,6 @@ function Page() {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
     } catch (err) {
-      console.error('Failed to fetch orders:', err);
       setError(err.message);
       setOrders([]);
     } finally {

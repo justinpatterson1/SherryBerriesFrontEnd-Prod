@@ -95,7 +95,6 @@ function AddJewelryModule({ openAddForm, setOpenAddForm, fetchJewelries }) {
             sizes: size
           };
 
-          console.log(payload);
 
           const resp2 = await fetch(
             `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries`,
@@ -140,7 +139,6 @@ function AddJewelryModule({ openAddForm, setOpenAddForm, fetchJewelries }) {
           setImageError('Select an image less than 5MB');
         }
       } catch (error) {
-        console.log('Upload error:', error);
       }
     }
   };

@@ -19,7 +19,6 @@ function Aftercare() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  console.log('aftercare page:' + JSON.stringify(session));
   const toggleAftercare = aftercare => {
     if (expandedAftercareId === aftercare.id) {
       setExpandedAftercareId(null);
@@ -44,7 +43,6 @@ function Aftercare() {
       .then(json => {
         if (json?.data.length !== 0) {
           setAftercare(json?.data);
-          console.log(json?.data);
           setLoading(false);
         } else {
           setAftercare([]);
@@ -52,7 +50,6 @@ function Aftercare() {
         }
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
       });
   };
@@ -89,10 +86,7 @@ function Aftercare() {
         alert('Failed to update aftercare.');
       }
     } catch (err) {
-      console.error('Update error:', err);
     }
-    console.log(id);
-    console.log(formData);
   };
 
   if (status === 'loading') return <Loader />;
@@ -136,7 +130,7 @@ function Aftercare() {
               className='flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition p-2 rounded'
               onClick={() => toggleAftercare(aftercare)}
             >
-              {console.log(JSON.stringify(aftercare.image.formats))}
+              
               <Image
                 src={
                   aftercare?.image?.formats?.thumbnail?.url ||

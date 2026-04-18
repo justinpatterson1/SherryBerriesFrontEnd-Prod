@@ -70,7 +70,6 @@ export default function Footer() {
       }
     } catch (error) {
       failure();
-      console.error('Subscription error:', error);
     } finally {
       setIsSubmitting(false);
     }

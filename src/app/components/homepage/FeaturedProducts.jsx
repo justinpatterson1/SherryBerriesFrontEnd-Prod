@@ -29,7 +29,6 @@ function FeaturedProducts({ featured }) {
 
   const addToCart = (product) => {
     // This would typically integrate with your cart context
-    console.log('Adding to cart:', product);
     // You can add toast notification here
   };
 

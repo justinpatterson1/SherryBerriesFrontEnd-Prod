@@ -35,7 +35,6 @@ function Page() {
   const [orders, setOrders] = useState([]);
   const [showSidebar, setShowSidebar] = useState(true);
 
-  console.log(session);
 
   // if(session.user.role_type !== 'admin'){
   //   redirect("/")
@@ -56,11 +55,9 @@ function Page() {
             }
           );
           const orderData = await res.json();
-          console.log(orderData);
           setOrders(orderData);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
       }
     };
 

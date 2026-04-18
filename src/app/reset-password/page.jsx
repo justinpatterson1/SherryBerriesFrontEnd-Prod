@@ -20,7 +20,6 @@ function page() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get('code');
-    console.log(token);
     setCode(token);
   }, []);
 
@@ -30,9 +29,8 @@ function page() {
       .then(json => {
         setData(json.data);
         setLoading(false);
-        console.log(process.env.STRAPI_URL);
       })
-      .catch(err => console.log(err));
+      .catch(() => {});
     // const data = await response.json();
 
     // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
@@ -70,25 +68,20 @@ function page() {
           success();
           router.push('/sign-in');
         } else {
-          console.log('Error while resetting password');
         }
       } catch (error) {
-        console.log(error);
       }
 
       // .then(res=>res.json())
       // .then(json=>{
       //   setData(json.data)
       //   setLoading(false)
-      //  console.log(process.env.STRAPI_URL)
       // })
-      // .catch(err=>console.log(err))
       // const data = await response.json();
 
       // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
     } else {
       setError('Password could not be confirmed');
-      console.log('');
     }
   };
 

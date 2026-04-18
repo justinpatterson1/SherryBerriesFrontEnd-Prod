@@ -8,7 +8,6 @@ export const fetchOrders = async status => {
     } // Prevent caching to always get fresh data
   );
 
-  console.log(response);
   if (!response.ok) {
     throw new Error('Failed to fetch orders');
   }

@@ -31,7 +31,6 @@ export async function POST(req) {
       }
     });
 
-    console.log('Postmark response:', response);
     
     return Response.json({
       message: 'Confirmation Email was successfully sent',
@@ -40,12 +39,9 @@ export async function POST(req) {
     });
 
   } catch (error) {
-    console.error('Error sending email via Postmark:', error);
     
     // Handle specific Postmark errors
     if (error.code) {
-      console.error('Postmark error code:', error.code);
-      console.error('Postmark error message:', error.message);
     }
     
     return Response.json(
@@ -65,14 +61,12 @@ export async function PUT(req) {
     const webhookData = await req.json();
     
     // Handle Postmark webhook events (bounces, opens, clicks, etc.)
-    console.log('Postmark webhook received:', webhookData);
     
     // You can update your database based on delivery status
     // For example, mark email as delivered, bounced, etc.
     
     return Response.json({ received: true });
   } catch (error) {
-    console.error('Error processing Postmark webhook:', error);
     return Response.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }

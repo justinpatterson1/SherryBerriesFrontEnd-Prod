@@ -25,7 +25,6 @@ export const authOptions = {
 
           return { jwt, ...user };
         } catch (error) {
-          console.error('Login failed:', error.response?.data);
           throw new Error('Invalid login credentials');
         }
       }
@@ -47,7 +46,6 @@ export const authOptions = {
         token.role_type = user.role_type;
         token.documentId = user.documentId;
       }
-      console.log('🔥 JWT Callback - token OUT ' + JSON.stringify(token));
       return token;
     },
     async session({ session, token }) {

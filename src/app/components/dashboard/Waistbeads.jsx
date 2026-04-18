@@ -48,7 +48,6 @@ function Waistbeads() {
         }
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
       });
   };
@@ -84,7 +83,6 @@ function Waistbeads() {
         alert('Failed to update waistbead.');
       }
     } catch (err) {
-      console.error('Update error:', err);
     }
   };
 

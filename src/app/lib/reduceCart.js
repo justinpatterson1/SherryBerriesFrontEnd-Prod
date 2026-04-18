@@ -13,7 +13,6 @@ export async function reduceQuantity(cartItems, jwt) {
     const collection = collectionMap[itemType];
 
     if (!collection) {
-      console.warn(`Unsupported item type: ${itemType}`);
       continue;
     }
 
@@ -43,9 +42,6 @@ export async function reduceQuantity(cartItems, jwt) {
           return { Size: sizeObj.Size, quantity: sizeObj.quantity };
         });
 
-        console.log('Updated Sizes:', updatedSizes);
-        console.log('Collection:', collection);
-        console.log('Doc ID:', docId);
         
         // Update sizes
         const updateResp = await fetch(
@@ -61,7 +57,6 @@ export async function reduceQuantity(cartItems, jwt) {
         );
 
         if (!updateResp.ok) {
-          console.error(
             `Failed to update ${itemType} quantity for item ${docId}`
           );
         }
@@ -95,13 +90,11 @@ export async function reduceQuantity(cartItems, jwt) {
         );
 
         if (!updateResp.ok) {
-          console.error(
             `Failed to update Aftercare quantity for item ${docId}`
           );
         }
       }
     } catch (err) {
-      console.error(`Error updating ${itemType} item with ID ${docId}:`, err);
     }
   }
 }

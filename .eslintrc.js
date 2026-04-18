@@ -7,7 +7,7 @@ module.exports = {
   plugins: ['react', 'react-hooks'],
   rules: {
     // Code quality rules
-    'no-console': 'warn',
+    'no-console': 'error',
     'no-unused-vars': 'error',
     'no-var': 'error',
     'prefer-const': 'error',

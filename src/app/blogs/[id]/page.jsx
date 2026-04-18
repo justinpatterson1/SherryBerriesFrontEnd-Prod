@@ -28,7 +28,6 @@ export async function generateMetadata({ params }) {
 async function page({ params }) {
   const { id } = await params;
 
-  console.log(id);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs/${id}?populate=*`,
     { next: { revalidate: 3600 } } // Cache for 1 hour
@@ -40,7 +39,6 @@ async function page({ params }) {
 
   const blog = await response.json();
 
-  console.log(blog);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

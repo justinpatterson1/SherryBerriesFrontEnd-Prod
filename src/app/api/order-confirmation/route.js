@@ -12,7 +12,6 @@ var client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 export async function POST(req) {
   try {
     const { email, order, orderId } = await req.json();
-    console.log('Received POST body:', { email, order, orderId });
     const response = await mgClient.messages.create(
       process.env.NEXT_PUBLIC_MAILGUN_DOMAIN,
       {
@@ -88,7 +87,6 @@ export async function POST(req) {
                     `
       }
     );
-    console.log('Mailgun response:', response); // Log the successful response
     return new Response(
       JSON.stringify({
         message: 'Confirmation Email was successfully sent',
@@ -100,7 +98,6 @@ export async function POST(req) {
       }
     );
   } catch (error) {
-    console.error('Error sending email:', error);
     return new Response(
       JSON.stringify({ error: 'Failed to send email', details: error.message }),
       {

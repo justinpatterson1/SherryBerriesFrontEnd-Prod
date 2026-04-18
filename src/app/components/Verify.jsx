@@ -12,7 +12,6 @@ function Verify({ email }) {
     }
   }, [status]);
   const resendEmail = async() => {
-    console.log(email);
     setStatus(true);
     const response = fetch(
       `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/auth/send-email-confirmation`,
@@ -27,7 +26,6 @@ function Verify({ email }) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Backend error:', errorData);
       setError('Email was unable to be sent');
       throw new Error('Failed to register user');
     }

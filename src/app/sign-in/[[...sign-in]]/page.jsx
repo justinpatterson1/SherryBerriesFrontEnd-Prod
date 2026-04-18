@@ -24,9 +24,8 @@ export default function Page() {
       .then(json => {
         setData(json.data);
         setLoading(false);
-        console.log(process.env.STRAPI_URL);
       })
-      .catch(err => console.log(err));
+      .catch(() => {});
     // const data = await response.json();
 
     // const imageUrl = `http://localhost:1337${data.data.Image.url}`;

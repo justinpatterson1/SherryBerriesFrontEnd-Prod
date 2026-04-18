@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import { authOptions } from './options';
-import { createRateLimiter } from '@/lib/rate-limit';
+import { createRateLimiter } from '../../../../lib/rate-limit';
 
 const handler = NextAuth(authOptions);
 const limiter = createRateLimiter({ windowMs: 60_000, max: 5 });

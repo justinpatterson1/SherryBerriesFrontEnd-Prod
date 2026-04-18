@@ -34,7 +34,6 @@ export default function Page() {
       const heroData = await heroImgResponse.json();
       const waistbeadData = await waistbeadResponse.json();
 
-      console.log(heroData);
 
       setHero(heroData?.data.Hero[0].url);
 
@@ -45,9 +44,7 @@ export default function Page() {
       }
 
       //setLoading(false)
-      console.log(waistbeadData?.data);
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -63,7 +60,6 @@ export default function Page() {
   //     setProduct(json.data || null);
   //     setHero(json.data?.Hero?.[0]?.url || "");
   //   } catch (error) {
-  //     console.error("Error fetching products:", error);
   //   } finally {
   //     setLoading(false);
   //   }

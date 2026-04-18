@@ -30,7 +30,6 @@ function page() {
     //     } else {
     //       setPage((prev) => prev - 1)
     //     }
-    //     console.log(json.data);
     //   });
 
     try {
@@ -46,7 +45,6 @@ function page() {
           const heroData = await heroImgResponse.json();
           const merchandiseData = await merchandiseResponse.json();
 
-          console.log(merchandiseData.data);
 
           setHero(heroData?.data.Hero[0].url);
 
@@ -57,22 +55,18 @@ function page() {
           }
 
           //setLoading(false)
-          console.log(merchandiseData?.data);
         } catch (error) {
-          console.log(error);
         }
       }
 
       fetchData();
     } catch (error) {
-      console.log(error);
     }
   }, [page]);
 
   //   useEffect(() => {
   //     if (jewelry) {
   //       setLoading(false);
-  //       console.log(jewelry)
   //     }
   //   }, [imagesLoaded, jewelry]);
 
@@ -80,7 +74,6 @@ function page() {
     setImagesLoaded(prev => prev + 1);
   };
 
-  console.log(JSON.stringify(product));
 
   if (loading && !product) return <Loader />;
 

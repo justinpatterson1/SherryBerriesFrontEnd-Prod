@@ -49,7 +49,6 @@ export default function ProductLayout({
   const { product, loading, error, refetch } = useProduct(productId, productType);
   const { addToCart, loading: cartLoading } = useCart();
 
-  console.log("product: " + JSON.stringify(product,null,2));
 
   // Get the maximum quantity available for the selected size
   const getMaxQuantityForSelectedSize = () => {
@@ -104,7 +103,6 @@ export default function ProductLayout({
       await addToCart(productData);
       dispatch({ type: 'reset' });
     } catch (error) {
-      console.error('Error adding to cart:', error);
     } finally {
       setIsAddingToCart(false);
     }

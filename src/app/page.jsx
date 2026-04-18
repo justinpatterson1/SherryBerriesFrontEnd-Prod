@@ -14,7 +14,6 @@ export default async function Home() {
   );
   const homepage = await res.json();
 
-  console.log(homepage);
 
   if (!homepage) return <Loader />;
   

@@ -26,7 +26,6 @@ export default NextAuth({
           // Return the user and JWT for session management
           return { jwt, user };
         } catch (error) {
-          console.error('Login failed:', error.response?.data);
           return null;
         }
       }

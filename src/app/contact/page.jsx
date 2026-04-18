@@ -115,7 +115,6 @@ export default function ContactForm() {
       }
     } catch (error) {
       failure();
-      console.error('Error sending message:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,7 +126,7 @@ export default function ContactForm() {
       .then(json => {
         setData(json.data);
       })
-      .catch(err => console.error('Error fetching contact data:', err));
+      .catch(() => {});
   }, []);
 
   const contactInfo = [

@@ -6,7 +6,6 @@ const OrdersWrapper = async() => {
   // Get session on the server
   const session = await auth();
 
-  console.log(session);
 
   if (!session) {
     return <div>Please log in to view orders.</div>;

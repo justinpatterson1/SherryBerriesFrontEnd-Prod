@@ -65,7 +65,6 @@ export default function PayPalButton() {
                                 throw new Error(errorMessage);
                             }
                         } catch (error) {
-                            console.error(error);
                             setMessage(
                                 `Could not initiate PayPal Checkout...${error}`
                             );
@@ -73,8 +72,6 @@ export default function PayPalButton() {
                     }}
                    onApprove={async (data, actions) => {
                         try {
-                            console.log("paypal data: ", JSON.stringify(data, null, 2));
-                            console.log("paypal actions: ", JSON.stringify(actions, null, 2));
                             const response = await fetch(
                                 `/api/paypal/orders/${data.orderID}/capture`,
                                 {
@@ -111,14 +108,12 @@ export default function PayPalButton() {
                                 setMessage(
                                     `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
                                 );
-                                console.log(
                                     "Capture result",
                                     orderData,
                                     JSON.stringify(orderData, null, 2)
                                 );
                             }
                         } catch (error) {
-                            console.error(error);
                             setMessage(
                                 `Sorry, your transaction could not be processed...${error}`
                             );

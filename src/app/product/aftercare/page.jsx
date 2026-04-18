@@ -35,7 +35,6 @@ function page() {
           const heroData = await heroImgResponse.json();
           const aftercareData = await aftercareResponse.json();
 
-          console.log(aftercareData.data);
 
           setHero(heroData?.data.Hero.url);
 
@@ -46,22 +45,18 @@ function page() {
           }
 
           //setLoading(false)
-          console.log(aftercareData?.data);
         } catch (error) {
-          console.log(error);
         }
       }
 
       fetchData();
     } catch (error) {
-      console.log(error);
     }
   }, [page]);
 
   //   useEffect(() => {
   //     if (jewelry) {
   //       setLoading(false);
-  //       console.log(jewelry)
   //     }
   //   }, [imagesLoaded, jewelry]);
 
@@ -69,7 +64,6 @@ function page() {
     setImagesLoaded(prev => prev + 1);
   };
 
-  // console.log(JSON.stringify(aftercare.Hero))
 
   if (loading && !aftercare) return <Loader />;
 

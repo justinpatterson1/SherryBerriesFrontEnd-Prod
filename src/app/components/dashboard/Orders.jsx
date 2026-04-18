@@ -43,7 +43,6 @@ function Orders() {
         );
       }
     } catch (error) {
-      console.log('Error occurred while updating: ' + error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +73,6 @@ function Orders() {
         );
       }
     } catch (error) {
-      console.log('Error occurred while updating: ' + error);
     } finally {
       setLoading(false);
     }
@@ -108,7 +106,7 @@ function Orders() {
 
           // }
         })
-        .catch(error => console.error('Error fetching orders:', error))
+        .catch(() => {})
         .finally(() => setLoading(false));
     }
   }, [orderStatus, page]);

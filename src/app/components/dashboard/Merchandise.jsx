@@ -77,7 +77,6 @@ function Merchandise() {
         }
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
       });
   };
@@ -119,7 +118,6 @@ function Merchandise() {
         alert('Failed to update merchandise.');
       }
     } catch (err) {
-      console.error('Update error:', err);
     }
   };
 

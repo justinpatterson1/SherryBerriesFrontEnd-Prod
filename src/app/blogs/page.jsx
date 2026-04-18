@@ -33,10 +33,8 @@ function Page() {
         } else {
           setPage(prev => prev - 1);
         }
-        console.log(json.data);
       })
       .catch(error => {
-        console.error('Error fetching blogs:', error);
         setLoading(false);
       });
   }, [page, order]);
@@ -87,7 +85,6 @@ function Page() {
 
   const handleSortChange = event => {
     setOrder(event.target.value);
-    console.log(event.target.value);
   };
 
   if (loading) return <Loader type="modern" />;

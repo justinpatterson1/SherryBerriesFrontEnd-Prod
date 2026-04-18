@@ -173,7 +173,6 @@ export default async function About() {
       </div>
     );
   } catch (error) {
-    console.error('Error loading about page:', error);
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center px-4'>
         <div className='text-center max-w-md'>

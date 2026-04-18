@@ -91,7 +91,6 @@ function AddMerchandiseModule({
             sizes: size
           };
 
-          console.log(payload);
           try {
             const resp = await fetch(
               `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises`,
@@ -120,20 +119,16 @@ function AddMerchandiseModule({
               notify();
             }
           } catch (error) {
-            console.log('Unable to create Waistbead: ' + error);
           }
         } else {
           alert('Image uploaded unsuccessfully');
           setImageError('Select an image less than 5MB');
         }
       } catch (error) {
-        console.log('Error: ' + error);
       }
     }
 
-    console.log('Submitted FormData:');
     for (const [key, value] of submissionData.entries()) {
-      console.log(`${key}:`, value);
     }
   };
 

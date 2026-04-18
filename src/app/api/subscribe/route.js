@@ -18,7 +18,6 @@ export async function POST(req) {
 
     const apiUrl = process.env.NEXT_PUBLIC_SHERRYBERRIES_URL;
     if (!apiUrl) {
-      console.error('Missing NEXT_PUBLIC_SHERRYBERRIES_URL');
       return NextResponse.json({
         error: 'Server configuration error',
         status: 500
@@ -36,7 +35,6 @@ export async function POST(req) {
 
     if (!checkRes.ok) {
       const err = await checkRes.json();
-      console.error('Error checking existing list:', err);
       return NextResponse.json(
         { error: err.error?.message || 'Downstream error' },
         { status: checkRes.status }
@@ -51,7 +49,6 @@ export async function POST(req) {
       });
     }
 
-    console.log(apiUrl);
 
     const createRes = await fetch(`${apiUrl}/api/email-lists`, {
       method: 'POST',
@@ -65,7 +62,6 @@ export async function POST(req) {
 
     // log status and raw body so you know what Strapi is returning
     const text = await createRes.text();
-    console.error('Strapi create status:', createRes.status, 'body:', text);
 
     if (!createRes.ok) {
       // if it was JSON, parse it, otherwise use the raw text
@@ -76,7 +72,6 @@ export async function POST(req) {
         err = { message: text };
       }
 
-      console.error('Error creating subscription:', err);
       return NextResponse.json(
         { error: err.error?.message || err.message || 'Downstream error' },
         { status: createRes.status }
@@ -88,7 +83,6 @@ export async function POST(req) {
       status: 201
     });
   } catch (err) {
-    console.error('Subscribe route error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -29,7 +29,6 @@ function page() {
     //     } else {
     //       setPage((prev) => prev - 1)
     //     }
-    //     console.log(json.data);
     //   });
 
     async function fetchData() {
@@ -53,9 +52,7 @@ function page() {
         }
 
         //setLoading(false)
-        console.log(jewelryData?.data);
       } catch (error) {
-        console.log(error);
       }
     }
 
@@ -63,7 +60,6 @@ function page() {
   }, [page]);
 
   useEffect(() => {
-    console.log(imagesLoaded);
     if (jewelry) {
       setLoading(false);
     }
@@ -73,7 +69,6 @@ function page() {
     setImagesLoaded(prev => prev + 1);
   };
 
-  console.log(JSON.stringify(session));
 
   if (loading) return <Loader />;
 

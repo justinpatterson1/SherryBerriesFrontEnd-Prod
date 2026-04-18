@@ -20,6 +20,5 @@ export const config = {
 // export async function session(req) {
 //   const session = await getServerSession(authOptions);
 
-//   console.log("🔍 Middleware Session:", session);
 //   return Response.next()
 // }

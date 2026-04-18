@@ -35,7 +35,6 @@ export default function RelatedProducts({
 
         setRelatedProducts(filtered);
       } catch (err) {
-        console.error('Error fetching related products:', err);
         setError(err.message);
       } finally {
         setLoading(false);
