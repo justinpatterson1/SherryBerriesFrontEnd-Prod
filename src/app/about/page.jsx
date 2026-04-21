@@ -24,7 +24,7 @@ export default async function About() {
       <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
         {/* Hero Section */}
         <FadeInSection>
-          <div className='relative bg-gradient-to-r from-[#EA4492] to-pink-600 py-20 px-4 overflow-hidden'>
+          <div className='relative bg-gradient-to-r from-brand to-pink-600 py-20 px-4 overflow-hidden'>
             <div className='absolute inset-0 bg-black/10'></div>
             <div className='relative container mx-auto text-center'>
               <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight'>
@@ -48,7 +48,7 @@ export default async function About() {
               {/* Image Section */}
               <FadeInSection>
                 <div className='relative group'>
-                  <div className='absolute -inset-4 bg-gradient-to-r from-[#EA4492] to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200'></div>
+                  <div className='absolute -inset-4 bg-gradient-to-r from-brand to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200'></div>
                   <div className='relative bg-white p-4 rounded-2xl shadow-xl'>
                     {about?.data?.blocks[2]?.file?.formats?.large?.url ? (
                       <Image
@@ -93,7 +93,7 @@ export default async function About() {
                   {/* Values Section */}
                   <div className='grid md:grid-cols-2 gap-6'>
                     <div className='bg-white p-6 rounded-xl shadow-lg border border-gray-100'>
-                      <div className='w-12 h-12 bg-[#EA4492] rounded-lg flex items-center justify-center mb-4'>
+                      <div className='w-12 h-12 bg-brand rounded-lg flex items-center justify-center mb-4'>
                         <svg className='w-6 h-6 text-white' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' />
                         </svg>
@@ -103,7 +103,7 @@ export default async function About() {
                     </div>
 
                     <div className='bg-white p-6 rounded-xl shadow-lg border border-gray-100'>
-                      <div className='w-12 h-12 bg-[#EA4492] rounded-lg flex items-center justify-center mb-4'>
+                      <div className='w-12 h-12 bg-brand rounded-lg flex items-center justify-center mb-4'>
                         <svg className='w-6 h-6 text-white' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' />
                         </svg>
@@ -132,7 +132,7 @@ export default async function About() {
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <Link 
                   href='/product/jewelry'
-                  className='bg-[#EA4492] hover:bg-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg'
+                  className='bg-brand hover:bg-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg'
                 >
                   Shop Jewelry
                 </Link>
@@ -160,7 +160,7 @@ export default async function About() {
               </p>
               <Link 
                 href='/contact'
-                className='inline-flex items-center bg-[#EA4492] hover:bg-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg'
+                className='inline-flex items-center bg-brand hover:bg-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg'
               >
                 Contact Us
                 <svg className='ml-2 w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -187,7 +187,7 @@ export default async function About() {
           </p>
           <Link 
             href='/'
-            className='inline-flex items-center bg-[#EA4492] hover:bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300'
+            className='inline-flex items-center bg-brand hover:bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300'
           >
             Go Home
           </Link>

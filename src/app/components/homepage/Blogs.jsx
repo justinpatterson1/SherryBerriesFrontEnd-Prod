@@ -43,7 +43,7 @@ function Blogs({ blog }) {
                 <p>{truncateText(blogItem?.description, 100)}</p>
 
                 <Link href={`/blogs/${blogItem?.documentId}`}>
-                  <p className='text-[#EA4492] cursor-pointer'>Read More</p>
+                  <p className='text-brand cursor-pointer'>Read More</p>
                 </Link>
               </div>
             </div>

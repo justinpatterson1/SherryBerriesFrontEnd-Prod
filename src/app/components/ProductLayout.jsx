@@ -203,7 +203,7 @@ export default function ProductLayout({
 
   return (
     <ErrorBoundary>
-      <div className='bg-[#ffefef] min-h-screen flex flex-col'>
+      <div className='bg-brand-light min-h-screen flex flex-col'>
         <ToastContainer />
         <main className='flex-grow'>
           <div className='container mx-auto px-4'>
@@ -225,7 +225,7 @@ export default function ProductLayout({
 
                 {/* Price Section */}
                 <div className='flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-5'>
-                  <p className='text-[#EA4492] text-2xl lg:text-3xl font-bold'>
+                  <p className='text-brand text-2xl lg:text-3xl font-bold'>
                     ${formatPrice(product.price, product.discount)}
                   </p>
                   { product.discount < 0 && (
@@ -288,7 +288,7 @@ export default function ProductLayout({
                 {/* Add to Cart Button */}
                 <button
                   type="button"
-                  className='w-full sm:w-auto bg-[#EA4492] p-4 lg:p-6 text-center text-white text-lg lg:text-xl font-medium rounded-lg hover:bg-[#d63a7a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
+                  className='w-full sm:w-auto bg-brand p-4 lg:p-6 text-center text-white text-lg lg:text-xl font-medium rounded-lg hover:bg-[#d63a7a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
                   onClick={handleAddToCart}
                   disabled={isAddingToCart || cartLoading || (!state.size && productType !== 'aftercare') || (state.size && getMaxQuantityForSelectedSize() === 0)}
                 >

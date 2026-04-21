@@ -78,14 +78,14 @@ function PopularCategories({ popular_category, description }) {
 
                   {/* Category Info */}
                   <div className='p-6'>
-                    <h3 className='text-xl font-bold text-gray-800 group-hover:text-[#EA4492] transition-colors duration-300 mb-2'>
+                    <h3 className='text-xl font-bold text-gray-800 group-hover:text-brand transition-colors duration-300 mb-2'>
                       {category?.Title}
                     </h3>
                     <p className='text-gray-600 text-sm'>
                       Explore our curated collection
                     </p>
                     
-                    <div className='mt-4 flex items-center text-[#EA4492] font-medium group-hover:translate-x-2 transition-transform duration-300'>
+                    <div className='mt-4 flex items-center text-brand font-medium group-hover:translate-x-2 transition-transform duration-300'>
                       <span>Shop Now</span>
                       <svg className='w-4 h-4 ml-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />

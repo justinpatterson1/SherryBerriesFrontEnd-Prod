@@ -167,7 +167,7 @@ export default function ContactForm() {
     <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-pink-50'>
       {/* Hero Section */}
       <FadeInSection>
-        <div className='bg-gradient-to-r from-[#EA4492] to-pink-600 py-20 px-4'>
+        <div className='bg-gradient-to-r from-brand to-pink-600 py-20 px-4'>
           <div className='container mx-auto text-center'>
             <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6'>
               Get In Touch
@@ -221,7 +221,7 @@ export default function ContactForm() {
                       href={social.href}
                       target='_blank'
                       rel='noopener noreferrer'
-                      className='w-10 h-10 bg-gray-100 hover:bg-[#EA4492] rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 group'
+                      className='w-10 h-10 bg-gray-100 hover:bg-brand rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 group'
                       aria-label={social.label}
                     >
                       <social.icon className='w-5 h-5 text-gray-600 group-hover:text-white' />
@@ -266,7 +266,7 @@ export default function ContactForm() {
                           name='name'
                           value={formData.name}
                           onChange={handleInputChange}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-300 ${
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 ${
                             errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder='Enter your full name'
@@ -287,7 +287,7 @@ export default function ContactForm() {
                           name='email'
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-300 ${
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 ${
                             errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder='Enter your email address'
@@ -309,7 +309,7 @@ export default function ContactForm() {
                         rows={6}
                         value={formData.message}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-300 resize-none ${
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 resize-none ${
                           errors.message ? 'border-red-300 bg-red-50' : 'border-gray-300'
                         }`}
                         placeholder='Tell us how we can help you...'
@@ -325,7 +325,7 @@ export default function ContactForm() {
                     <button
                       type='submit'
                       disabled={isSubmitting}
-                      className='w-full bg-[#EA4492] hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center group'
+                      className='w-full bg-brand hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center group'
                     >
                       {isSubmitting ? (
                         <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>

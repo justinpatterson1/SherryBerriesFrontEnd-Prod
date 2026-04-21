@@ -51,7 +51,7 @@ function Pagination({ page, setPage, totalPages, hasNextPage = true, hasPrevPage
         className={`flex items-center justify-center w-10 h-10 rounded-lg border transition-all duration-200 ${
           !hasPrevPage || page <= 1
             ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-            : 'border-gray-300 text-gray-600 hover:border-[#EA4492] hover:text-[#EA4492] hover:bg-pink-50'
+            : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand hover:bg-pink-50'
         }`}
         aria-label="Previous page"
       >
@@ -66,7 +66,7 @@ function Pagination({ page, setPage, totalPages, hasNextPage = true, hasPrevPage
             <>
               <button
                 onClick={() => goToPage(1)}
-                className='flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:border-[#EA4492] hover:text-[#EA4492] hover:bg-pink-50 transition-all duration-200'
+                className='flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:border-brand hover:text-brand hover:bg-pink-50 transition-all duration-200'
               >
                 1
               </button>
@@ -83,8 +83,8 @@ function Pagination({ page, setPage, totalPages, hasNextPage = true, hasPrevPage
               onClick={() => goToPage(pageNumber)}
               className={`flex items-center justify-center w-10 h-10 rounded-lg border transition-all duration-200 ${
                 pageNumber === page
-                  ? 'border-[#EA4492] bg-[#EA4492] text-white'
-                  : 'border-gray-300 text-gray-600 hover:border-[#EA4492] hover:text-[#EA4492] hover:bg-pink-50'
+                  ? 'border-brand bg-brand text-white'
+                  : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand hover:bg-pink-50'
               }`}
             >
               {pageNumber}
@@ -99,7 +99,7 @@ function Pagination({ page, setPage, totalPages, hasNextPage = true, hasPrevPage
               )}
               <button
                 onClick={() => goToPage(totalPages || page + 10)}
-                className='flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:border-[#EA4492] hover:text-[#EA4492] hover:bg-pink-50 transition-all duration-200'
+                className='flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:border-brand hover:text-brand hover:bg-pink-50 transition-all duration-200'
               >
                 {totalPages || page + 10}
               </button>
@@ -115,7 +115,7 @@ function Pagination({ page, setPage, totalPages, hasNextPage = true, hasPrevPage
         className={`flex items-center justify-center w-10 h-10 rounded-lg border transition-all duration-200 ${
           !hasNextPage
             ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-            : 'border-gray-300 text-gray-600 hover:border-[#EA4492] hover:text-[#EA4492] hover:bg-pink-50'
+            : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand hover:bg-pink-50'
         }`}
         aria-label="Next page"
       >

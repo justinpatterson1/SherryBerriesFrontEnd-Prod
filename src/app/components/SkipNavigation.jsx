@@ -9,12 +9,12 @@ const SkipNavigation = () => {
 
   return (
     <div className="sr-only focus-within:not-sr-only">
-      <nav className="fixed top-0 left-0 z-50 bg-[#EA4492] text-white p-2">
+      <nav className="fixed top-0 left-0 z-50 bg-brand text-white p-2">
         <ul className="flex space-x-4">
           <li>
             <button
               onClick={skipToMain}
-              className="px-4 py-2 bg-white text-[#EA4492] rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+              className="px-4 py-2 bg-white text-brand rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
             >
               Skip to main content
             </button>
@@ -22,7 +22,7 @@ const SkipNavigation = () => {
           <li>
             <Link
               href="#navigation"
-              className="px-4 py-2 bg-white text-[#EA4492] rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+              className="px-4 py-2 bg-white text-brand rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
             >
               Skip to navigation
             </Link>
@@ -30,7 +30,7 @@ const SkipNavigation = () => {
           <li>
             <Link
               href="#search"
-              className="px-4 py-2 bg-white text-[#EA4492] rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+              className="px-4 py-2 bg-white text-brand rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
             >
               Skip to search
             </Link>

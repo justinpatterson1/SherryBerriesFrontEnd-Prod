@@ -122,7 +122,7 @@ function Page() {
                 placeholder='Search blogs...'
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className='w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-200'
+                className='w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-200'
               />
             </div>
 
@@ -134,7 +134,7 @@ function Page() {
                 <select
                   value={selectedCategory}
                   onChange={handleCategoryChange}
-                  className='pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-200 bg-white'
+                  className='pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-200 bg-white'
                 >
                   <option value='all'>All Categories</option>
                   {categories.map(category => (
@@ -151,7 +151,7 @@ function Page() {
                 <select
                   value={order}
                   onChange={handleSortChange}
-                  className='pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-200 bg-white'
+                  className='pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-200 bg-white'
                 >
                   <option value='DESC'>Newest First</option>
                   <option value='ASC'>Oldest First</option>
@@ -168,7 +168,7 @@ function Page() {
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className='text-[#EA4492] hover:text-pink-600 font-medium'
+                className='text-brand hover:text-pink-600 font-medium'
               >
                 Clear search
               </button>
@@ -217,7 +217,7 @@ function Page() {
                     </div>
 
                     {/* Title */}
-                    <h3 className='font-bold text-lg md:text-xl mb-3 text-gray-900 group-hover:text-[#EA4492] transition-colors duration-200 line-clamp-2'>
+                    <h3 className='font-bold text-lg md:text-xl mb-3 text-gray-900 group-hover:text-brand transition-colors duration-200 line-clamp-2'>
                       {blogItem?.Title}
                     </h3>
 
@@ -228,7 +228,7 @@ function Page() {
 
                     {/* Read More Link */}
                     <Link href={`/blogs/${blogItem?.documentId}`}>
-                      <div className='inline-flex items-center text-[#EA4492] hover:text-pink-600 font-medium transition-colors duration-200 group/link'>
+                      <div className='inline-flex items-center text-brand hover:text-pink-600 font-medium transition-colors duration-200 group/link'>
                         <span>Read More</span>
                         <svg className='ml-2 w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-200' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />

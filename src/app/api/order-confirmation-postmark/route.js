@@ -2,6 +2,7 @@ import { ServerClient } from 'postmark';
 import { generateOrderConfirmationTemplate, generatePlainTextOrderConfirmation } from '../../../utils/emailTemplates';
 import { requireAuth } from '@/lib/auth';
 import { orderConfirmationSchema, validateBody } from '@/lib/validation';
+import { SENDER_EMAILS } from '@/lib/constants';
 
 const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
@@ -18,7 +19,7 @@ export async function POST(req) {
 
     // Send email using Postmark
     const response = await client.sendEmail({
-      From: 'orders@sherry-berries.com', // Must be verified in Postmark
+      From: SENDER_EMAILS.ORDERS,
       To: email,
       Subject: `Order Confirmation #${orderId} - SherryBerries`,
       HtmlBody: generateOrderConfirmationTemplate(order, orderId),

@@ -73,7 +73,7 @@ function page() {
   if (loading) return <Loader />;
 
   return (
-    <div className='bg-[#ffefef]'>
+    <div className='bg-brand-light'>
       <Hero img={hero?.Hero?.image?.url} />
 
       <div className='container mx-auto py-10 px-4 sm:px-6 lg:px-8'>
@@ -86,7 +86,7 @@ function page() {
                   href={`/product/jewelry/${jewels?.documentId}`}
                   key={jewels?.id}
                 >
-                  <div className='text-center bg-white hover:text-[#EA4492] relative shadow-md rounded-md overflow-hidden'>
+                  <div className='text-center bg-white hover:text-brand relative shadow-md rounded-md overflow-hidden'>
                     <Image
                       src={
                         jewels?.image?.formats?.small?.url || jewels?.image?.url
@@ -108,7 +108,7 @@ function page() {
                       <p className='text-lg font-medium'>${jewels?.price}</p>
                     </div>
                     {jewels.discount != 0 && (
-                      <div className='w-[50px] h-[50px] rounded-full absolute top-5 right-5 bg-[#EA4492] flex justify-center items-center text-white font-bold'>
+                      <div className='w-[50px] h-[50px] rounded-full absolute top-5 right-5 bg-brand flex justify-center items-center text-white font-bold'>
                         {jewels.discount}%
                       </div>
                     )}

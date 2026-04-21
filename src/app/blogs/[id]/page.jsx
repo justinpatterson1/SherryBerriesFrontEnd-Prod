@@ -76,7 +76,7 @@ async function page({ params }) {
         <div className='container mx-auto px-4 py-4'>
           <Link 
             href='/blogs' 
-            className='inline-flex items-center text-gray-600 hover:text-[#EA4492] transition-colors duration-200'
+            className='inline-flex items-center text-gray-600 hover:text-brand transition-colors duration-200'
           >
             <FiArrowLeft className='mr-2' />
             Back to Blogs
@@ -99,7 +99,7 @@ async function page({ params }) {
                 <span>{estimatedReadTime(blog?.data?.description)}</span>
               </div>
               {blog?.data?.category && (
-                <div className='bg-[#EA4492] text-white px-3 py-1 rounded-full text-xs font-medium'>
+                <div className='bg-brand text-white px-3 py-1 rounded-full text-xs font-medium'>
                   {blog?.data?.category?.name}
                 </div>
               )}
@@ -159,7 +159,7 @@ async function page({ params }) {
             <div className='mt-12 pt-8 border-t border-gray-200'>
               <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
                 <div className='flex items-center gap-4'>
-                  <button className='flex items-center gap-2 px-6 py-3 bg-[#EA4492] hover:bg-pink-600 text-white rounded-lg transition-colors duration-200'>
+                  <button className='flex items-center gap-2 px-6 py-3 bg-brand hover:bg-pink-600 text-white rounded-lg transition-colors duration-200'>
                     <FiHeart className='w-4 h-4' />
                     <span>Like this post</span>
                   </button>
@@ -171,7 +171,7 @@ async function page({ params }) {
                 
                 <Link 
                   href='/blogs'
-                  className='text-[#EA4492] hover:text-pink-600 font-medium transition-colors duration-200'
+                  className='text-brand hover:text-pink-600 font-medium transition-colors duration-200'
                 >
                   ← Back to all posts
                 </Link>
@@ -196,7 +196,7 @@ async function page({ params }) {
                 </div>
                 <h3 className='font-semibold text-lg mb-2'>Related Post Title</h3>
                 <p className='text-gray-600 text-sm mb-4'>Brief description of the related post...</p>
-                <Link href='#' className='text-[#EA4492] font-medium'>Read More →</Link>
+                <Link href='#' className='text-brand font-medium'>Read More →</Link>
               </div>
               <div className='bg-white rounded-xl p-6 shadow-md'>
                 <div className='w-full h-48 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg mb-4 flex items-center justify-center'>
@@ -204,7 +204,7 @@ async function page({ params }) {
                 </div>
                 <h3 className='font-semibold text-lg mb-2'>Related Post Title</h3>
                 <p className='text-gray-600 text-sm mb-4'>Brief description of the related post...</p>
-                <Link href='#' className='text-[#EA4492] font-medium'>Read More →</Link>
+                <Link href='#' className='text-brand font-medium'>Read More →</Link>
               </div>
               <div className='bg-white rounded-xl p-6 shadow-md'>
                 <div className='w-full h-48 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg mb-4 flex items-center justify-center'>
@@ -212,7 +212,7 @@ async function page({ params }) {
                 </div>
                 <h3 className='font-semibold text-lg mb-2'>Related Post Title</h3>
                 <p className='text-gray-600 text-sm mb-4'>Brief description of the related post...</p>
-                <Link href='#' className='text-[#EA4492] font-medium'>Read More →</Link>
+                <Link href='#' className='text-brand font-medium'>Read More →</Link>
               </div>
             </div>
           </div>

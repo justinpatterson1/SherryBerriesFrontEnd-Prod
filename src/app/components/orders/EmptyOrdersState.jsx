@@ -30,7 +30,7 @@ const EmptyOrdersState = ({ hasFilters = false }) => {
 
   return (
     <div className="text-center py-16">
-      <div className="mx-auto w-32 h-32 bg-gradient-to-br from-[#EA4492] to-pink-400 rounded-full flex items-center justify-center mb-8">
+      <div className="mx-auto w-32 h-32 bg-gradient-to-br from-brand to-pink-400 rounded-full flex items-center justify-center mb-8">
         <FiShoppingBag className="h-16 w-16 text-white" />
       </div>
       

@@ -12,7 +12,7 @@ import { reduceQuantity } from '../lib/reduceCart';
 import { setConfig } from 'next/config';
 import { RxCross2 } from 'react-icons/rx';
 import Jewelry from '../product/jewelry/page';
-import { calculateDiscountedPrice } from '../lib/func';
+import { calculateDiscountedPrice, getCartItem } from '../lib/func';
 import PayPalButton from '../components/paypalButtons/PayPalButton';
 
 // const customId = customAlphabet(
@@ -100,25 +100,6 @@ function Page() {
 
   useEffect(() => {
     if (!session?.user?.documentId) return;
-
-    const getCartItem = item => {
-      const arr = [];
-      item.forEach(i => {
-        if (i.ItemType === 'Jewelry') {
-          arr.push({ info: i, item: i.jewelries[0] });
-        }
-        if (i.ItemType === 'Merchandise') {
-          arr.push({ info: i, item: i.merchandises[0] });
-        }
-        if (i.ItemType === 'Waistbead') {
-          arr.push({ info: i, item: i.waistbeads[0] });
-        }
-        if (i.ItemType === 'Aftercare') {
-          arr.push({ info: i, item: i.aftercares[0] });
-        }
-      });
-      return arr;
-    };
 
     const fetchCart = async() => {
       try {
@@ -753,7 +734,7 @@ function Page() {
   if (status === 'loading' || loading) return <Loader />;
 
   return (
-    <div className='bg-[#ffefef] min-h-screen px-4 lg:px-10 py-6'>
+    <div className='bg-brand-light min-h-screen px-4 lg:px-10 py-6'>
       <h1 className='text-4xl font-bold mb-6 text-center'>Checkout</h1>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 items-start'>
@@ -1065,7 +1046,7 @@ function Page() {
           </Formik>
         </div>
 
-        <div className='bg-[#ffefef] min-h-screen px-4 lg:px-10 py-6'>
+        <div className='bg-brand-light min-h-screen px-4 lg:px-10 py-6'>
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 items-start'>
             {/* Cart Summary Section with Scrollable Items */}
             <div className='bg-white  p-6 rounded-lg shadow-md w-full lg:col-span-2'>
@@ -1111,7 +1092,7 @@ function Page() {
                           : jewelry?.item?.Name}
                       </h2>
                     </div>
-                    <div className='text-lg pr-4 font-bold text-[#EA4492]'>
+                    <div className='text-lg pr-4 font-bold text-brand'>
                       {jewelry?.info?.quantity || 'N/A'} x $
                       {calculateDiscountedPrice(jewelry?.item?.price || 0, jewelry?.item?.discount || 0)}
                     </div>

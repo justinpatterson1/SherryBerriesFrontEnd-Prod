@@ -118,7 +118,7 @@ const OrderCard = ({ order, onTrackOrder, onReorder }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <div className="text-center sm:text-left">
             <p className="text-sm text-gray-500 mb-1">Total Amount</p>
-            <p className="text-xl font-bold text-[#EA4492]">
+            <p className="text-xl font-bold text-brand">
               ${order.subtotal}
             </p>
           </div>

@@ -24,10 +24,10 @@ const Button = ({
   
   // Variant styles
   const variants = {
-    primary: 'bg-[#EA4492] text-white hover:bg-pink-600 focus:ring-[#EA4492] shadow-sm hover:shadow-md',
+    primary: 'bg-brand text-white hover:bg-pink-600 focus:ring-brand shadow-sm hover:shadow-md',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-    outline: 'border-2 border-[#EA4492] text-[#EA4492] hover:bg-[#EA4492] hover:text-white focus:ring-[#EA4492]',
-    ghost: 'text-[#EA4492] hover:bg-pink-50 focus:ring-[#EA4492]',
+    outline: 'border-2 border-brand text-brand hover:bg-brand hover:text-white focus:ring-brand',
+    ghost: 'text-brand hover:bg-pink-50 focus:ring-brand',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
     success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
   };

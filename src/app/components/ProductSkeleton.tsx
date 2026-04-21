@@ -2,7 +2,7 @@
 
 export default function ProductSkeleton() {
   return (
-    <div className="bg-[#ffefef] min-h-screen flex flex-col">
+    <div className="bg-brand-light min-h-screen flex flex-col">
       <main className="flex-grow">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:space-x-8 py-10">

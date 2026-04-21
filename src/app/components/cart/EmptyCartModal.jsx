@@ -8,7 +8,7 @@ export default function EmptyCartModal({ isOpen, onClose }) {
       <div className='bg-white rounded-xl shadow-xl w-full max-w-md text-center overflow-hidden'>
         <div className='p-8'>
           <div className='w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full flex items-center justify-center'>
-            <svg className='w-10 h-10 text-[#EA4492]' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+            <svg className='w-10 h-10 text-brand' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01' />
             </svg>
           </div>
@@ -19,7 +19,7 @@ export default function EmptyCartModal({ isOpen, onClose }) {
           <div className='space-y-3'>
             <Link
               href='/product/jewelry'
-              className='block w-full bg-[#EA4492] text-white px-6 py-3 rounded-lg hover:bg-[#c83778] transition-colors duration-200 font-medium'
+              className='block w-full bg-brand text-white px-6 py-3 rounded-lg hover:bg-brand-hover transition-colors duration-200 font-medium'
             >
               Browse Jewelry Collection
             </Link>

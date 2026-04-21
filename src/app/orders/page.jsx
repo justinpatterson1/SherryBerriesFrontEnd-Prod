@@ -6,35 +6,16 @@ import { FiPackage, FiTrendingUp, FiClock, FiEye, FiTruck, FiCheckCircle } from 
 import Image from 'next/image';
 import Loader from '../components/Loader';
 import Pagination from '../components/Pagination';
+import { getCartItem } from '../lib/func';
 
 function Page() {
   const { data: session, status } = useSession();
-  
+
   // State management
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
-
-  // Helper function to process cart items
-  const getCartItem = (item) => {
-    const arr = [];
-    item.forEach(i => {
-      if (i.ItemType === 'Jewelry') {
-        arr.push({ info: i, item: i.jewelries[0] });
-      }
-      if (i.ItemType === 'Merchandise') {
-        arr.push({ info: i, item: i.merchandises[0] });
-      }
-      if (i.ItemType === 'Waistbead') {
-        arr.push({ info: i, item: i.waistbeads[0] });
-      }
-      if (i.ItemType === 'Aftercare') {
-        arr.push({ info: i, item: i.aftercares[0] });
-      }
-    });
-    return arr;
-  };
 
   // Fetch orders - simplified version that matches your original structure
   const fetchOrders = async () => {
@@ -87,7 +68,7 @@ function Page() {
   // Show error state
   if (error) {
     return (
-      <div className="bg-[#ffefef] py-5 min-h-screen">
+      <div className="bg-brand-light py-5 min-h-screen">
         <div className="p-6 max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold mb-6">Your Orders</h1>
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
@@ -109,7 +90,7 @@ function Page() {
   if (loading) return <Loader />;
 
   return (
-    <div className="bg-[#ffefef] py-5 min-h-screen">
+    <div className="bg-brand-light py-5 min-h-screen">
       <div className="p-6 max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Your Orders</h1>
 
@@ -157,7 +138,7 @@ function Page() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
                     <p className="text-sm text-gray-500">Total Amount</p>
-                    <p className="text-lg font-bold text-[#EA4492]">${order.subtotal}</p>
+                    <p className="text-lg font-bold text-brand">${order.subtotal}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Payment Method</p>

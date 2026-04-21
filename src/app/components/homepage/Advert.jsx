@@ -24,7 +24,7 @@ function Advert({ advert }) {
               {advert?.description}
             </p>
             <Link href={'/product/aftercare'}>
-              <div className='cursor-pointer bg-[#EA4492] mt-5 w-48 h-10 text-white text-center text-xl flex items-center justify-center'>
+              <div className='cursor-pointer bg-brand mt-5 w-48 h-10 text-white text-center text-xl flex items-center justify-center'>
                 Shop Now
               </div>
             </Link>

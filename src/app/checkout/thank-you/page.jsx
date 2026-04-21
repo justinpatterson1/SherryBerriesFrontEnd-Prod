@@ -34,7 +34,7 @@ async function page({ searchParams }) {
       const isValid = verifyWiPayHash(transactionId, wipayTotal, apiKey, wipayHash);
       if (!isValid) {
         return (
-          <div className='min-h-screen flex flex-col justify-center items-center bg-[#ffefef] px-4'>
+          <div className='min-h-screen flex flex-col justify-center items-center bg-brand-light px-4'>
             <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
               <h1 className='text-3xl font-bold text-red-600 mb-4'>
                 Payment Verification Failed
@@ -171,9 +171,9 @@ async function page({ searchParams }) {
     }
 
     return (
-      <div className='min-h-screen flex flex-col justify-center items-center bg-[#ffefef] px-4'>
+      <div className='min-h-screen flex flex-col justify-center items-center bg-brand-light px-4'>
         <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
-          <h1 className='text-3xl font-bold text-[#EA4492] mb-4'>
+          <h1 className='text-3xl font-bold text-brand mb-4'>
             Thank You for Your Order!
           </h1>
           <p className='text-lg text-gray-700 mb-6'>
@@ -201,9 +201,9 @@ async function page({ searchParams }) {
     );
   } else if (status === 'failed') {
     return (
-      <div className='min-h-screen flex flex-col justify-center items-center bg-[#ffefef] px-4'>
+      <div className='min-h-screen flex flex-col justify-center items-center bg-brand-light px-4'>
         <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
-          <h1 className='text-3xl font-bold text-[#EA4492] mb-4'>
+          <h1 className='text-3xl font-bold text-brand mb-4'>
             Payment Failed
           </h1>
           <p className='text-lg text-gray-700 mb-6'>
@@ -225,7 +225,7 @@ async function page({ searchParams }) {
     );
   } else if (status === 'error') {
     return (
-      <div className='min-h-screen flex flex-col justify-center items-center bg-[#ffefef] px-4'>
+      <div className='min-h-screen flex flex-col justify-center items-center bg-brand-light px-4'>
         <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
           <h1 className='text-3xl font-bold text-red-600 mb-4'>
             Transaction Error
@@ -251,7 +251,7 @@ async function page({ searchParams }) {
 
   // No status param — user navigated here directly
   return (
-    <div className='min-h-screen flex flex-col justify-center items-center bg-[#ffefef] px-4'>
+    <div className='min-h-screen flex flex-col justify-center items-center bg-brand-light px-4'>
       <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
         <h1 className='text-3xl font-bold text-gray-700 mb-4'>
           No Transaction Found

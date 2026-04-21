@@ -127,7 +127,7 @@ function FeaturedProducts({ featured }) {
 
                   {/* Discount Badge */}
                   {feature?.discount < 0 && (
-                    <div className='absolute top-3 left-3 bg-gradient-to-r from-[#EA4492] to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg'>
+                    <div className='absolute top-3 left-3 bg-gradient-to-r from-brand to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg'>
                       {Math.abs(feature?.discount)}% OFF
                     </div>
                   )}
@@ -140,8 +140,8 @@ function FeaturedProducts({ featured }) {
                     }}
                     className={`absolute top-3 right-3 p-2 rounded-full shadow-lg transition-all duration-300 ${
                       wishlistItems.has(feature?.id)
-                        ? 'bg-[#EA4492] text-white'
-                        : 'bg-white/90 text-gray-600 hover:bg-[#EA4492] hover:text-white'
+                        ? 'bg-brand text-white'
+                        : 'bg-white/90 text-gray-600 hover:bg-brand hover:text-white'
                     }`}
                   >
                     <FaHeart className='w-4 h-4' />
@@ -159,13 +159,13 @@ function FeaturedProducts({ featured }) {
                   <span className='text-sm text-gray-500 ml-2'>(4.8)</span>
                 </div>
                 
-                <h3 className='font-bold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-[#EA4492] transition-colors duration-300'>
+                <h3 className='font-bold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-brand transition-colors duration-300'>
                   {feature?.name}
                 </h3>
                 
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center space-x-2'>
-                    <span className='text-xl font-bold text-[#EA4492]'>
+                    <span className='text-xl font-bold text-brand'>
                       ${feature?.price}
                     </span>
                     {feature?.discount < 0 && (
@@ -189,7 +189,7 @@ function FeaturedProducts({ featured }) {
         >
           <motion.button
             onClick={loadMore}
-            className='bg-gradient-to-r from-[#EA4492] to-pink-500 hover:from-pink-600 hover:to-pink-700 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3'
+            className='bg-gradient-to-r from-brand to-pink-500 hover:from-pink-600 hover:to-pink-700 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

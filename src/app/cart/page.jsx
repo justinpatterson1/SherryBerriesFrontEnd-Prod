@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import EmptyCartModal from '../components/cart/EmptyCartModal';
 import { toast } from 'react-toastify';
-import { calculateDiscountedPrice } from '../lib/func';
+import { calculateDiscountedPrice, getCartItem } from '../lib/func';
 
 function Page() {
   const { data: session, status } = useSession();
@@ -20,29 +20,6 @@ function Page() {
   const [showEmptyModal, setShowEmptyModal] = useState(false);
   const [updatingItem, setUpdatingItem] = useState(null);
   const [removingItem, setRemovingItem] = useState(null);
-
-  const getCartItem = item => {
-    const arr = [];
-
-    item.forEach(i => {
-      if (i.ItemType === 'Jewelry') {
-        arr.push({ info: i, item: i.jewelries[0] });
-      }
-
-      if (i.ItemType === 'Merchandise') {
-        arr.push({ info: i, item: i.merchandises[0] });
-      }
-
-      if (i.ItemType === 'Waistbead') {
-        arr.push({ info: i, item: i.waistbeads[0] });
-      }
-
-      if (i.ItemType === 'Aftercare') {
-        arr.push({ info: i, item: i.aftercares[0] });
-      }
-    });
-    return arr;
-  };
 
   useEffect(() => {
     if (session?.user?.documentId) {
@@ -363,7 +340,7 @@ function Page() {
               </div>
               <h2 className='text-2xl font-bold text-gray-900 mb-2'>Your cart is empty</h2>
               <p className='text-gray-600 mb-8'>Looks like you haven't added anything yet.</p>
-              <Link href='/product/jewelry' className='inline-flex items-center px-6 py-3 bg-[#EA4492] text-white rounded-lg hover:bg-[#c83778] transition-colors duration-200 font-medium'>
+              <Link href='/product/jewelry' className='inline-flex items-center px-6 py-3 bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors duration-200 font-medium'>
                 <svg className='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 6v6m0 0v6m0-6h6m-6 0H6' />
                 </svg>
@@ -463,7 +440,7 @@ function Page() {
 
                         {/* Price and Quantity Controls */}
                         <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
-                          <div className='text-xl font-bold text-[#EA4492]'>
+                          <div className='text-xl font-bold text-brand'>
                             ${calculateDiscountedPrice(jewelry?.item?.price, jewelry?.item?.discount)}
                             {jewelry?.item?.discount && jewelry?.item?.discount > 0 && (
                               <span className='text-gray-400 text-sm ml-2'>
@@ -531,7 +508,7 @@ function Page() {
                   <div className='border-t border-gray-200 pt-4'>
                     <div className='flex justify-between items-center'>
                       <span className='text-lg font-semibold text-gray-900'>Total</span>
-                      <span className='text-xl font-bold text-[#EA4492]'>
+                      <span className='text-xl font-bold text-brand'>
                         ${(parseFloat(subtotal) + parseFloat(delivery)).toFixed(2)}
                       </span>
                     </div>
@@ -540,7 +517,7 @@ function Page() {
 
                 {cart.length > 0 ? (
                   <Link href='/checkout' className='block'>
-                    <button className='w-full py-4 bg-[#EA4492] text-white rounded-lg font-semibold hover:bg-[#c83778] transition-colors duration-200 flex items-center justify-center space-x-2'>
+                    <button className='w-full py-4 bg-brand text-white rounded-lg font-semibold hover:bg-brand-hover transition-colors duration-200 flex items-center justify-center space-x-2'>
                       <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01' />
                       </svg>
@@ -557,7 +534,7 @@ function Page() {
                 )}
 
                 <div className='mt-6 pt-6 border-t border-gray-200'>
-                  <Link href='/product/jewelry' className='text-center block text-[#EA4492] hover:text-[#c83778] font-medium transition-colors duration-200'>
+                  <Link href='/product/jewelry' className='text-center block text-brand hover:text-brand-hover font-medium transition-colors duration-200'>
                     Continue Shopping
                   </Link>
                 </div>

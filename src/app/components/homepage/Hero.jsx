@@ -54,7 +54,7 @@ function Hero({ img }) {
           variants={itemVariants}
         >
           Discover Your
-          <span className="text-[#EA4492] block">Unique Style</span>
+          <span className="text-brand block">Unique Style</span>
         </motion.h1>
         
         <motion.p
@@ -71,7 +71,7 @@ function Hero({ img }) {
         >
           <Link href="/product/jewelry">
             <motion.button
-              className="group bg-[#EA4492] hover:bg-pink-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300"
+              className="group bg-brand hover:bg-pink-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Shop our jewelry collection"
@@ -101,15 +101,15 @@ function Hero({ img }) {
           variants={itemVariants}
         >
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-[#EA4492] rounded-full"></div>
+            <div className="w-2 h-2 bg-brand rounded-full"></div>
             <span>Handcrafted Quality</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-[#EA4492] rounded-full"></div>
+            <div className="w-2 h-2 bg-brand rounded-full"></div>
             <span>Fast Shipping</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-[#EA4492] rounded-full"></div>
+            <div className="w-2 h-2 bg-brand rounded-full"></div>
             <span>30-Day Returns</span>
           </div>
         </motion.div>

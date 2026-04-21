@@ -71,7 +71,7 @@ export default function Navigation() {
           {/* Logo */}
           <Link href='/' className='text-lg font-bold flex items-center group'>
             <motion.span 
-              className='bg-gradient-to-r from-[#EA4492] to-pink-500 text-white px-3 py-2 rounded-lg shadow-md group-hover:shadow-lg transition-all duration-300'
+              className='bg-gradient-to-r from-brand to-pink-500 text-white px-3 py-2 rounded-lg shadow-md group-hover:shadow-lg transition-all duration-300'
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -88,12 +88,12 @@ export default function Navigation() {
                 placeholder='Search jewelry, waistbeads...'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className='w-full px-4 py-2 pl-10 pr-12 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent transition-all duration-300'
+                className='w-full px-4 py-2 pl-10 pr-12 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300'
               />
               <FaSearch className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
               <button
                 type='submit'
-                className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#EA4492] text-white px-3 py-1 rounded-full hover:bg-pink-600 transition-colors duration-300'
+                className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-brand text-white px-3 py-1 rounded-full hover:bg-pink-600 transition-colors duration-300'
               >
                 Search
               </button>
@@ -106,8 +106,8 @@ export default function Navigation() {
               href='/'
               className={`px-3 py-2 rounded-md font-medium transition-all duration-300 ${
                 pathname === '/' 
-                  ? 'text-[#EA4492] bg-pink-50' 
-                  : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                  ? 'text-brand bg-pink-50' 
+                  : 'text-gray-700 hover:text-brand hover:bg-pink-50'
               }`}
             >
               Home
@@ -116,8 +116,8 @@ export default function Navigation() {
               href='/about'
               className={`px-3 py-2 rounded-md font-medium transition-all duration-300 ${
                 pathname === '/about' 
-                  ? 'text-[#EA4492] bg-pink-50' 
-                  : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                  ? 'text-brand bg-pink-50' 
+                  : 'text-gray-700 hover:text-brand hover:bg-pink-50'
               }`}
             >
               About
@@ -126,8 +126,8 @@ export default function Navigation() {
               href='/blogs'
               className={`px-3 py-2 rounded-md font-medium transition-all duration-300 ${
                 pathname === '/blogs' 
-                  ? 'text-[#EA4492] bg-pink-50' 
-                  : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                  ? 'text-brand bg-pink-50' 
+                  : 'text-gray-700 hover:text-brand hover:bg-pink-50'
               }`}
             >
               Blogs
@@ -148,8 +148,8 @@ export default function Navigation() {
               <button
                 className={`px-3 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-1 ${
                   pathname.startsWith('/product') 
-                    ? 'text-[#EA4492] bg-pink-50' 
-                    : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    ? 'text-brand bg-pink-50' 
+                    : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                 }`}
               >
                 Products
@@ -178,25 +178,25 @@ export default function Navigation() {
                   >
                     <Link
                       href='/product/jewelry'
-                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#EA4492] transition-colors duration-200 first:rounded-t-lg'
+                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-brand transition-colors duration-200 first:rounded-t-lg'
                     >
                       💎 Jewelry
                     </Link>
                     <Link
                       href='/product/waistbeads'
-                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#EA4492] transition-colors duration-200'
+                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-brand transition-colors duration-200'
                     >
                       📿 Waistbeads
                     </Link>
                     <Link
                       href='/product/clothing'
-                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#EA4492] transition-colors duration-200'
+                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-brand transition-colors duration-200'
                     >
                       👗 Clothing
                     </Link>
                     <Link
                       href='/product/aftercare'
-                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#EA4492] transition-colors duration-200 last:rounded-b-lg'
+                      className='block px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-brand transition-colors duration-200 last:rounded-b-lg'
                     >
                       ✨ Aftercare
                     </Link>
@@ -209,8 +209,8 @@ export default function Navigation() {
               href='/contact'
               className={`px-3 py-2 rounded-md font-medium transition-all duration-300 ${
                 pathname === '/contact' 
-                  ? 'text-[#EA4492] bg-pink-50' 
-                  : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                  ? 'text-brand bg-pink-50' 
+                  : 'text-gray-700 hover:text-brand hover:bg-pink-50'
               }`}
             >
               Contact
@@ -221,8 +221,8 @@ export default function Navigation() {
                 href='/orders'
                 className={`px-3 py-2 rounded-md font-medium transition-all duration-300 ${
                   pathname === '/orders' 
-                    ? 'text-[#EA4492] bg-pink-50' 
-                    : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    ? 'text-brand bg-pink-50' 
+                    : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                 }`}
               >
                   Orders
@@ -235,22 +235,22 @@ export default function Navigation() {
             {/* Search Toggle - Mobile */}
             {/* <button
               onClick={toggleSearch}
-              className='md:hidden p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'
+              className='md:hidden p-2 text-gray-600 hover:text-brand transition-colors duration-300'
             >
               <FaSearch className='w-5 h-5' />
             </button> */}
 
             {/* Wishlist */}
-            <Link href='/wishlist' className='relative p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'>
+            <Link href='/wishlist' className='relative p-2 text-gray-600 hover:text-brand transition-colors duration-300'>
               <FaHeart className='w-5 h-5' />
             </Link>
 
             {/* Cart */}
             {status === 'authenticated' && session.user.role_type === 'customer' && (
-              <Link href='/cart' className='relative p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'>
+              <Link href='/cart' className='relative p-2 text-gray-600 hover:text-brand transition-colors duration-300'>
                 <FaShoppingCart className='w-5 h-5' />
                 {cartCount > 0 && (
-                  <span className='absolute -top-1 -right-1 bg-[#EA4492] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold'>
+                  <span className='absolute -top-1 -right-1 bg-brand text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold'>
                     {cartCount}
                   </span>
                 )}
@@ -264,7 +264,7 @@ export default function Navigation() {
                   {session.user.role_type === 'admin' && (
                     <Link href='/dashboard'>
                       <motion.button
-                        className='bg-gradient-to-r from-[#EA4492] to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2'
+                        className='bg-gradient-to-r from-brand to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2'
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -295,7 +295,7 @@ export default function Navigation() {
                   </Link>
                   <motion.button
                     onClick={() => signIn()}
-                    className='bg-gradient-to-r from-[#EA4492] to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300'
+                    className='bg-gradient-to-r from-brand to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300'
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -308,7 +308,7 @@ export default function Navigation() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className='md:hidden p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'
+            className='md:hidden p-2 text-gray-600 hover:text-brand transition-colors duration-300'
             onClick={toggleMobileMenu}
           >
             {isMobileMenuOpen ? <FaTimes className='w-6 h-6' /> : <FaBars className='w-6 h-6' />}
@@ -331,13 +331,13 @@ export default function Navigation() {
                     placeholder='Search jewelry, waistbeads...'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full px-4 py-3 pl-10 pr-12 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#EA4492] focus:border-transparent'
+                    className='w-full px-4 py-3 pl-10 pr-12 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
                     autoFocus
                   />
                   <FaSearch className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
                   <button
                     type='submit'
-                    className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#EA4492] text-white px-3 py-1 rounded-full hover:bg-pink-600 transition-colors duration-300'
+                    className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-brand text-white px-3 py-1 rounded-full hover:bg-pink-600 transition-colors duration-300'
                   >
                     Search
                   </button>
@@ -361,14 +361,14 @@ export default function Navigation() {
                 {/* Mobile Action Buttons */}
                 <div className='flex items-center justify-between py-2 border-b border-gray-100'>
                   <div className='flex items-center space-x-4'>
-                    <Link href='/wishlist' className='p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'>
+                    <Link href='/wishlist' className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'>
                       <FaHeart className='w-5 h-5' />
                     </Link>
                     {status === 'authenticated' && session.user.role_type === 'customer' && (
-                      <Link href='/cart' className='relative p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'>
+                      <Link href='/cart' className='relative p-2 text-gray-600 hover:text-brand transition-colors duration-300'>
                         <FaShoppingCart className='w-5 h-5' />
                         {cartCount > 0 && (
-                          <span className='absolute -top-1 -right-1 bg-[#EA4492] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold'>
+                          <span className='absolute -top-1 -right-1 bg-brand text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold'>
                             {cartCount}
                           </span>
                         )}
@@ -377,7 +377,7 @@ export default function Navigation() {
                   </div>
                   <button
                     onClick={toggleSearch}
-                    className='p-2 text-gray-600 hover:text-[#EA4492] transition-colors duration-300'
+                    className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'
                   >
                     <FaSearch className='w-5 h-5' />
                   </button>
@@ -387,7 +387,7 @@ export default function Navigation() {
                 <Link
                   href='/'
                   className={`block py-3 px-2 rounded-md font-medium transition-colors duration-300 ${
-                    pathname === '/' ? 'text-[#EA4492] bg-pink-50' : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    pathname === '/' ? 'text-brand bg-pink-50' : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                   }`}
                   onClick={toggleMobileMenu}
                 >
@@ -396,7 +396,7 @@ export default function Navigation() {
                 <Link
                   href='/about'
                   className={`block py-3 px-2 rounded-md font-medium transition-colors duration-300 ${
-                    pathname === '/about' ? 'text-[#EA4492] bg-pink-50' : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    pathname === '/about' ? 'text-brand bg-pink-50' : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                   }`}
                   onClick={toggleMobileMenu}
                 >
@@ -405,7 +405,7 @@ export default function Navigation() {
                 <Link
                   href='/blogs'
                   className={`block py-3 px-2 rounded-md font-medium transition-colors duration-300 ${
-                    pathname === '/blogs' ? 'text-[#EA4492] bg-pink-50' : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    pathname === '/blogs' ? 'text-brand bg-pink-50' : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                   }`}
                   onClick={toggleMobileMenu}
                 >
@@ -417,28 +417,28 @@ export default function Navigation() {
                   <span className='block text-gray-700 font-medium px-2'>Products</span>
                   <Link
                     href='/product/jewelry'
-                    className='block py-2 px-4 text-gray-700 hover:text-[#EA4492] hover:bg-pink-50 rounded-md transition-colors duration-300'
+                    className='block py-2 px-4 text-gray-700 hover:text-brand hover:bg-pink-50 rounded-md transition-colors duration-300'
                     onClick={toggleMobileMenu}
                   >
                     💎 Jewelry
                   </Link>
                   <Link
                     href='/product/waistbeads'
-                    className='block py-2 px-4 text-gray-700 hover:text-[#EA4492] hover:bg-pink-50 rounded-md transition-colors duration-300'
+                    className='block py-2 px-4 text-gray-700 hover:text-brand hover:bg-pink-50 rounded-md transition-colors duration-300'
                     onClick={toggleMobileMenu}
                   >
                     📿 Waistbeads
                   </Link>
                   <Link
                     href='/product/clothing'
-                    className='block py-2 px-4 text-gray-700 hover:text-[#EA4492] hover:bg-pink-50 rounded-md transition-colors duration-300'
+                    className='block py-2 px-4 text-gray-700 hover:text-brand hover:bg-pink-50 rounded-md transition-colors duration-300'
                     onClick={toggleMobileMenu}
                   >
                     👗 Clothing
                   </Link>
                   <Link
                     href='/product/aftercare'
-                    className='block py-2 px-4 text-gray-700 hover:text-[#EA4492] hover:bg-pink-50 rounded-md transition-colors duration-300'
+                    className='block py-2 px-4 text-gray-700 hover:text-brand hover:bg-pink-50 rounded-md transition-colors duration-300'
                     onClick={toggleMobileMenu}
                   >
                     ✨ Aftercare
@@ -448,7 +448,7 @@ export default function Navigation() {
                 <Link
                   href='/contact'
                   className={`block py-3 px-2 rounded-md font-medium transition-colors duration-300 ${
-                    pathname === '/contact' ? 'text-[#EA4492] bg-pink-50' : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                    pathname === '/contact' ? 'text-brand bg-pink-50' : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                   }`}
                   onClick={toggleMobileMenu}
                 >
@@ -459,7 +459,7 @@ export default function Navigation() {
                   <Link
                     href='/orders'
                     className={`block py-3 px-2 rounded-md font-medium transition-colors duration-300 ${
-                      pathname === '/orders' ? 'text-[#EA4492] bg-pink-50' : 'text-gray-700 hover:text-[#EA4492] hover:bg-pink-50'
+                      pathname === '/orders' ? 'text-brand bg-pink-50' : 'text-gray-700 hover:text-brand hover:bg-pink-50'
                     }`}
                     onClick={toggleMobileMenu}
                   >
@@ -474,7 +474,7 @@ export default function Navigation() {
                       {session.user.role_type === 'admin' && (
                         <Link
                           href='/dashboard'
-                          className='block w-full bg-gradient-to-r from-[#EA4492] to-pink-500 text-white py-3 px-4 rounded-full text-center font-medium'
+                          className='block w-full bg-gradient-to-r from-brand to-pink-500 text-white py-3 px-4 rounded-full text-center font-medium'
                           onClick={toggleMobileMenu}
                         >
                           Dashboard
@@ -500,7 +500,7 @@ export default function Navigation() {
                         Sign Up
                       </Link>
                       <button
-                        className='block w-full bg-gradient-to-r from-[#EA4492] to-pink-500 text-white py-3 px-4 rounded-full font-medium'
+                        className='block w-full bg-gradient-to-r from-brand to-pink-500 text-white py-3 px-4 rounded-full font-medium'
                         onClick={() => {
                           toggleMobileMenu();
                           signIn();

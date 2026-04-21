@@ -2,7 +2,7 @@
 
 export default function Error({ error, reset }) {
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center bg-[#ffefef] px-4'>
+    <div className='min-h-screen flex flex-col items-center justify-center bg-brand-light px-4'>
       <div className='bg-white shadow-md rounded-2xl p-8 max-w-md w-full text-center'>
         <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center'>
           <svg className='w-8 h-8 text-red-500' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -16,7 +16,7 @@ export default function Error({ error, reset }) {
         <div className='flex flex-col sm:flex-row gap-3 justify-center'>
           <button
             onClick={() => reset()}
-            className='px-6 py-2 bg-[#EA4492] text-white rounded-lg hover:bg-[#c83778] transition-colors'
+            className='px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors'
           >
             Try Again
           </button>

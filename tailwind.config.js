@@ -9,7 +9,12 @@ module.exports = {
     extend: {
       colors: {
         background: 'var(--background)',
-        foreground: 'var(--foreground)'
+        foreground: 'var(--foreground)',
+        brand: {
+          DEFAULT: '#EA4492',
+          hover: '#c83778',
+          light: '#ffefef'
+        }
       }
     }
   },

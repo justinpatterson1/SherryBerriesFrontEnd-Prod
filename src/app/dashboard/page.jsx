@@ -101,7 +101,7 @@ function Page() {
       >
         {/* Header */}
         <div className='flex items-center space-x-3 mb-8'>
-          <div className='w-10 h-10 bg-[#EA4492] rounded-lg flex items-center justify-center'>
+          <div className='w-10 h-10 bg-brand rounded-lg flex items-center justify-center'>
             <FaChartSimple className='text-white text-xl' />
           </div>
           <div>
@@ -115,7 +115,7 @@ function Page() {
           {/* Overview */}
           <div
             className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-              displayOverview ? 'bg-[#EA4492] text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'
+              displayOverview ? 'bg-brand text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'
             }`}
             onClick={handleOverviewClick}
           >
@@ -139,7 +139,7 @@ function Page() {
               <div className='ml-6 mt-2 space-y-1'>
                 <div
                   className={`p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    displayJewelryComponent ? 'bg-[#EA4492] text-white' : 'text-gray-600 hover:bg-gray-100'
+                    displayJewelryComponent ? 'bg-brand text-white' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   onClick={() => {
                     resetAllComponents();
@@ -150,7 +150,7 @@ function Page() {
                 </div>
                 <div
                   className={`p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    displayWaistbeadComponent ? 'bg-[#EA4492] text-white' : 'text-gray-600 hover:bg-gray-100'
+                    displayWaistbeadComponent ? 'bg-brand text-white' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   onClick={() => {
                     resetAllComponents();
@@ -161,7 +161,7 @@ function Page() {
                 </div>
                 <div
                   className={`p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    displayMerchandiseComponent ? 'bg-[#EA4492] text-white' : 'text-gray-600 hover:bg-gray-100'
+                    displayMerchandiseComponent ? 'bg-brand text-white' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   onClick={() => {
                     resetAllComponents();
@@ -172,7 +172,7 @@ function Page() {
                 </div>
                 <div
                   className={`p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    displayAftercareComponent ? 'bg-[#EA4492] text-white' : 'text-gray-600 hover:bg-gray-100'
+                    displayAftercareComponent ? 'bg-brand text-white' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   onClick={() => {
                     resetAllComponents();
@@ -203,7 +203,7 @@ function Page() {
               <div className='ml-6 mt-2 space-y-1'>
                 <div
                   className={`p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    displayOpenOrderComponent ? 'bg-[#EA4492] text-white' : 'text-gray-600 hover:bg-gray-100'
+                    displayOpenOrderComponent ? 'bg-brand text-white' : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   onClick={() => {
                     resetAllComponents();
@@ -219,7 +219,7 @@ function Page() {
           {/* Blogs */}
           <div
             className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-              displayBlogComponent ? 'bg-[#EA4492] text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'
+              displayBlogComponent ? 'bg-brand text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'
             }`}
             onClick={() => {
               resetAllComponents();
@@ -234,7 +234,7 @@ function Page() {
         {/* User Info */}
         <div className='mt-auto pt-6 border-t border-gray-200'>
           <div className='flex items-center space-x-3 p-3 bg-gray-50 rounded-lg'>
-            <div className='w-8 h-8 bg-[#EA4492] rounded-full flex items-center justify-center'>
+            <div className='w-8 h-8 bg-brand rounded-full flex items-center justify-center'>
               <FaUser className='text-white text-sm' />
             </div>
             <div className='flex-1'>
@@ -247,7 +247,7 @@ function Page() {
 
       {/* Toggle Sidebar Button (Mobile) */}
       <button
-        className='md:hidden fixed top-4 left-4 z-50 bg-[#EA4492] text-white p-3 rounded-lg shadow-lg hover:bg-pink-600 transition-colors duration-300'
+        className='md:hidden fixed top-4 left-4 z-50 bg-brand text-white p-3 rounded-lg shadow-lg hover:bg-pink-600 transition-colors duration-300'
         onClick={() => setShowSidebar(!showSidebar)}
       >
         {showSidebar ? <FaTimes size={20} /> : <FaBars size={20} />}

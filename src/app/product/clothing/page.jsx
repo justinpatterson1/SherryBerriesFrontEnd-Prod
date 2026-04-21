@@ -78,7 +78,7 @@ function page() {
   if (loading && !product) return <Loader />;
 
   return (
-    <div className='bg-[#ffefef]'>
+    <div className='bg-brand-light'>
       <Hero img={hero} />
 
       <div className='container mx-auto py-10 px-4 sm:px-6 lg:px-8'>
@@ -91,7 +91,7 @@ function page() {
                   href={`/product/clothing/${item?.documentId}`}
                   key={item?.id}
                 >
-                  <div className='text-center bg-white hover:text-[#EA4492] relative shadow-md rounded-md overflow-hidden'>
+                  <div className='text-center bg-white hover:text-brand relative shadow-md rounded-md overflow-hidden'>
                     <Image
                       src={
                         item?.image[0]?.formats?.small?.url ||
@@ -110,7 +110,7 @@ function page() {
                       <p className='text-lg font-medium'>${item?.price}</p>
                     </div>
                     {item?.discount != 0 && (
-                      <div className='w-[50px] h-[50px] rounded-full absolute top-5 right-5 bg-[#EA4492] flex justify-center items-center text-white font-bold'>
+                      <div className='w-[50px] h-[50px] rounded-full absolute top-5 right-5 bg-brand flex justify-center items-center text-white font-bold'>
                         {item.discount}%
                       </div>
                     )}

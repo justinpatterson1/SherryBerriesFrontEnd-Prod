@@ -11,7 +11,7 @@ export default function Error({ reset }) {
           This product could not be loaded. It may have been removed or is temporarily unavailable.
         </p>
         <div className='flex flex-col sm:flex-row gap-3 justify-center'>
-          <button onClick={() => reset()} className='px-6 py-2 bg-[#EA4492] text-white rounded-lg hover:bg-[#c83778] transition-colors'>
+          <button onClick={() => reset()} className='px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors'>
             Try Again
           </button>
           <Link href='/product/clothing' className='px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors'>

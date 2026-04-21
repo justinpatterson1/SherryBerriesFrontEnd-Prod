@@ -128,7 +128,7 @@ function Orders() {
           <button
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
               orderStatus === 'open' 
-                ? 'bg-[#EA4492] text-white shadow-md' 
+                ? 'bg-brand text-white shadow-md' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             onClick={() => setOrderStatus('open')}
@@ -138,7 +138,7 @@ function Orders() {
           <button
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
               orderStatus === 'closed' 
-                ? 'bg-[#EA4492] text-white shadow-md' 
+                ? 'bg-brand text-white shadow-md' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             onClick={() => setOrderStatus('closed')}
@@ -148,7 +148,7 @@ function Orders() {
           <button
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
               orderStatus === 'cancelled'
-                ? 'bg-[#EA4492] text-white shadow-md'
+                ? 'bg-brand text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             onClick={() => {
@@ -161,7 +161,7 @@ function Orders() {
           <button
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
               orderStatus === 'pending' 
-                ? 'bg-[#EA4492] text-white shadow-md' 
+                ? 'bg-brand text-white shadow-md' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             onClick={() => {

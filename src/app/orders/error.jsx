@@ -8,7 +8,7 @@ export default function Error({ reset }) {
         <p className='text-gray-600 mb-6'>
           We had trouble loading your orders. Please try again.
         </p>
-        <button onClick={() => reset()} className='px-6 py-2 bg-[#EA4492] text-white rounded-lg hover:bg-[#c83778] transition-colors'>
+        <button onClick={() => reset()} className='px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors'>
           Try Again
         </button>
       </div>

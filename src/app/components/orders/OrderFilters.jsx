@@ -38,7 +38,7 @@ const OrderFilters = ({
               placeholder="Search by order ID..."
               value={filters.search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#EA4492] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
             />
           </div>
         </div>
@@ -48,7 +48,7 @@ const OrderFilters = ({
           <select
             value={filters.status}
             onChange={(e) => onFilterChange('status', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#EA4492] focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
           >
             {statusOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -63,7 +63,7 @@ const OrderFilters = ({
           <select
             value={filters.sort}
             onChange={(e) => onFilterChange('sort', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#EA4492] focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
           >
             {sortOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -78,7 +78,7 @@ const OrderFilters = ({
           <select
             value={filters.dateRange}
             onChange={(e) => onDateRangeChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#EA4492] focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
           >
             <option value="all">All Time</option>
             <option value="7">Last 7 days</option>

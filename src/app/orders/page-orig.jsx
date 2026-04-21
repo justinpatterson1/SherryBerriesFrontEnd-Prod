@@ -74,7 +74,7 @@ function Page() {
 
   if (loading) return <Loader />;
   return (
-    <div className='bg-[#ffefef] py-5 min-h-screen '>
+    <div className='bg-brand-light py-5 min-h-screen '>
       <div className='p-6 max-w-4xl mx-auto'>
         <h1 className='text-2xl font-bold mb-6'>Your Orders</h1>
 
