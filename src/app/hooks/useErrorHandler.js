@@ -11,15 +11,10 @@ export const useErrorHandler = () => {
     setError(null);
   }, []);
 
-  const resetError = useCallback(() => {
-    setError(null);
-  }, []);
-
   return {
     error,
     handleError,
     clearError,
-    resetError,
     hasError: !!error
   };
 };

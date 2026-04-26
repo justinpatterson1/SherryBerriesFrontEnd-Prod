@@ -1,77 +1,53 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { 
-  FiPackage, 
-  FiTruck, 
-  FiCheckCircle, 
-  FiClock, 
-  FiEye, 
+import {
+  FiPackage,
+  FiTruck,
+  FiCheckCircle,
+  FiClock,
+  FiEye,
   FiRefreshCw,
   FiMapPin,
   FiCreditCard,
   FiCalendar
 } from 'react-icons/fi';
 import Button from '../ui/Button';
+import { getStatusConfig as getSharedStatusConfig } from '@/lib/constants';
+
+const STATUS_ICONS = {
+  open: FiClock,
+  pending: FiClock,
+  shipped: FiTruck,
+  delivered: FiCheckCircle,
+  closed: FiCheckCircle,
+  cancelled: FiPackage
+};
+
+const PAYMENT_LABELS = {
+  'C.O.D': 'Cash on Delivery',
+  CC: 'Credit Card',
+  BT: 'Bank Transfer'
+};
+
+const SHIPPING_LABELS = {
+  ttpost: 'TT Post',
+  courier: 'Courier',
+  DHL: 'DHL Express'
+};
 
 const OrderCard = ({ order, onTrackOrder, onReorder }) => {
   const [expanded, setExpanded] = useState(false);
 
-  // Order status configuration
-  const getStatusConfig = (status) => {
-    const statusMap = {
-      'open': { 
-        color: 'bg-blue-100 text-blue-800', 
-        icon: FiClock, 
-        label: 'Processing' 
-      },
-      'pending': { 
-        color: 'bg-yellow-100 text-yellow-800', 
-        icon: FiClock, 
-        label: 'Pending Payment' 
-      },
-      'shipped': { 
-        color: 'bg-purple-100 text-purple-800', 
-        icon: FiTruck, 
-        label: 'Shipped' 
-      },
-      'delivered': { 
-        color: 'bg-green-100 text-green-800', 
-        icon: FiCheckCircle, 
-        label: 'Delivered' 
-      },
-      'cancelled': { 
-        color: 'bg-red-100 text-red-800', 
-        icon: FiPackage, 
-        label: 'Cancelled' 
-      }
-    };
-    return statusMap[status] || statusMap['open'];
-  };
+  const statusConfig = useMemo(() => {
+    const shared = getSharedStatusConfig(order.order_status);
+    return { ...shared, icon: STATUS_ICONS[order.order_status] || FiClock };
+  }, [order.order_status]);
 
-  // Payment method display
-  const getPaymentMethod = (paymentType) => {
-    const paymentMap = {
-      'C.O.D': 'Cash on Delivery',
-      'CC': 'Credit Card',
-      'BT': 'Bank Transfer'
-    };
-    return paymentMap[paymentType] || paymentType;
-  };
-
-  // Shipping method display
-  const getShippingMethod = (method) => {
-    const shippingMap = {
-      'ttpost': 'TT Post',
-      'courier': 'Courier',
-      'DHL': 'DHL Express'
-    };
-    return shippingMap[method] || method;
-  };
-
-  const statusConfig = getStatusConfig(order.order_status);
   const StatusIcon = statusConfig.icon;
+  const paymentLabel = PAYMENT_LABELS[order.paymentType] || order.paymentType;
+  const shippingLabel = SHIPPING_LABELS[order.shipping_method] || order.shipping_method;
 
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -95,7 +71,7 @@ const OrderCard = ({ order, onTrackOrder, onReorder }) => {
               </div>
               <div className="flex items-center gap-1">
                 <FiCreditCard className="h-4 w-4" />
-                <span>{getPaymentMethod(order.paymentType)}</span>
+                <span>{paymentLabel}</span>
               </div>
             </div>
           </div>
@@ -131,7 +107,7 @@ const OrderCard = ({ order, onTrackOrder, onReorder }) => {
           <div className="text-center sm:text-left">
             <p className="text-sm text-gray-500 mb-1">Shipping</p>
             <p className="text-lg font-semibold text-gray-900">
-              {getShippingMethod(order.shipping_method)}
+              {shippingLabel}
             </p>
           </div>
           <div className="text-center sm:text-left">
@@ -204,9 +180,10 @@ const OrderCard = ({ order, onTrackOrder, onReorder }) => {
                   const imageSrc = isMerch
                     ? item?.item?.image?.[0]?.formats?.thumbnail?.url
                     : item?.item?.image?.formats?.thumbnail?.url;
+                  const itemKey = item?.item?.documentId || item?.item?.id || `${order.orderId}-${index}`;
 
                   return (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                    <div key={itemKey} className="flex items-center gap-3 p-3 bg-white rounded-lg">
                       {imageSrc && (
                         <Image
                           src={imageSrc}

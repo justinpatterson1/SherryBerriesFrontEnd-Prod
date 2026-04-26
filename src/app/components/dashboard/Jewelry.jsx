@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { CgAddR } from 'react-icons/cg';
@@ -36,7 +36,7 @@ function Jewelry() {
     }
   };
 
-  const fetchJewelries = async() => {
+  const fetchJewelries = useCallback(async() => {
     fetch(
       `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries?populate[0]=image&populate[1]=sizes&pagination[page]=${page}&pagination[pageSize]=12`
     )
@@ -50,14 +50,14 @@ function Jewelry() {
           setLoading(false);
         }
       })
-      .catch(err => {
+      .catch(() => {
         setLoading(false);
       });
-  };
+  }, [page]);
 
   useEffect(() => {
     fetchJewelries();
-  }, [page]);
+  }, [fetchJewelries]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
