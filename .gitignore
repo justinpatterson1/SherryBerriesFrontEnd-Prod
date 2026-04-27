@@ -41,3 +41,6 @@ next-env.d.ts
 
 # strapi (separate repository)
 /strapi-project/
+test-results/
+playwright-report/
+playwright/.cache/

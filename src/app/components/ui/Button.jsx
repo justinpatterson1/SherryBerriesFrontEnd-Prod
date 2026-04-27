@@ -58,7 +58,8 @@ const Button = ({
     ${className}
   `.trim();
 
-  // Render icon based on state
+  // Render icon based on state. Supports both component refs (e.g. `icon={FiTruck}`)
+  // and React elements (e.g. `icon={<FiTruck />}`).
   const renderIcon = () => {
     if (loading) {
       return <FiLoader className="animate-spin" />;
@@ -70,7 +71,8 @@ const Button = ({
       return <FiAlertCircle />;
     }
     if (icon) {
-      return icon;
+      const IconCmp = icon;
+      return typeof icon === 'function' ? <IconCmp /> : icon;
     }
     return null;
   };
