@@ -264,6 +264,10 @@ export default function ContactForm() {
                           type='text'
                           id='name'
                           name='name'
+                          required
+                          aria-required='true'
+                          aria-invalid={!!errors.name}
+                          aria-describedby={errors.name ? 'name-error' : undefined}
                           value={formData.name}
                           onChange={handleInputChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 ${
@@ -272,7 +276,7 @@ export default function ContactForm() {
                           placeholder='Enter your full name'
                         />
                         {errors.name && (
-                          <p className='mt-1 text-sm text-red-600'>{errors.name}</p>
+                          <p id='name-error' role='alert' className='mt-1 text-sm text-red-600'>{errors.name}</p>
                         )}
                       </div>
 
@@ -285,6 +289,10 @@ export default function ContactForm() {
                           type='email'
                           id='email'
                           name='email'
+                          required
+                          aria-required='true'
+                          aria-invalid={!!errors.email}
+                          aria-describedby={errors.email ? 'email-error' : undefined}
                           value={formData.email}
                           onChange={handleInputChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 ${
@@ -293,7 +301,7 @@ export default function ContactForm() {
                           placeholder='Enter your email address'
                         />
                         {errors.email && (
-                          <p className='mt-1 text-sm text-red-600'>{errors.email}</p>
+                          <p id='email-error' role='alert' className='mt-1 text-sm text-red-600'>{errors.email}</p>
                         )}
                       </div>
                     </div>
@@ -307,6 +315,10 @@ export default function ContactForm() {
                         id='message'
                         name='message'
                         rows={6}
+                        required
+                        aria-required='true'
+                        aria-invalid={!!errors.message}
+                        aria-describedby={errors.message ? 'message-error' : undefined}
                         value={formData.message}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300 resize-none ${
@@ -315,7 +327,7 @@ export default function ContactForm() {
                         placeholder='Tell us how we can help you...'
                       />
                       {errors.message && (
-                        <p className='mt-1 text-sm text-red-600'>{errors.message}</p>
+                        <p id='message-error' role='alert' className='mt-1 text-sm text-red-600'>{errors.message}</p>
                       )}
                       <p className='mt-1 text-sm text-gray-500'>
                         {formData.message.length}/500 characters

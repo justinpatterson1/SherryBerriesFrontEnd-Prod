@@ -22,9 +22,12 @@ export default function OrderRow({
   return (
     <div className='bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden'>
       {/* Header */}
-      <div
-        className='cursor-pointer grid grid-cols-1 sm:grid-cols-4 gap-4 items-center p-6 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all duration-300'
+      <button
+        type='button'
         onClick={() => onToggle(order.id)}
+        aria-expanded={expanded}
+        aria-controls={`order-details-${order.id}`}
+        className='w-full text-left grid grid-cols-1 sm:grid-cols-4 gap-4 items-center p-6 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-inset'
       >
         <div>
           <p className='text-sm text-gray-500'>Order ID</p>
@@ -44,15 +47,18 @@ export default function OrderRow({
         </div>
         <div>
           <p className='text-sm text-gray-500'>Status</p>
-          <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${badgeClass}`}>
+          <span
+            className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${badgeClass}`}
+            aria-label={`Order status: ${order.order_status || 'open'}`}
+          >
             {order.order_status || 'Open'}
           </span>
         </div>
-      </div>
+      </button>
 
       {/* Expanded Details */}
       {expanded && (
-        <div className='p-6 border-t border-gray-200 bg-gray-50'>
+        <div id={`order-details-${order.id}`} className='p-6 border-t border-gray-200 bg-gray-50'>
           <div className='grid grid-cols-2'>
             <div>
               <h3 className='font-semibold mb-3'>Cart Items:</h3>

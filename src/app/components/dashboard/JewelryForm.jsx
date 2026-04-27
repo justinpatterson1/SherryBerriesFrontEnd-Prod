@@ -1,19 +1,65 @@
 'use client';
 
+import { useId } from 'react';
 import { JEWELRY_SIZES } from '@/lib/constants';
 import ImageUploader from './ImageUploader';
 
 const TEXT_FIELDS = [
-  { label: 'Name', name: 'name' },
-  { label: 'Item Type', name: 'ItemType' },
-  { label: 'Color', name: 'color' },
-  { label: 'Price', name: 'price' },
-  { label: 'Discount', name: 'discount' },
-  { label: 'Description', name: 'description' }
+  { label: 'Name', name: 'name', required: true },
+  { label: 'Item Type', name: 'ItemType', required: true },
+  { label: 'Color', name: 'color', required: false },
+  { label: 'Price', name: 'price', required: true },
+  { label: 'Discount', name: 'discount', required: false },
+  { label: 'Description', name: 'description', required: false }
 ];
 
 const MATERIAL_OPTIONS = ['Gold', 'Silver', 'Acrylic', 'Plastic', 'Stainless-Steel'];
 const CATEGORY_OPTIONS = ['Nose-Ring', 'Belly-Ring', 'Septum', 'Tragus'];
+
+function FormField({ label, name, value, onChange, required, placeholder }) {
+  const inputId = useId();
+  return (
+    <div className='flex flex-col'>
+      <label htmlFor={inputId} className='text-sm font-medium text-gray-700 mb-1'>
+        {label}
+        {required && <span className='text-red-500 ml-1' aria-hidden='true'>*</span>}
+      </label>
+      <input
+        id={inputId}
+        placeholder={placeholder}
+        type='text'
+        name={name}
+        value={value || ''}
+        onChange={onChange}
+        aria-required={required}
+        className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+      />
+    </div>
+  );
+}
+
+function SelectField({ label, name, value, onChange, options, required }) {
+  const selectId = useId();
+  return (
+    <div className='flex flex-col'>
+      <label htmlFor={selectId} className='text-sm font-medium text-gray-700 mb-1'>
+        {label}
+        {required && <span className='text-red-500 ml-1' aria-hidden='true'>*</span>}
+      </label>
+      <select
+        id={selectId}
+        name={name}
+        value={value}
+        onChange={onChange}
+        aria-required={required}
+        className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+      >
+        <option value=''>Select</option>
+        {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+      </select>
+    </div>
+  );
+}
 
 export default function JewelryForm({
   formData,
@@ -26,73 +72,57 @@ export default function JewelryForm({
   submitting
 }) {
   return (
-    <form onSubmit={onSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+    <form onSubmit={onSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4' noValidate>
       {TEXT_FIELDS.map(field => (
-        <div key={field.name} className='flex flex-col'>
-          <label className='text-sm font-medium text-gray-700 mb-1'>{field.label}</label>
-          <input
-            placeholder={field.label === 'Discount' ? '-5' : ''}
-            type='text'
-            name={field.name}
-            value={formData[field.name] || ''}
-            onChange={onInputChange}
-            className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-          />
-        </div>
+        <FormField
+          key={field.name}
+          label={field.label}
+          name={field.name}
+          value={formData[field.name]}
+          onChange={onInputChange}
+          required={field.required}
+          placeholder={field.label === 'Discount' ? '-5' : ''}
+        />
       ))}
 
-      <div className='flex flex-col'>
-        <label className='text-sm font-medium text-gray-700 mb-1'>Material</label>
-        <select
-          name='material'
-          value={formData.material}
-          onChange={onInputChange}
-          className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-        >
-          <option value=''>Select</option>
-          {MATERIAL_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </div>
+      <SelectField
+        label='Material'
+        name='material'
+        value={formData.material}
+        onChange={onInputChange}
+        options={MATERIAL_OPTIONS}
+      />
 
-      <div className='flex flex-col'>
-        <label className='text-sm font-medium text-gray-700 mb-1'>Category</label>
-        <select
-          name='category'
-          value={formData.category}
-          onChange={onInputChange}
-          className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-        >
-          <option value=''>Select</option>
-          {CATEGORY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
+      <SelectField
+        label='Category'
+        name='category'
+        value={formData.category}
+        onChange={onInputChange}
+        options={CATEGORY_OPTIONS}
+      />
 
-      <div className='flex flex-col'>
-        <label className='text-sm font-medium text-gray-700 mb-1'>Featured</label>
-        <select
-          name='isFeatured'
-          value={formData.isFeatured}
-          onChange={onInputChange}
-          className='border border-gray-300 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-        >
-          <option value=''>Select</option>
-          <option value='true'>True</option>
-          <option value='false'>False</option>
-        </select>
-      </div>
+      <SelectField
+        label='Featured'
+        name='isFeatured'
+        value={formData.isFeatured}
+        onChange={onInputChange}
+        options={['true', 'false']}
+      />
 
-      <div className='col-span-full'>
-        <label className='text-sm font-medium mb-2 block'>Sizes</label>
+      <fieldset className='col-span-full'>
+        <legend className='text-sm font-medium mb-2 block'>Sizes</legend>
         {sizes.map((entry, index) => (
           <div key={JEWELRY_SIZES[index]} className='mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2'>
+            <label className='sr-only' htmlFor={`size-${entry.Size}`}>Size {entry.Size} quantity</label>
             <input
               type='text'
-              placeholder='Size'
               value={entry.Size}
               readOnly
+              aria-label={`Size ${entry.Size} inches`}
               className='border p-2 w-full sm:w-auto bg-gray-50'
             />
             <input
+              id={`size-${entry.Size}`}
               type='number'
               placeholder='Quantity'
               value={entry.quantity}
@@ -101,7 +131,7 @@ export default function JewelryForm({
             />
           </div>
         ))}
-      </div>
+      </fieldset>
 
       <ImageUploader onChange={onImageChange} error={imageError} />
 

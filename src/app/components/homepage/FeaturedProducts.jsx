@@ -77,12 +77,13 @@ function FeaturedProducts({ featured }) {
           viewport={{ once: true }}
         >
           {featured?.jewelries?.slice(0, visibleCount).map(feature => (
-            <motion.div
+            <motion.article
               key={feature?.id}
               variants={itemVariants}
               className='group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden'
               onMouseEnter={() => setHoveredProduct(feature?.id)}
               onMouseLeave={() => setHoveredProduct(null)}
+              aria-labelledby={`featured-${feature?.id}-name`}
             >
               <Link href={`product/jewelry/${feature?.documentId}`}>
                 <div className='relative overflow-hidden'>
@@ -159,7 +160,7 @@ function FeaturedProducts({ featured }) {
                   <span className='text-sm text-gray-500 ml-2'>(4.8)</span>
                 </div>
                 
-                <h3 className='font-bold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-brand transition-colors duration-300'>
+                <h3 id={`featured-${feature?.id}-name`} className='font-bold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-brand transition-colors duration-300'>
                   {feature?.name}
                 </h3>
                 
@@ -176,7 +177,7 @@ function FeaturedProducts({ featured }) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </motion.div>
 

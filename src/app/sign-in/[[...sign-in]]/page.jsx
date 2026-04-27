@@ -78,21 +78,24 @@ export default function Page() {
           <p className='text-sm text-gray-600 mb-6'>
             Enter the information to Login
           </p>
-          <form onSubmit={handleSubmit}>
-            {/* Email Input */}
-            <span className='text-red-500 font-bold text-center'>{error}</span>
+          <form onSubmit={handleSubmit} noValidate>
+            <div role='alert' aria-live='polite' className='text-red-500 font-bold text-center min-h-[1.5rem]'>
+              {error}
+            </div>
             <div className='mb-4'>
-              <label
-                htmlFor='email'
-                className='block text-sm text-gray-600 mb-1'
-              ></label>
+              <label htmlFor='email' className='sr-only'>
+                Email Address
+              </label>
               <div className='relative'>
                 <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
-                  <FiMail className='h-5 w-5 text-gray-400' />
+                  <FiMail className='h-5 w-5 text-gray-400' aria-hidden='true' />
                 </span>
                 <input
                   type='email'
                   id='email'
+                  required
+                  aria-required='true'
+                  aria-invalid={!!error}
                   className='w-full px-10 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-800 text-sm'
                   placeholder='Email Address'
                   value={identifier}
@@ -102,19 +105,20 @@ export default function Page() {
                 />
               </div>
             </div>
-            {/* Password Input */}
             <div className='mb-6'>
-              <label
-                htmlFor='password'
-                className='block text-sm text-gray-600 mb-1'
-              ></label>
+              <label htmlFor='password' className='sr-only'>
+                Password
+              </label>
               <div className='relative'>
                 <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
-                  <FiLock className='h-5 w-5 text-gray-400' />
+                  <FiLock className='h-5 w-5 text-gray-400' aria-hidden='true' />
                 </span>
                 <input
                   type='password'
                   id='password'
+                  required
+                  aria-required='true'
+                  aria-invalid={!!error}
                   className='w-full px-10 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-800 text-sm'
                   placeholder='Password'
                   value={password}

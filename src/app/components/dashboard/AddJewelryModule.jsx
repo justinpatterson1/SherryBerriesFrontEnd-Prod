@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
-import { RxCross2 } from 'react-icons/rx';
 import JewelryForm from './JewelryForm';
+import Modal from '../ui/Modal';
 import { JEWELRY_SIZES } from '@/lib/constants';
 
 const INITIAL_FORM = {
@@ -122,22 +122,13 @@ export default function AddJewelryModule({ setOpenAddForm, fetchJewelries }) {
   };
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-auto p-4'>
-      <div className='w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative'>
-        <button
-          className='absolute top-3 right-3 text-2xl text-gray-600 hover:text-red-500 z-50'
-          onClick={() => setOpenAddForm(false)}
-          aria-label='Close'
-        >
-          <RxCross2 />
-        </button>
-
-        <div className='mb-4'>
-          <h2 className='text-lg sm:text-2xl font-semibold text-gray-800 text-center'>
-            Add Jewelry
-          </h2>
-        </div>
-
+    <>
+      <Modal
+        open
+        onClose={() => setOpenAddForm(false)}
+        title='Add Jewelry'
+        titleId='add-jewelry-title'
+      >
         <JewelryForm
           formData={formData}
           onInputChange={handleInputChange}
@@ -148,8 +139,8 @@ export default function AddJewelryModule({ setOpenAddForm, fetchJewelries }) {
           onSubmit={handleSubmit}
           submitting={submitting}
         />
-      </div>
+      </Modal>
       <ToastContainer />
-    </div>
+    </>
   );
 }

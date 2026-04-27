@@ -37,7 +37,9 @@ export default function Providers({ children }) {
             <SessionProvider>
               <InactivityHandler>
                 <Navigation />
-                {children}
+                <div id='main-content' tabIndex={-1}>
+                  {children}
+                </div>
               </InactivityHandler>
             </SessionProvider>
           </div>

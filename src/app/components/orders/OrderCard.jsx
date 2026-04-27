@@ -59,8 +59,11 @@ const OrderCard = ({ order, onTrackOrder, onReorder }) => {
               <h3 className="text-lg font-semibold text-gray-900">
                 Order #{order.orderId}
               </h3>
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.color}`}>
-                <StatusIcon className="h-3 w-3" />
+              <span
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.color}`}
+                aria-label={`Order status: ${statusConfig.label}`}
+              >
+                <StatusIcon className="h-3 w-3" aria-hidden='true' />
                 {statusConfig.label}
               </span>
             </div>
