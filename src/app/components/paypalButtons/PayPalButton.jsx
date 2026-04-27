@@ -108,10 +108,6 @@ export default function PayPalButton() {
                                 setMessage(
                                     `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
                                 );
-                                    "Capture result",
-                                    orderData,
-                                    JSON.stringify(orderData, null, 2)
-                                );
                             }
                         } catch (error) {
                             setMessage(

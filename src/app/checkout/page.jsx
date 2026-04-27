@@ -318,8 +318,6 @@ function Page() {
   const reduceQuantity = async() => {
     for (let i = 0; i < state.cart.length; i++) {
       if (state.cart[i].info.ItemType === 'Jewelry') {
-          'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
-        );
         const resp = await fetch(
           `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries/${state.cart[i].item.documentId}?populate[0]=sizes`,
           {
@@ -363,8 +361,6 @@ function Page() {
       }
 
       if (state.cart[i].info.ItemType === 'Merchandise') {
-          'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
-        );
         const resp = await fetch(
           `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises/${state.cart[i].item.documentId}?populate[0]=sizes`,
           {
@@ -409,8 +405,6 @@ function Page() {
       }
 
       if (state.cart[i].info.ItemType === 'Aftercare') {
-          'Cart data:' + JSON.stringify(state.cart[i].item.documentId)
-        );
         const resp = await fetch(
           `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${state.cart[i].item.documentId}`,
           {

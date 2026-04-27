@@ -7,7 +7,7 @@ import { RxCross2 } from 'react-icons/rx';
 import AddJewelryModule from './AddJewelryModule';
 import Loader from '../Loader';
 import { ToastContainer } from 'react-toastify';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 function AddNewBlogModule({ openAddForm, setOpenAddForm, fetchBlogs }) {
   const [formData, setFormData] = useState({
@@ -69,7 +69,7 @@ function AddNewBlogModule({ openAddForm, setOpenAddForm, fetchBlogs }) {
           const payload = {
             Title: formData.Title,
             description: formData.description,
-            date: moment().format('yyyy-MM-DD'),
+            date: dayjs().format('YYYY-MM-DD'),
             image: resp[0].id || ''
           };
 

@@ -56,10 +56,6 @@ export async function reduceQuantity(cartItems, jwt) {
           }
         );
 
-        if (!updateResp.ok) {
-            `Failed to update ${itemType} quantity for item ${docId}`
-          );
-        }
       } else if (itemType === 'Aftercare') {
         // Fetch current quantity
         const resp = await fetch(
@@ -89,10 +85,6 @@ export async function reduceQuantity(cartItems, jwt) {
           }
         );
 
-        if (!updateResp.ok) {
-            `Failed to update Aftercare quantity for item ${docId}`
-          );
-        }
       }
     } catch (err) {
     }

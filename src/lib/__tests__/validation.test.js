@@ -30,7 +30,8 @@ describe('orderConfirmationSchema', () => {
   });
 
   it('rejects missing orderId', () => {
-    const { orderId, ...rest } = valid;
+    // eslint-disable-next-line no-unused-vars
+    const { orderId: _orderId, ...rest } = valid;
     expect(orderConfirmationSchema.safeParse(rest).success).toBe(false);
   });
 
@@ -95,7 +96,7 @@ describe('validateBody', () => {
     expect(result.data.code).toBe('SAVE10');
   });
 
-  it('returns 400 Response on failure', async () => {
+  it('returns 400 Response on failure', async() => {
     const result = validateBody({}, couponSchema);
     expect(result.data).toBeNull();
     expect(result.error.status).toBe(400);
