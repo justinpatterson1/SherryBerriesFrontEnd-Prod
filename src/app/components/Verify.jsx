@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { sendEmailConfirmation } from '@/lib/api/auth';
 
 function Verify({ email }) {
   const [error, setError] = useState();
@@ -11,21 +12,12 @@ function Verify({ email }) {
       }, 3000);
     }
   }, [status]);
+
   const resendEmail = async() => {
     setStatus(true);
-    const response = fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/auth/send-email-confirmation`,
-      {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
+    try {
+      await sendEmailConfirmation({ email });
+    } catch {
       setError('Email was unable to be sent');
       throw new Error('Failed to register user');
     }

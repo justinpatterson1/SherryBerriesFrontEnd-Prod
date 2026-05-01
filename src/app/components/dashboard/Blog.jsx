@@ -7,6 +7,7 @@ import { RxCross2 } from 'react-icons/rx';
 import AddNewBlogModule from '../dashboard/AddNewBlogModule';
 import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
+import { getBlogListWithImage, updateBlog as apiUpdateBlog } from '@/lib/api/blogs';
 
 function Blog() {
   const [page, setPage] = useState(1);
@@ -32,21 +33,17 @@ function Blog() {
   };
 
   const fetchBlogs = async() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs?populate[0]=image&pagination[page]=${page}&pagination[pageSize]=4`
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json?.data.length !== 0) {
-          setBlog(json?.data);
-          setLoading(false);
-        } else {
-          setPage(prev => prev - 1);
-        }
-      })
-      .catch(err => {
+    try {
+      const json = await getBlogListWithImage({ page, pageSize: 4 });
+      if (json?.data?.length) {
+        setBlog(json.data);
         setLoading(false);
-      });
+      } else {
+        setPage(prev => prev - 1);
+      }
+    } catch {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -63,24 +60,10 @@ function Blog() {
 
   const updateblog = async id => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: formData })
-        }
-      );
-
-      if (res.ok) {
-        fetchBlogs();
-      } else {
-        alert('Failed to update blog.');
-      }
-    } catch (err) {
+      await apiUpdateBlog(id, formData, session?.jwt);
+      fetchBlogs();
+    } catch {
+      alert('Failed to update blog.');
     }
   };
 

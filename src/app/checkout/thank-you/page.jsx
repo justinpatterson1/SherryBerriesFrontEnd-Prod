@@ -5,6 +5,7 @@ import { authOptions } from '../../api/auth/[...nextauth]/options';
 import { getServerSession } from 'next-auth';
 import { endCart, reduceQuantity } from '../../lib/reduceCart';
 import { getCartItem } from '../../lib/func';
+import { getOrderByOrderId, updateOrder } from '@/lib/api/orders';
 
 function verifyWiPayHash(transactionId, total, apiKey, receivedHash) {
   if (!transactionId || !total || !apiKey || !receivedHash) return false;
@@ -51,22 +52,7 @@ async function page({ searchParams }) {
       }
     }
 
-    if (!process.env.NEXT_PUBLIC_SHERRYBERRIES_URL) {
-      throw new Error('API URL environment variable is not configured');
-    }
-
-    const resp = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders?populate[0]=cart.Items.aftercares.image&populate[1]=cart.Items.jewelries.image&populate[2]=cart.Items.waistbeads.image&populate[3]=cart.Items.merchandises.image&filters[orderId][$eq]=${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.jwt}`
-        }
-      }
-    );
-
-    const json = await resp.json();
+    const json = await getOrderByOrderId(id, session?.jwt);
 
     const orders = json?.data?.[0];
     const items = getCartItem(json?.data?.[0]?.cart?.Items);
@@ -132,39 +118,20 @@ async function page({ searchParams }) {
           throw new Error('User session JWT is missing');
         }
 
-        const updateOrder = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders/${orders.documentId}`,
+        await updateOrder(
+          orders.documentId,
           {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.jwt}`
-            },
-            body: JSON.stringify({
-              data: {
-                order_status: 'open',
-                isPaid: true,
-                transaction_id: transactionId || null,
-                wipay_total: wipayTotal || null,
-                wipay_message: wipayMessage || null,
-                wipay_date: wipayDate || null
-              }
-            })
-          }
+            order_status: 'open',
+            isPaid: true,
+            transaction_id: transactionId || null,
+            wipay_total: wipayTotal || null,
+            wipay_message: wipayMessage || null,
+            wipay_date: wipayDate || null
+          },
+          session?.jwt
         );
-
-        if (!updateOrder.ok) {
-          const errorText = await updateOrder.text();
-          throw new Error(`Order update failed: ${updateOrder.status} ${updateOrder.statusText} - ${errorText}`);
-        }
-
-        const updateResult = await updateOrder.json();
-
-        if (updateOrder.status === 200) {
-          //await sendConfirmationEmail();
-          await reduceQuantity(items, session?.jwt);
-          await endCart(cartId, session);
-        }
+        await reduceQuantity(items, session?.jwt);
+        await endCart(cartId, session);
       } catch (error) {
         // Don't throw — the user should still see the thank you page
       }

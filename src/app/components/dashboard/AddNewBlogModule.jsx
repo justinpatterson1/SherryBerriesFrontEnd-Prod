@@ -8,6 +8,8 @@ import AddJewelryModule from './AddJewelryModule';
 import Loader from '../Loader';
 import { ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
+import { uploadFile } from '@/lib/api/uploads';
+import { createBlog } from '@/lib/api/blogs';
 
 function AddNewBlogModule({ openAddForm, setOpenAddForm, fetchBlogs }) {
   const [formData, setFormData] = useState({
@@ -49,64 +51,34 @@ function AddNewBlogModule({ openAddForm, setOpenAddForm, fetchBlogs }) {
     }
 
     if (imageFile) {
-      const formImage = new FormData();
-      formImage.append('files', imageFile);
-
       try {
-        const imageUpload = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/upload`,
-          {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${session?.jwt}`
-            },
-            body: formImage
-          }
-        );
-
-        if (imageUpload.ok) {
-          const resp = await imageUpload.json();
-          const payload = {
-            Title: formData.Title,
-            description: formData.description,
-            date: dayjs().format('YYYY-MM-DD'),
-            image: resp[0].id || ''
-          };
-
-          try {
-            const resp = await fetch(
-              `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  authorization: `Bearer ${session?.jwt}`
-                },
-                body: JSON.stringify({ data: payload })
-              }
-            );
-
-            if (resp.ok) {
-              setFormData({
-                Title: '',
-                description: ''
-              });
-              setImageFile(null);
-              setImagePreview(null);
-              fetchBlogs();
-              notify();
-            }
-          } catch (error) {
-          }
-        } else {
+        let resp;
+        try {
+          resp = await uploadFile(imageFile, session?.jwt);
+        } catch {
           alert('Image uploaded unsuccessfully');
           setImageError('Select an image less than 5MB');
+          return;
+        }
+
+        const payload = {
+          Title: formData.Title,
+          description: formData.description,
+          date: dayjs().format('YYYY-MM-DD'),
+          image: resp[0].id || ''
+        };
+
+        try {
+          await createBlog({ data: payload }, session?.jwt);
+          setFormData({ Title: '', description: '' });
+          setImageFile(null);
+          setImagePreview(null);
+          fetchBlogs();
+          notify();
+        } catch (error) {
         }
       } catch (error) {
       }
-    }
-
-    for (const [key, value] of submissionData.entries()) {
     }
   };
 

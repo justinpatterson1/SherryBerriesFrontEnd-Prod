@@ -1,17 +1,22 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import {
+  getJewelryById,
+  getMerchandiseById,
+  getWaistbeadsById,
+  getAftercareById
+} from '@/lib/api/products';
 
-function getApiEndpoint(type, id) {
-  const baseUrl = process.env.NEXT_PUBLIC_SHERRYBERRIES_URL;
+function fetchByType(type, id, opts) {
   switch (type) {
     case 'jewelry':
-      return `${baseUrl}/api/jewelries/${id}?populate=*`;
+      return getJewelryById(id, opts);
     case 'clothing':
-      return `${baseUrl}/api/merchandises/${id}?populate=*`;
+      return getMerchandiseById(id, opts);
     case 'waistbead':
-      return `${baseUrl}/api/waistbeads/${id}?populate=*`;
+      return getWaistbeadsById(id, opts);
     case 'aftercare':
-      return `${baseUrl}/api/aftercares/${id}?populate=*`;
+      return getAftercareById(id, opts);
     default:
       throw new Error(`Unknown product type: ${type}`);
   }
@@ -38,14 +43,7 @@ export function useProduct(productId, productType) {
         setLoading(true);
         setError(null);
 
-        const apiEndpoint = getApiEndpoint(productType, productId);
-        const response = await fetch(apiEndpoint, { signal: controller.signal });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch product: ${response.status}`);
-        }
-
-        const json = await response.json();
+        const json = await fetchByType(productType, productId, { signal: controller.signal });
 
         if (json.data) {
           setProduct(json.data);

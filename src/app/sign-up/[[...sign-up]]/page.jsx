@@ -9,6 +9,7 @@ import Loader from '../../components/Loader';
 import { useRouter } from 'next/navigation';
 import Verify from '../../components/Verify.jsx';
 import AppContext from '../../../../context/AppContext.jsx';
+import { getSignUpHero, customRegister } from '@/lib/api/auth';
 
 export default function Page() {
   const { setJwt, setUserId } = useContext(AppContext);
@@ -24,8 +25,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState(false);
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/sign-up?populate=*`)
-      .then(res => res.json())
+    getSignUpHero()
       .then(json => {
         setImage(json.data.Image.url);
         setLoading(false);
@@ -42,28 +42,14 @@ export default function Page() {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/new-auth/custom-register`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-            firstName,
-            lastName,
-            role_type: 'customer'
-          })
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error('Failed to register user');
-      }
-
-      const data = await response.json();
+      const data = await customRegister({
+        username,
+        email,
+        password,
+        firstName,
+        lastName,
+        role_type: 'customer'
+      });
 
       if (data) {
         // setJwt(data.user.jwt)

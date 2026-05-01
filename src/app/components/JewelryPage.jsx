@@ -6,9 +6,9 @@ import Hero from '../components/homepage/Hero';
 import Image from 'next/image';
 import Link from 'next/link';
 import Pagination from '../components/Pagination';
-import options from '../api/auth/[...nextauth]/options.js';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import { getJewelryListPopulated } from '@/lib/api/products';
+import { getJewelryProductHero } from '@/lib/api/content';
 
 function page() {
   const [page, setPage] = useState(1);
@@ -33,25 +33,13 @@ function page() {
 
     async function fetchData() {
       try {
-        const jewelryResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries?pagination[page]=${page}&pagination[pageSize]=12&populate=*`
-        );
-        const heroImgResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelry-product?populate[0]=Hero.image`
-        );
-
-        const heroData = await heroImgResponse.json();
-        const jewelryData = await jewelryResponse.json();
+        const [jewelryData, heroData] = await Promise.all([
+          getJewelryListPopulated({ page, pageSize: 12 }),
+          getJewelryProductHero()
+        ]);
 
         setHero(heroData?.data);
-
-        if (jewelryData?.data.length !== 0) {
-          setJewelry(jewelryData?.data);
-        } else {
-          setJewelry([]);
-        }
-
-        //setLoading(false)
+        setJewelry(jewelryData?.data?.length ? jewelryData.data : []);
       } catch (error) {
       }
     }

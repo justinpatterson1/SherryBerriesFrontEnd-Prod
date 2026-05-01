@@ -7,6 +7,7 @@ import { RxCross2 } from 'react-icons/rx';
 import AddWaistbeadModule from '../dashboard/AddWaistbeadModule.jsx';
 import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
+import { getWaistbeadsListWithImage, updateWaistbeads as apiUpdateWaistbeads } from '@/lib/api/products';
 
 function Waistbeads() {
   const [waistbead, setWaistbead] = useState([]);
@@ -34,22 +35,14 @@ function Waistbeads() {
   };
 
   const fetchWaistbeads = async() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/waistbeads?populate[0]=image&pagination[page]=${page}&pagination[pageSize]=12`
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json?.data.length !== 0) {
-          setWaistbead(json?.data);
-          setLoading(false);
-        } else {
-          setWaistbead([]);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        setLoading(false);
-      });
+    try {
+      const json = await getWaistbeadsListWithImage({ page, pageSize: 12 });
+      setWaistbead(json?.data?.length ? json.data : []);
+    } catch {
+      setWaistbead([]);
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     fetchWaistbeads();
@@ -65,24 +58,10 @@ function Waistbeads() {
 
   const updateWaistbead = async id => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/waistbeads/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: formData })
-        }
-      );
-
-      if (res.ok) {
-        fetchWaistbeads();
-      } else {
-        alert('Failed to update waistbead.');
-      }
-    } catch (err) {
+      await apiUpdateWaistbeads(id, formData, session?.jwt);
+      fetchWaistbeads();
+    } catch {
+      alert('Failed to update waistbead.');
     }
   };
 

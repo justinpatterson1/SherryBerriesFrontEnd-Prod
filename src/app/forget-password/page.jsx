@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { FiMail, FiLock } from 'react-icons/fi';
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
+import { BASE_URL } from '@/lib/api-client';
+import { getSignUpHero, forgotPassword } from '@/lib/api/auth';
 
 function page() {
   const [data, setData] = useState({});
@@ -14,16 +16,12 @@ function page() {
   const success = () => toast('Email was sent Successfully');
   const failure = () => toast('Email could not be sent');
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/sign-up?populate=*`)
-      .then(res => res.json())
+    getSignUpHero()
       .then(json => {
         setData(json.data);
         setLoading(false);
       })
       .catch(() => {});
-    // const data = await response.json();
-
-    // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
   }, []);
 
   const handleSubmit = async evt => {
@@ -31,37 +29,13 @@ function page() {
 
     if (identifier) {
       try {
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/auth/forgot-password`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: identifier
-            })
-          }
-        );
-
-        if (resp.ok) {
-          success();
-          setIdentifier('');
-          setError('');
-        }
+        await forgotPassword(identifier);
+        success();
+        setIdentifier('');
+        setError('');
       } catch (error) {
-        // setError(error)
         failure();
       }
-
-      // .then(res=>res.json())
-      // .then(json=>{
-      //   setData(json.data)
-      //   setLoading(false)
-      // })
-      // const data = await response.json();
-
-      // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
     } else {
       setError('Enter email addresss');
     }
@@ -74,7 +48,7 @@ function page() {
         <div
           className='lg:w-1/2 w-full h-64 lg:h-auto'
           style={{
-            backgroundImage: `url('${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data?.Image?.url}')`,
+            backgroundImage: `url('${BASE_URL}${data?.Image?.url}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}

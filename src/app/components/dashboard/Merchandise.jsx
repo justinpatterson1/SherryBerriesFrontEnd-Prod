@@ -6,6 +6,7 @@ import { RxCross2 } from 'react-icons/rx';
 import Loader from '../Loader.jsx';
 import AddMerchandiseModule from './AddMerchandiseModule.jsx';
 import Pagination from '../../components/Pagination.jsx';
+import { getMerchandiseList, updateMerchandise as apiUpdateMerchandise } from '@/lib/api/products';
 
 function Merchandise() {
   const [merchandise, setMerchandise] = useState([]);
@@ -63,22 +64,14 @@ function Merchandise() {
   };
 
   const fetchMerchandises = async() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises?populate[0]=image&populate[1]=sizes&pagination[page]=${page}&pagination[pageSize]=12`
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json?.data.length !== 0) {
-          setMerchandise(json?.data);
-          setLoading(false);
-        } else {
-          setMerchandise([]);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        setLoading(false);
-      });
+    try {
+      const json = await getMerchandiseList({ page, pageSize: 12, withSizes: true });
+      setMerchandise(json?.data?.length ? json.data : []);
+    } catch {
+      setMerchandise([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -100,24 +93,10 @@ function Merchandise() {
     };
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: payload })
-        }
-      );
-
-      if (res.ok) {
-        fetchMerchandises();
-      } else {
-        alert('Failed to update merchandise.');
-      }
-    } catch (err) {
+      await apiUpdateMerchandise(id, payload, session?.jwt);
+      fetchMerchandises();
+    } catch {
+      alert('Failed to update merchandise.');
     }
   };
 

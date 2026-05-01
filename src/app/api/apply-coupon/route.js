@@ -1,5 +1,6 @@
 import { requireAuth } from '@/lib/auth';
 import { couponSchema, validateBody } from '@/lib/validation';
+import { api, ApiError } from '@/lib/api-client';
 
 export async function POST(req) {
   const { unauthorized } = await requireAuth();
@@ -12,25 +13,15 @@ export async function POST(req) {
   const { code } = validated;
 
   try {
-    const strapiRes = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/coupons/validate`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code })
-      }
-    );
-
-    const data = await strapiRes.json();
-    if (!strapiRes.ok) {
-      return Response.json(
-        { error: data.message || 'Failed to validate coupon.' },
-        { status: strapiRes.status }
-      );
-    }
-
+    const data = await api.post('/api/coupons/validate', { code });
     return Response.json({ discount: data });
   } catch (err) {
+    if (err instanceof ApiError) {
+      return Response.json(
+        { error: err.message || 'Failed to validate coupon.' },
+        { status: err.status }
+      );
+    }
     return Response.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }

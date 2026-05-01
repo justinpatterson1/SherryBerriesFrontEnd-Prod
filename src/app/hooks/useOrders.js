@@ -1,15 +1,9 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { PAGINATION } from '@/lib/constants';
-
-const POPULATE_QUERY = [
-  'populate[0]=cart.Items',
-  'populate[1]=cart.Items.jewelries.image',
-  'populate[2]=cart.Items.waistbeads.image',
-  'populate[3]=cart.Items.merchandises.image',
-  'populate[4]=cart.Items.aftercares.image',
-  'populate[5]=cart.User'
-].join('&');
+import {
+  getOrdersByStatus,
+  updateOrderStatus as apiUpdateOrderStatus
+} from '@/lib/api/orders';
 
 /**
  * Fetches orders for the authenticated user with status and pagination filters.
@@ -35,19 +29,12 @@ export function useOrders({ session, status, orderStatus, page }) {
         setLoading(true);
         setError(null);
 
-        const url = `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders?${POPULATE_QUERY}&filters[order_status][$eq]=${orderStatus}&pagination[page]=${page}&pagination[pageSize]=${PAGINATION.DEFAULT_PAGE_SIZE}`;
-        const res = await fetch(url, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-            'Content-Type': 'application/json'
-          },
+        const json = await getOrdersByStatus({
+          token: session.jwt,
+          orderStatus,
+          page,
           signal: controller.signal
         });
-
-        if (!res.ok) throw new Error(`Failed to load orders: ${res.status}`);
-
-        const json = await res.json();
         setOrders(json?.data || []);
       } catch (err) {
         if (err.name === 'AbortError') return;
@@ -65,23 +52,9 @@ export function useOrders({ session, status, orderStatus, page }) {
   const updateOrderStatus = useCallback(async (id, newStatus) => {
     if (!session?.jwt) return false;
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ data: { order_status: newStatus } })
-        }
-      );
-
-      if (res.ok) {
-        setOrders(prev => prev.filter(o => o.documentId !== id));
-        return true;
-      }
-      return false;
+      await apiUpdateOrderStatus(id, newStatus, session.jwt);
+      setOrders(prev => prev.filter(o => o.documentId !== id));
+      return true;
     } catch {
       return false;
     }

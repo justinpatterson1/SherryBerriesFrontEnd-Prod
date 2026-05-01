@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { createRateLimiter } from '@/lib/rate-limit';
 import { subscribeSchema, validateBody } from '@/lib/validation';
+import { api, ApiError } from '@/lib/api-client';
 
 const limiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
@@ -16,32 +17,24 @@ export async function POST(req) {
 
     const { email } = validated;
 
-    const apiUrl = process.env.NEXT_PUBLIC_SHERRYBERRIES_URL;
-    if (!apiUrl) {
-      return NextResponse.json({
-        error: 'Server configuration error',
-        status: 500
-      });
+    let existing;
+    try {
+      const filterPath =
+        '/api/email-lists' +
+        `?filters[email][$eq]=${encodeURIComponent(email)}` +
+        '&pagination[pageSize]=1';
+      const result = await api.get(filterPath);
+      existing = result?.data || [];
+    } catch (err) {
+      if (err instanceof ApiError) {
+        return NextResponse.json(
+          { error: err.message || 'Downstream error' },
+          { status: err.status }
+        );
+      }
+      throw err;
     }
 
-    // 3. check for existing email via Strapi filter
-    const filterUrl =
-      `${apiUrl}/api/email-lists?` +
-      `filters[email][$eq]=${encodeURIComponent(email)}` +
-      '&pagination[pageSize]=1';
-    const checkRes = await fetch(filterUrl, {
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (!checkRes.ok) {
-      const err = await checkRes.json();
-      return NextResponse.json(
-        { error: err.error?.message || 'Downstream error' },
-        { status: checkRes.status }
-      );
-    }
-
-    const { data: existing } = await checkRes.json();
     if (existing.length > 0) {
       return NextResponse.json({
         message: 'Email already exists',
@@ -49,33 +42,16 @@ export async function POST(req) {
       });
     }
 
-
-    const createRes = await fetch(`${apiUrl}/api/email-lists`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-        // if you have a Strapi API token, include it here:
-        // "Authorization": `Bearer ${process.env.STRAPI_API_TOKEN}`,
-      },
-      body: JSON.stringify({ data: { email } })
-    });
-
-    // log status and raw body so you know what Strapi is returning
-    const text = await createRes.text();
-
-    if (!createRes.ok) {
-      // if it was JSON, parse it, otherwise use the raw text
-      let err;
-      try {
-        err = JSON.parse(text);
-      } catch {
-        err = { message: text };
+    try {
+      await api.post('/api/email-lists', { data: { email } });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        return NextResponse.json(
+          { error: err.message || 'Downstream error' },
+          { status: err.status }
+        );
       }
-
-      return NextResponse.json(
-        { error: err.error?.message || err.message || 'Downstream error' },
-        { status: createRes.status }
-      );
+      throw err;
     }
 
     return NextResponse.json({

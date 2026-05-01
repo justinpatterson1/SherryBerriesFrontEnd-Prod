@@ -8,6 +8,7 @@ import AddAftercareModule from '../dashboard/AddAftercareModule';
 import Loader from '../../components/Loader';
 import { useRouter } from 'next/navigation';
 import Pagination from '../../components/Pagination';
+import { getAftercareList, updateAftercare as apiUpdateAftercare } from '@/lib/api/products';
 
 function Aftercare() {
   const router = useRouter();
@@ -36,22 +37,14 @@ function Aftercare() {
   };
 
   const fetchAftercare = async() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares?populate[0]=image&pagination[page]=${page}&pagination[pageSize]=12`
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json?.data.length !== 0) {
-          setAftercare(json?.data);
-          setLoading(false);
-        } else {
-          setAftercare([]);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        setLoading(false);
-      });
+    try {
+      const json = await getAftercareList({ page, pageSize: 12, withImage: true });
+      setAftercare(json?.data?.length ? json.data : []);
+    } catch {
+      setAftercare([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -68,24 +61,10 @@ function Aftercare() {
 
   const updateaftercare = async id => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: formData })
-        }
-      );
-
-      if (res.ok) {
-        fetchAftercare();
-      } else {
-        alert('Failed to update aftercare.');
-      }
-    } catch (err) {
+      await apiUpdateAftercare(id, formData, session?.jwt);
+      fetchAftercare();
+    } catch {
+      alert('Failed to update aftercare.');
     }
   };
 

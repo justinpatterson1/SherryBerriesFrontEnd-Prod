@@ -19,6 +19,7 @@ import {
 import {FaCheckCircle} from 'react-icons/fa';
 import FadeInSection from '../components/FadeInSection';
 import Image from 'next/image';
+import { getSignUpHero } from '@/lib/api/auth';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -121,8 +122,7 @@ export default function ContactForm() {
   };
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/sign-up?populate=*`)
-      .then(res => res.json())
+    getSignUpHero()
       .then(json => {
         setData(json.data);
       })

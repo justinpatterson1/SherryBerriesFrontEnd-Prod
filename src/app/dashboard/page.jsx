@@ -15,6 +15,7 @@ import DashboardOverview from '../components/dashboard/DashboardOverview.jsx';
 import { FaPencilAlt } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Loader from '../components/Loader.jsx';
+import { getUnpaidOrders } from '@/lib/api/orders';
 
 function Page() {
   const router = useRouter();
@@ -45,16 +46,7 @@ function Page() {
     const fetchData = async() => {
       try {
         if (session?.jwt) {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders?populate[0]=cart.Items&populate[1]=cart.Items.jewelries.image&populate[2]=cart.Items.waistbeads.image&populate[3]=cart.Items.merchandises.image&populate[4]=cart.Items.aftercares.image&filters[isPaid][$eq]=false`,
-            {
-              headers: {
-                Authorization: `Bearer ${session.jwt}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-          const orderData = await res.json();
+          const orderData = await getUnpaidOrders({ token: session.jwt });
           setOrders(orderData);
         }
       } catch (error) {

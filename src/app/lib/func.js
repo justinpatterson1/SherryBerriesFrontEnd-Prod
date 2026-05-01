@@ -24,23 +24,16 @@ export const calculateDiscountedPrice = (price, discount) => {
   return price.toFixed(2);
 };
 
+import { api } from '@/lib/api-client';
+
 export const normalizeCart = async(id, session, item, size) => {
   try {
-    const resp = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${id}?populate[0]=Items.jewelries.image&populate[1]=Items.merchandises.image&populate[2]=Items.waistbeads.image&populate[3]=Items.aftercares.image`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.jwt}`
-        }
-      }
-    );
-
-    if (!resp.ok) {
-    }
-
-    let cart = await resp.json();
+    const path =
+      `/api/cart-items/${id}?populate[0]=Items.jewelries.image` +
+      '&populate[1]=Items.merchandises.image' +
+      '&populate[2]=Items.waistbeads.image' +
+      '&populate[3]=Items.aftercares.image';
+    let cart = await api.get(path, { token: session?.jwt });
 
     cart = getCartItem(cart.data.Items);
 

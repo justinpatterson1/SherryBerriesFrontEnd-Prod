@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import { RxCross2 } from 'react-icons/rx';
+import { uploadFile } from '@/lib/api/uploads';
+import { createMerchandise } from '@/lib/api/products';
 
 function AddMerchandiseModule({
   openAddForm,
@@ -63,72 +65,45 @@ function AddMerchandiseModule({
     }
 
     if (imageFile) {
-      const formImage = new FormData();
-      formImage.append('files', imageFile);
-
       try {
-        const imageUpload = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/upload`,
-          {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${session?.jwt}`
-            },
-            body: formImage
-          }
-        );
-
-        if (imageUpload.ok) {
-          const resp = await imageUpload.json();
-          const payload = {
-            name: formData.name,
-            description: formData.description,
-            price: parseInt(formData.price),
-            isFeatured: formData.isFeatured,
-            discount: parseInt(formData.discount) || 0,
-            ItemType: formData.ItemType,
-            image: resp[0].id || '',
-            sizes: size
-          };
-
-          try {
-            const resp = await fetch(
-              `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  authorization: `Bearer ${session?.jwt}`
-                },
-                body: JSON.stringify({ data: payload })
-              }
-            );
-
-            if (resp.ok) {
-              setFormData({
-                Name: '',
-                description: '',
-                price: '',
-                isFeatured: '',
-                discount: '0',
-                ItemType: 'Waistbead'
-              });
-              setImageFile(null);
-              setImagePreview(null);
-              fetchMerchandises();
-              notify();
-            }
-          } catch (error) {
-          }
-        } else {
+        let resp;
+        try {
+          resp = await uploadFile(imageFile, session?.jwt);
+        } catch {
           alert('Image uploaded unsuccessfully');
           setImageError('Select an image less than 5MB');
+          return;
+        }
+
+        const payload = {
+          name: formData.name,
+          description: formData.description,
+          price: parseInt(formData.price),
+          isFeatured: formData.isFeatured,
+          discount: parseInt(formData.discount) || 0,
+          ItemType: formData.ItemType,
+          image: resp[0].id || '',
+          sizes: size
+        };
+
+        try {
+          await createMerchandise({ data: payload }, session?.jwt);
+          setFormData({
+            Name: '',
+            description: '',
+            price: '',
+            isFeatured: '',
+            discount: '0',
+            ItemType: 'Waistbead'
+          });
+          setImageFile(null);
+          setImagePreview(null);
+          fetchMerchandises();
+          notify();
+        } catch (error) {
         }
       } catch (error) {
       }
-    }
-
-    for (const [key, value] of submissionData.entries()) {
     }
   };
 

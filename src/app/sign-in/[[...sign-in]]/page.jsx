@@ -8,6 +8,7 @@ import { signIn } from 'next-auth/react';
 import Loader from '../../components/Loader';
 import AppContext from '../../../../context/AppContext';
 import { useRouter } from 'next/navigation';
+import { getSignUpHero } from '@/lib/api/auth';
 
 export default function Page() {
   const router = useRouter();
@@ -19,16 +20,12 @@ export default function Page() {
   const { setUser } = useContext(AppContext);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/sign-up?populate=*`)
-      .then(res => res.json())
+    getSignUpHero()
       .then(json => {
         setData(json.data);
         setLoading(false);
       })
       .catch(() => {});
-    // const data = await response.json();
-
-    // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
   }, []);
   const handleSubmit = async e => {
     e.preventDefault();

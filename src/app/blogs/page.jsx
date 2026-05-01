@@ -8,6 +8,7 @@ import Pagination from '../components/Pagination';
 import Breadcrumbs from '../components/Breadcrumbs';
 import AppContext from '../../../context/AppContext';
 import { FiSearch, FiCalendar, FiFilter, FiClock } from 'react-icons/fi';
+import { getBlogList } from '@/lib/api/blogs';
 
 function Page() {
   const { page, setPage } = useContext(AppContext);
@@ -21,10 +22,7 @@ function Page() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs?pagination[page]=${page}&pagination[pageSize]=12&sort[date]=${order}&populate=*`
-    )
-      .then(res => res.json())
+    getBlogList({ page, pageSize: 12, sortOrder: order })
       .then(json => {
         if (json.data.length !== 0) {
           setBlog(json.data);
@@ -34,7 +32,7 @@ function Page() {
           setPage(prev => prev - 1);
         }
       })
-      .catch(error => {
+      .catch(() => {
         setLoading(false);
       });
   }, [page, order]);

@@ -8,6 +8,11 @@ import Link from 'next/link';
 import EmptyCartModal from '../components/cart/EmptyCartModal';
 import { toast } from 'react-toastify';
 import { calculateDiscountedPrice, getCartItem } from '../lib/func';
+import {
+  getActiveCart,
+  getCartByIdWithItems,
+  updateCart as apiUpdateCart
+} from '@/lib/api/cart';
 
 function Page() {
   const { data: session, status } = useSession();
@@ -23,17 +28,7 @@ function Page() {
 
   useEffect(() => {
     if (session?.user?.documentId) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items?filters[User][documentId][$eq]=${session?.user?.documentId}&filters[isCompleted][$eq]=false&filters[active][$eq]=true&populate[Items][populate][jewelries][populate][image]=true&populate[Items][populate][merchandises][populate][image]=true&populate[Items][populate][waistbeads][populate][image]=true&populate[Items][populate][aftercares][populate][image]=true`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${session?.jwt}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-        .then(res => res.json())
+      getActiveCart(session.user.documentId, session.jwt)
         .then(json => {
           setIsCartEmpty(json?.data[0]?.Items ? false : true);
           setCartId(json?.data[0]?.documentId);
@@ -42,8 +37,7 @@ function Page() {
           setDelivery(json?.data[0]?.deliveryFee?.toFixed(2));
           setLoading(false);
         })
-        .catch(err => {
-        });
+        .catch(() => {});
     }
   }, [session]);
 
@@ -172,20 +166,7 @@ function Page() {
 
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify(updatedPayload)
-        }
-      );
-
-      if (!response.ok) {
-      }
+      await apiUpdateCart(cartId, updatedPayload, session?.jwt);
     } catch (error) {
     }
   };
@@ -213,17 +194,7 @@ function Page() {
   const deleteRepeatableComponent = async(parentId, componentId) => {
     setRemovingItem(componentId);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${parentId}?populate[0]=Items.jewelries&populate[1]=Items.merchandises&populate[2]=Items.waistbeads&populate[3]=Items.aftercares&filters[isCompleted][$eq]=false&filters[active][$eq]=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.jwt}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      const parentData = await response.json();
+      const parentData = await getCartByIdWithItems(parentId, session?.jwt);
       if (!parentData?.data) {
         return;
       }
@@ -284,27 +255,14 @@ function Page() {
       };
 
 
-      const updateResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${parentId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify(updatedPayload)
-        }
-      );
-
-      if (updateResponse.ok) {
+      try {
+        await apiUpdateCart(parentId, updatedPayload, session?.jwt);
         toast.success('Item removed from cart');
         setCart(prevCart =>
           prevCart.filter(item => item.info.id !== componentId)
         );
-        // Dispatch event to notify other components of cart update
         window.dispatchEvent(new CustomEvent('cartUpdated'));
-      } else {
-        const errorResponse = await updateResponse.json();
+      } catch {
         toast.error('Failed to remove item');
       }
     } catch (error) {
@@ -312,7 +270,7 @@ function Page() {
     } finally {
       setRemovingItem(null);
     }
-  }; // Parent entry ID: 1, Component ID: 102
+  };
 
   // Example usage:
   if (loading) return <Loader />;

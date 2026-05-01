@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Loader from '../components/Loader';
 import Pagination from '../components/Pagination';
 import { getCartItem } from '../lib/func';
+import { getOrdersForUser } from '@/lib/api/orders';
 
 function Page() {
   const { data: session, status } = useSession();
@@ -25,32 +26,22 @@ function Page() {
     setError(null);
     
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders?populate[0]=cart.Items&populate[1]=cart.Items.jewelries.image&populate[2]=cart.Items.waistbeads.image&populate[3]=cart.Items.merchandises.image&populate[4]=cart.Items.aftercares.image&populate[5]=cart.User&pagination[page]=${page}&pagination[pageSize]=5&filters[cart][User][documentId][$eq]=${session?.user?.documentId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${session?.jwt}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const data = await getOrdersForUser({
+        token: session?.jwt,
+        userDocumentId: session?.user?.documentId,
+        page,
+        pageSize: 5
+      });
 
-      if (res.ok) {
-        const data = await res.json();
-
-        if (data.data && data.data.length !== 0) {
-          data.data.map((item, index) => {
-            const cart = getCartItem(item.cart.Items || []);
-            data.data[index].newCart = cart;
-          });
-          setOrders(data);
-        } else {
-          setOrders([]);
-          setPage(1);
-        }
+      if (data.data && data.data.length !== 0) {
+        data.data.map((item, index) => {
+          const cart = getCartItem(item.cart.Items || []);
+          data.data[index].newCart = cart;
+        });
+        setOrders(data);
       } else {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        setOrders([]);
+        setPage(1);
       }
     } catch (err) {
       setError(err.message);

@@ -7,12 +7,10 @@ import Reviews from './components/homepage/Reviews';
 import Blogs from './components/homepage/Blogs';
 import FadeInSection from './components/FadeInSection';
 import Loader from './components/Loader';
+import { getHomepage } from '@/lib/api/content';
 
 export default async function Home() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/homepage?populate[0]=Popular_Categories.Image&populate[1]=Hero.image&populate[2]=featured.jewelries.image&populate[3]=Advert.image&populate[4]=Greeting.Video&populate[5]=Reviews.reviews.Image&populate[6]=Blogs.blogs.image`
-  );
-  const homepage = await res.json();
+  const homepage = await getHomepage();
 
 
   if (!homepage) return <Loader />;

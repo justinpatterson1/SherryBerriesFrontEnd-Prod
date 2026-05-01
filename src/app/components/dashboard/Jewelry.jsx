@@ -7,6 +7,7 @@ import { RxCross2 } from 'react-icons/rx';
 import AddJewelryModule from '../dashboard/AddJewelryModule';
 import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
+import { getJewelryList, updateJewelry as apiUpdateJewelry } from '@/lib/api/products';
 
 function Jewelry() {
   const [page, setPage] = useState(1);
@@ -37,22 +38,14 @@ function Jewelry() {
   };
 
   const fetchJewelries = useCallback(async() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries?populate[0]=image&populate[1]=sizes&pagination[page]=${page}&pagination[pageSize]=12`
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json?.data.length !== 0) {
-          setJewelry(json?.data);
-          setLoading(false);
-        } else {
-          setJewelry([]);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    try {
+      const json = await getJewelryList({ page, pageSize: 12 });
+      setJewelry(json?.data?.length ? json.data : []);
+    } catch {
+      setJewelry([]);
+    } finally {
+      setLoading(false);
+    }
   }, [page]);
 
   useEffect(() => {
@@ -69,24 +62,10 @@ function Jewelry() {
 
   const updateJewelry = async id => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: formData })
-        }
-      );
-
-      if (res.ok) {
-        fetchJewelries();
-      } else {
-        alert('Failed to update jewelry.');
-      }
-    } catch (err) {
+      await apiUpdateJewelry(id, formData, session?.jwt);
+      fetchJewelries();
+    } catch {
+      alert('Failed to update jewelry.');
     }
   };
 

@@ -6,10 +6,9 @@ import Hero from '../../components/homepage/Hero';
 import Image from 'next/image';
 import Link from 'next/link';
 import Pagination from '../../components/Pagination';
-import options from '../../api/auth/[...nextauth]/options.js';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import { SYSTEM_ENTRYPOINTS } from 'next/dist/shared/lib/constants';
+import { getMerchandiseList } from '@/lib/api/products';
+import { getClothingProductHero } from '@/lib/api/content';
 
 function page() {
   const [page, setPage] = useState(1);
@@ -32,36 +31,20 @@ function page() {
     //     }
     //   });
 
-    try {
-      async function fetchData() {
-        try {
-          const merchandiseResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises?pagination[page]=${page}&pagination[pageSize]=12&populate=*`
-          );
-          const heroImgResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/clothing-product?populate[0]=Hero`
-          );
+    async function fetchData() {
+      try {
+        const [merchandiseData, heroData] = await Promise.all([
+          getMerchandiseList({ page, pageSize: 12 }),
+          getClothingProductHero()
+        ]);
 
-          const heroData = await heroImgResponse.json();
-          const merchandiseData = await merchandiseResponse.json();
-
-
-          setHero(heroData?.data.Hero[0].url);
-
-          if (merchandiseData?.data.length !== 0) {
-            setProduct(merchandiseData?.data || []);
-          } else {
-            setProduct([]);
-          }
-
-          //setLoading(false)
-        } catch (error) {
-        }
+        setHero(heroData?.data.Hero[0].url);
+        setProduct(merchandiseData?.data?.length ? merchandiseData.data : []);
+      } catch (error) {
       }
-
-      fetchData();
-    } catch (error) {
     }
+
+    fetchData();
   }, [page]);
 
   //   useEffect(() => {

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { api } from '@/lib/api-client';
 
 export default function RelatedProducts({ 
   currentProductId, 
@@ -18,17 +19,11 @@ export default function RelatedProducts({
         setLoading(true);
         setError(null);
 
-        const apiEndpoint = getApiEndpoint(productType);
-        const response = await fetch(`${apiEndpoint}?populate=*&pagination[limit]=${limit + 1}`);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch related products');
-        }
-
-        const json = await response.json();
+        const path = getApiPath(productType);
+        if (!path) throw new Error('Failed to fetch related products');
+        const json = await api.get(`${path}?populate=*&pagination[limit]=${limit + 1}`);
         const products = json.data || [];
-        
-        // Filter out current product and limit results
+
         const filtered = products
           .filter(product => product.documentId !== currentProductId)
           .slice(0, limit);
@@ -46,17 +41,16 @@ export default function RelatedProducts({
     }
   }, [currentProductId, productType, limit]);
 
-  const getApiEndpoint = (type) => {
-    const baseUrl = process.env.NEXT_PUBLIC_SHERRYBERRIES_URL;
+  const getApiPath = (type) => {
     switch (type) {
       case 'jewelry':
-        return `${baseUrl}/api/jewelries`;
+        return '/api/jewelries';
       case 'clothing':
-        return `${baseUrl}/api/merchandises`;
+        return '/api/merchandises';
       case 'waistbead':
-        return `${baseUrl}/api/waistbeads`;
+        return '/api/waistbeads';
       case 'aftercare':
-        return `${baseUrl}/api/aftercares`;
+        return '/api/aftercares';
       default:
         return '';
     }

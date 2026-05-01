@@ -2,19 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import FadeInSection from '../components/FadeInSection';
 import Loader from '../components/Loader';
+import { getAboutPage } from '@/lib/api/content';
 
 export default async function About() {
   try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_SHERRYBERRIES_URL +
-        '/api/about?populate[blocks][on][shared.media][populate]=*&populate[blocks][on][shared.quote][populate]=*&populate[blocks][on][shared.rich-text][populate]=*'
-    );
-    
-    if (!res.ok) {
-      throw new Error('Failed to fetch about data');
-    }
-    
-    const about = await res.json();
+    const about = await getAboutPage();
 
     if (!about?.data) {
       throw new Error('No about data available');

@@ -3,16 +3,12 @@ import Link from 'next/link';
 import { FiArrowLeft, FiCalendar, FiClock, FiShare2, FiHeart } from 'react-icons/fi';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '../../components/Breadcrumbs';
+import { getBlogById } from '@/lib/api/blogs';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs/${id}?populate=image`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return { title: 'Blog Post' };
-    const { data } = await res.json();
+    const { data } = await getBlogById(id, { populateImageOnly: true });
     return {
       title: data?.title || 'Blog Post',
       description: data?.description?.slice(0, 160) || 'Read this article on the SherryBerries blog.',
@@ -28,16 +24,12 @@ export async function generateMetadata({ params }) {
 async function page({ params }) {
   const { id } = await params;
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/blogs/${id}?populate=*`,
-    { next: { revalidate: 3600 } } // Cache for 1 hour
-  );
-
-  if (!response.ok) {
+  let blog;
+  try {
+    blog = await getBlogById(id);
+  } catch {
     notFound();
   }
-
-  const blog = await response.json();
 
 
   const formatDate = (dateString) => {

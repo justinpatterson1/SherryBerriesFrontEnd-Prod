@@ -1,36 +1,25 @@
-// lib/reduceQuantity.js
+import { updateCart as apiUpdateCart } from '@/lib/api/cart';
+import {
+  getJewelryWithSizes,
+  updateJewelry,
+  getMerchandiseWithSizes,
+  updateMerchandise,
+  getAftercare,
+  updateAftercare
+} from '@/lib/api/products';
 
 export async function reduceQuantity(cartItems, jwt) {
-  const collectionMap = {
-    Jewelry: 'jewelries',
-    Merchandise: 'merchandises',
-    Aftercare: 'aftercares'
-  };
-
   for (const item of cartItems) {
     const itemType = item.info.ItemType;
     const docId = item.item.documentId;
-    const collection = collectionMap[itemType];
-
-    if (!collection) {
-      continue;
-    }
 
     try {
       if (itemType === 'Jewelry' || itemType === 'Merchandise') {
-        // Fetch current sizes
-        const url = `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/${collection}/${docId}?populate[0]=sizes`;
-        const resp = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`
-          }
-        });
-
-        const data = await resp.json();
-
         const sizeKey = itemType === 'Jewelry' ? 'size' : 'clothingSize';
+        const data =
+          itemType === 'Jewelry'
+            ? await getJewelryWithSizes(docId, jwt)
+            : await getMerchandiseWithSizes(docId, jwt);
 
         const updatedSizes = data.data.sizes.map(({ id, ...sizeObj }) => {
           if (sizeObj.Size === item.info[sizeKey]) {
@@ -42,49 +31,15 @@ export async function reduceQuantity(cartItems, jwt) {
           return { Size: sizeObj.Size, quantity: sizeObj.quantity };
         });
 
-        
-        // Update sizes
-        const updateResp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/${collection}/${docId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${jwt}`
-            },
-            body: JSON.stringify({ data: { sizes: updatedSizes } })
-          }
-        );
-
+        if (itemType === 'Jewelry') {
+          await updateJewelry(docId, { sizes: updatedSizes }, jwt);
+        } else {
+          await updateMerchandise(docId, { sizes: updatedSizes }, jwt);
+        }
       } else if (itemType === 'Aftercare') {
-        // Fetch current quantity
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${docId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${jwt}`
-            }
-          }
-        );
-
-        const data = await resp.json();
+        const data = await getAftercare(docId, jwt);
         const newQty = data.data.quantity - item.info.quantity;
-
-        // Update quantity
-        const updateResp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${docId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${jwt}`
-            },
-            body: JSON.stringify({ data: { quantity: newQty } })
-          }
-        );
-
+        await updateAftercare(docId, { quantity: newQty }, jwt);
       }
     } catch (err) {
     }
@@ -92,22 +47,7 @@ export async function reduceQuantity(cartItems, jwt) {
 }
 
 export const endCart = async(cartId, session) => {
-  const resp = await fetch(
-    `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.jwt}`
-      },
-      body: JSON.stringify({
-        data: {
-          active: false
-        }
-      })
-    }
-  );
-
-  if (resp.ok) {
-  }
+  try {
+    await apiUpdateCart(cartId, { data: { active: false } }, session?.jwt);
+  } catch {}
 };

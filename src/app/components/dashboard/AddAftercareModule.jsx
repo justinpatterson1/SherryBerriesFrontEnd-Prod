@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import { RxCross2 } from 'react-icons/rx';
+import { uploadFile } from '@/lib/api/uploads';
+import { createAftercare } from '@/lib/api/products';
 
 function AddAftercareModule({ openAddForm, setOpenAddForm, fetchAftercare }) {
   const { data: session } = useSession();
@@ -45,61 +47,35 @@ function AddAftercareModule({ openAddForm, setOpenAddForm, fetchAftercare }) {
     }
 
     if (imageFile) {
-      const formImage = new FormData();
-      formImage.append('files', imageFile);
-
       try {
-        const imageUpload = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/upload`,
-          {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${session?.jwt}`
-            },
-            body: formImage
-          }
-        );
-
-        if (imageUpload.ok) {
-          const resp = await imageUpload.json();
-          const payload = {
-            name: formData.name,
-            description: formData.description,
-            price: parseInt(formData.price),
-            ItemType: formData.ItemType,
-            image: resp[0].id || ''
-          };
-
-
-          const resp2 = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                authorization: `Bearer ${session?.jwt}`
-              },
-              body: JSON.stringify({ data: payload })
-            }
-          );
-
-          if (resp2.ok) {
-            setFormData({
-              name: '',
-              description: '',
-              price: '',
-              ItemType: 'Jewelry'
-            });
-
-            setImageFile(null);
-            setImagePreview(null);
-            fetchAftercare();
-            notify();
-          }
-        } else {
+        let resp;
+        try {
+          resp = await uploadFile(imageFile, session?.jwt);
+        } catch {
           alert('Image upload failed');
           setImageError('Select an image less than 5MB');
+          return;
         }
+
+        const payload = {
+          name: formData.name,
+          description: formData.description,
+          price: parseInt(formData.price),
+          ItemType: formData.ItemType,
+          image: resp[0].id || ''
+        };
+
+        await createAftercare({ data: payload }, session?.jwt);
+        setFormData({
+          name: '',
+          description: '',
+          price: '',
+          ItemType: 'Jewelry'
+        });
+        setImageFile(null);
+        setImagePreview(null);
+        fetchAftercare();
+        notify();
       } catch (error) {
       }
     }

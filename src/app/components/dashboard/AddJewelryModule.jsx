@@ -6,6 +6,9 @@ import { useSession } from 'next-auth/react';
 import JewelryForm from './JewelryForm';
 import Modal from '../ui/Modal';
 import { JEWELRY_SIZES } from '@/lib/constants';
+import { uploadFile } from '@/lib/api/uploads';
+import { createJewelry } from '@/lib/api/products';
+import { ApiError } from '@/lib/api-client';
 
 const INITIAL_FORM = {
   name: '',
@@ -65,24 +68,17 @@ export default function AddJewelryModule({ setOpenAddForm, fetchJewelries }) {
 
     setSubmitting(true);
     try {
-      const formImage = new FormData();
-      formImage.append('files', imageFile);
-
-      const imageUpload = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/upload`,
-        {
-          method: 'POST',
-          headers: { authorization: `Bearer ${session?.jwt}` },
-          body: formImage
+      let uploadResp;
+      try {
+        uploadResp = await uploadFile(imageFile, session?.jwt);
+      } catch (err) {
+        if (err instanceof ApiError) {
+          setImageError('Select an image less than 5MB');
+          return;
         }
-      );
-
-      if (!imageUpload.ok) {
-        setImageError('Select an image less than 5MB');
-        return;
+        throw err;
       }
 
-      const uploadResp = await imageUpload.json();
       const payload = {
         name: formData.name,
         description: formData.description,
@@ -93,27 +89,14 @@ export default function AddJewelryModule({ setOpenAddForm, fetchJewelries }) {
         category: formData.category,
         material: formData.material,
         ItemType: formData.ItemType,
-        image: uploadResp[0]?.id || '',
+        image: uploadResp?.[0]?.id || '',
         sizes
       };
 
-      const createResp = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({ data: payload })
-        }
-      );
-
-      if (createResp.ok) {
-        resetForm();
-        fetchJewelries?.();
-        toast('Jewelry was successfully added!');
-      }
+      await createJewelry({ data: payload }, session?.jwt);
+      resetForm();
+      fetchJewelries?.();
+      toast('Jewelry was successfully added!');
     } catch {
       setImageError('Submission failed — please try again');
     } finally {

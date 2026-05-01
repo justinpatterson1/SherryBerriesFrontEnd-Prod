@@ -7,6 +7,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Pagination from '../../components/Pagination';
 import { useSession } from 'next-auth/react';
+import { getWaistbeadsList } from '@/lib/api/products';
+import { getWaistbeadProductHero } from '@/lib/api/content';
 
 export default function Page() {
   const [page, setPage] = useState(1);
@@ -24,26 +26,13 @@ export default function Page() {
 
   async function fetchData() {
     try {
-      const waistbeadResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/waistbeads?pagination[page]=${page}&pagination[pageSize]=12&populate=*`
-      );
-      const heroImgResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/waistbead-product?populate[0]=Hero`
-      );
-
-      const heroData = await heroImgResponse.json();
-      const waistbeadData = await waistbeadResponse.json();
-
+      const [waistbeadData, heroData] = await Promise.all([
+        getWaistbeadsList({ page, pageSize: 12 }),
+        getWaistbeadProductHero()
+      ]);
 
       setHero(heroData?.data.Hero[0].url);
-
-      if (waistbeadData?.data.length !== 0) {
-        setProduct(waistbeadData?.data);
-      } else {
-        setProduct([]);
-      }
-
-      //setLoading(false)
+      setProduct(waistbeadData?.data?.length ? waistbeadData.data : []);
     } catch (error) {
     }
   }

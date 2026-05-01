@@ -2,6 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import {
+  getActiveCart,
+  createCart as apiCreateCart,
+  updateCart as apiUpdateCart
+} from '@/lib/api/cart';
 
 export function useCart() {
   const [cartId, setCartId] = useState('');
@@ -18,29 +23,15 @@ export function useCart() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items?filters[User][documentId][$eq]=${session?.user?.documentId}&filters[isCompleted][$eq]=false&filters[active][$eq]=true&populate[Items][populate][jewelries][populate][image]=true&populate[Items][populate][merchandises][populate][image]=true&populate[Items][populate][waistbeads][populate][image]=true&populate[Items][populate][aftercares][populate][image]=true`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.jwt}`
-          }
-        }
-      );
+      const json = await getActiveCart(session?.user?.documentId, session?.jwt);
 
-      if (response.ok) {
-        const json = await response.json();
-
-        if (json.data && json.data.length > 0 && json.data[0].active) {
-          setCartId(json.data[0].documentId);
-          setCurrentCart(json.data[0].Items || []);
-          setActive(true);
-        } else {
-          // No active cart found
-          setCurrentCart([]);
-          setActive(false);
-        }
+      if (json?.data && json.data.length > 0 && json.data[0].active) {
+        setCartId(json.data[0].documentId);
+        setCurrentCart(json.data[0].Items || []);
+        setActive(true);
+      } else {
+        setCurrentCart([]);
+        setActive(false);
       }
     } catch (error) {
     }
@@ -51,7 +42,6 @@ export function useCart() {
       throw new Error('Please sign in to add items to cart');
     }
 
-
     setLoading(true);
     try {
       if (active) {
@@ -60,9 +50,7 @@ export function useCart() {
         await createNewCart(productData);
       }
       toast.success('Item added to cart!');
-      // Refresh cart data
       await fetchCart();
-      // Dispatch event to notify other components of cart update
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('cartUpdated'));
       }
@@ -100,9 +88,8 @@ export function useCart() {
       color: item.color
     }));
 
-    // Check if item already exists and update quantity or add new
-    const existingItemIndex = updatedItems.findIndex(item => 
-      item.ItemType === productData.ItemType && 
+    const existingItemIndex = updatedItems.findIndex(item =>
+      item.ItemType === productData.ItemType &&
       (item.jewelries?.[0] === productData.jewelries?.[0] ||
        item.merchandises?.[0] === productData.merchandises?.[0] ||
        item.waistbeads?.[0] === productData.waistbeads?.[0] ||
@@ -118,54 +105,26 @@ export function useCart() {
     const payload = {
       data: {
         Items: updatedItems,
-        TotalPrice: 0, // Will be calculated server-side
+        TotalPrice: 0,
         User: session.user.documentId,
         active: true
       }
     };
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.jwt}`
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to update cart');
-    }
+    await apiUpdateCart(cartId, payload, session.jwt);
   };
 
   const createNewCart = async (productData) => {
     const payload = {
       data: {
         Items: [productData],
-        TotalPrice: 0, // Will be calculated server-side
+        TotalPrice: 0,
         User: session.user.documentId,
         active: true
       }
     };
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.jwt}`
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to create cart');
-    }
+    await apiCreateCart(payload, session.jwt);
   };
 
   const refreshCart = async () => {

@@ -5,6 +5,9 @@ import { FiMail, FiLock } from 'react-icons/fi';
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { BASE_URL } from '@/lib/api-client';
+import { getSignUpHero, resetPassword as apiResetPassword } from '@/lib/api/auth';
+import { ApiError } from '@/lib/api-client';
 
 function page() {
   const router = useRouter();
@@ -24,16 +27,12 @@ function page() {
   }, []);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/sign-up?populate=*`)
-      .then(res => res.json())
+    getSignUpHero()
       .then(json => {
         setData(json.data);
         setLoading(false);
       })
       .catch(() => {});
-    // const data = await response.json();
-
-    // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
   }, []);
 
   const handleSubmit = async evt => {
@@ -46,40 +45,21 @@ function page() {
 
     if (newPassword === confirmPassword) {
       try {
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/auth/reset-password`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              code: code,
-              password: newPassword,
-              passwordConfirmation: newPassword
-            })
-          }
-        );
-
-        if (resp.ok) {
-          setNewPassword('');
-          setConfirmPassword('');
-          setError('');
-          success();
-          router.push('/sign-in');
-        } else {
-        }
+        await apiResetPassword({
+          code: code,
+          password: newPassword,
+          passwordConfirmation: newPassword
+        });
+        setNewPassword('');
+        setConfirmPassword('');
+        setError('');
+        success();
+        router.push('/sign-in');
       } catch (error) {
+        if (!(error instanceof ApiError)) {
+          // network error — silently swallow as before
+        }
       }
-
-      // .then(res=>res.json())
-      // .then(json=>{
-      //   setData(json.data)
-      //   setLoading(false)
-      // })
-      // const data = await response.json();
-
-      // const imageUrl = `http://localhost:1337${data.data.Image.url}`;
     } else {
       setError('Password could not be confirmed');
     }
@@ -92,7 +72,7 @@ function page() {
         <div
           className='lg:w-1/2 w-full h-64 lg:h-auto'
           style={{
-            backgroundImage: `url('${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}${data?.Image?.url}')`,
+            backgroundImage: `url('${BASE_URL}${data?.Image?.url}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}

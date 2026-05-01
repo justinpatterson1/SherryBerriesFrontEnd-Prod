@@ -6,10 +6,9 @@ import Hero from '../../components/homepage/Hero';
 import Image from 'next/image';
 import Link from 'next/link';
 import Pagination from '../../components/Pagination';
-import options from '../../api/auth/[...nextauth]/options.js';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import { SYSTEM_ENTRYPOINTS } from 'next/dist/shared/lib/constants';
+import { getAftercareList } from '@/lib/api/products';
+import { getAftercareProductHero } from '@/lib/api/content';
 
 function page() {
   const [page, setPage] = useState(1);
@@ -22,36 +21,20 @@ function page() {
   useEffect(() => {
     setLoading(true);
 
-    try {
-      async function fetchData() {
-        try {
-          const aftercareResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares?pagination[page]=${page}&pagination[pageSize]=12&populate=*`
-          );
-          const heroImgResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercare-product?populate[0]=Hero`
-          );
+    async function fetchData() {
+      try {
+        const [aftercareData, heroData] = await Promise.all([
+          getAftercareList({ page, pageSize: 12 }),
+          getAftercareProductHero()
+        ]);
 
-          const heroData = await heroImgResponse.json();
-          const aftercareData = await aftercareResponse.json();
-
-
-          setHero(heroData?.data.Hero.url);
-
-          if (aftercareData?.data.length !== 0) {
-            setAftercare(aftercareData?.data);
-          } else {
-            setAftercare([]);
-          }
-
-          //setLoading(false)
-        } catch (error) {
-        }
+        setHero(heroData?.data.Hero.url);
+        setAftercare(aftercareData?.data?.length ? aftercareData.data : []);
+      } catch (error) {
       }
-
-      fetchData();
-    } catch (error) {
     }
+
+    fetchData();
   }, [page]);
 
   //   useEffect(() => {

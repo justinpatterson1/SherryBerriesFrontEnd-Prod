@@ -14,6 +14,17 @@ import { RxCross2 } from 'react-icons/rx';
 import Jewelry from '../product/jewelry/page';
 import { calculateDiscountedPrice, getCartItem } from '../lib/func';
 import PayPalButton from '../components/paypalButtons/PayPalButton';
+import { getActiveCart, updateCart as apiUpdateCart, findCartCoupon } from '@/lib/api/cart';
+import { findCouponByCode } from '@/lib/api/coupons';
+import { createOrder } from '@/lib/api/orders';
+import {
+  getJewelryWithSizes,
+  updateJewelry as apiUpdateJewelry,
+  getMerchandiseWithSizes,
+  updateMerchandise as apiUpdateMerchandise,
+  getAftercare,
+  updateAftercare as apiUpdateAftercare
+} from '@/lib/api/products';
 
 // const customId = customAlphabet(
 //   '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_',
@@ -103,18 +114,7 @@ function Page() {
 
     const fetchCart = async() => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items?filters[User][documentId][$eq]=${session?.user?.documentId}&filters[isCompleted][$eq]=false&filters[active][$eq]=true&populate[Items][populate][jewelries][populate][image]=true&populate[Items][populate][merchandises][populate][image]=true&populate[Items][populate][waistbeads][populate][image]=true&populate[Items][populate][aftercares][populate][image]=true`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${session?.jwt}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-
-        const json = await res.json();
+        const json = await getActiveCart(session.user.documentId, session.jwt);
         dispatch({
           type: 'SET_CART',
           payload: getCartItem(json.data?.[0]?.Items) || []
@@ -209,27 +209,14 @@ function Page() {
     setCouponError('');
     if (!coupon) {
       const currDate = dayjs().format('YYYY-MM-DD');
-      const resp = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/coupons?filters[code][$eq]=${code}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.jwt}`
-          }
-        }
-      );
-
-
-
-      // if(!resp.data){
-      //   setCouponError("Coupon Is Invalid");
-      //   setCode("")
-      //   return;
-      // }
-
-      const result = await resp.json();
-
+      let result;
+      try {
+        result = await findCouponByCode(code, session?.jwt);
+      } catch {
+        setCouponError('This Coupon Is Invalid');
+        setCode('');
+        return;
+      }
 
       if (
         result.data.length > 0 &&
@@ -237,50 +224,28 @@ function Page() {
         result.data[0].code === code
       ) {
         try {
-          const couponCheckResp = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items?filters[User][documentId][$eq]=${session?.user?.documentId}&filters[code][$eq]=${code}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session?.jwt}`
-              }
-            }
+          const couponCheck = await findCartCoupon(
+            session?.user?.documentId,
+            code,
+            session?.jwt
           );
-
-          if (!couponCheckResp.ok) {
-            setCouponError('Error Occured During Coupon Validation');
-            setCode('');
-          }
-
-          const couponCheck = await couponCheckResp.json();
 
           if (couponCheck.data.length > 0) {
             setCouponError('You Already Applied This Code');
           } else {
-            const couponUpdateResp = await fetch(
-              `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
+            await apiUpdateCart(
+              cartId,
               {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${session?.jwt}`
-                },
-                body: JSON.stringify({
-                  data: {
-                    discountValue: result.data[0].discountValue,
-                    discountType: result.data[0].discountType,
-                    code: result.data[0].code
-                  }
-                })
-              }
+                data: {
+                  discountValue: result.data[0].discountValue,
+                  discountType: result.data[0].discountType,
+                  code: result.data[0].code
+                }
+              },
+              session?.jwt
             );
-
-
-            if (couponUpdateResp.ok) {
-              setCoupon(result.data[0]);
-              setCode('');
-            }
+            setCoupon(result.data[0]);
+            setCode('');
           }
         } catch (error) {
           setCouponError('Error Occured Applying Coupon');
@@ -294,194 +259,77 @@ function Page() {
   };
 
   const endCart = async() => {
-    const resp = await fetch(
-      `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.jwt}`
-        },
-        body: JSON.stringify({
-          data: {
-            active: false
-          }
-        })
-      }
-    );
-
-    if (resp.ok) {
+    try {
+      await apiUpdateCart(cartId, { data: { active: false } }, session?.jwt);
       alert('cart ' + cartId + ' is not long active');
-    }
+    } catch {}
   };
 
   const reduceQuantity = async() => {
     for (let i = 0; i < state.cart.length; i++) {
-      if (state.cart[i].info.ItemType === 'Jewelry') {
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries/${state.cart[i].item.documentId}?populate[0]=sizes`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            }
-          }
-        );
+      const cartItem = state.cart[i];
+      const docId = cartItem.item.documentId;
 
-        const jewelry = await resp?.json();
-
-        if (jewelry) {
-
-          const updatedSizes = jewelry.data.sizes.map(({ id, ...sizeObj }) => {
-            if (sizeObj.Size === state.cart[i].info.size) {
-              return {
-                ...sizeObj,
-                quantity: sizeObj.quantity - state.cart[i].info.quantity
-              }; // or any logic
-            }
-            return { Size: sizeObj.Size, quantity: sizeObj.quantity };
-          });
-
-          const resp = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries/${state.cart[i].item.documentId}`,
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session?.jwt}`
-              },
-              body: JSON.stringify({ data: { sizes: updatedSizes } })
-            }
-          );
-
-          if (!resp.ok) {
-          }
-        }
-      }
-
-      if (state.cart[i].info.ItemType === 'Merchandise') {
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises/${state.cart[i].item.documentId}?populate[0]=sizes`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            }
-          }
-        );
-
-        const merchandise = await resp?.json();
-
-        if (merchandise) {
-          const updatedSizes = merchandise.data.sizes.map(
-            ({ id, ...sizeObj }) => {
-              if (sizeObj.Size == state.cart[i].info.clothingSize) {
+      if (cartItem.info.ItemType === 'Jewelry') {
+        try {
+          const jewelry = await getJewelryWithSizes(docId, session?.jwt);
+          if (jewelry?.data?.sizes) {
+            const updatedSizes = jewelry.data.sizes.map(({ id, ...sizeObj }) => {
+              if (sizeObj.Size === cartItem.info.size) {
                 return {
                   ...sizeObj,
-                  quantity: sizeObj.quantity - state.cart[i].info.quantity
-                }; // or any logic
+                  quantity: sizeObj.quantity - cartItem.info.quantity
+                };
               }
               return { Size: sizeObj.Size, quantity: sizeObj.quantity };
-            }
-          );
-
-          const resp = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/merchandises/${state.cart[i].item.documentId}`,
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session?.jwt}`
-              },
-              body: JSON.stringify({ data: { sizes: updatedSizes } })
-            }
-          );
-
-          if (!resp.ok) {
+            });
+            await apiUpdateJewelry(docId, { sizes: updatedSizes }, session?.jwt);
           }
-        }
+        } catch {}
       }
 
-      if (state.cart[i].info.ItemType === 'Aftercare') {
-        const resp = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${state.cart[i].item.documentId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            }
+      if (cartItem.info.ItemType === 'Merchandise') {
+        try {
+          const merchandise = await getMerchandiseWithSizes(docId, session?.jwt);
+          if (merchandise?.data?.sizes) {
+            const updatedSizes = merchandise.data.sizes.map(
+              ({ id, ...sizeObj }) => {
+                if (sizeObj.Size == cartItem.info.clothingSize) {
+                  return {
+                    ...sizeObj,
+                    quantity: sizeObj.quantity - cartItem.info.quantity
+                  };
+                }
+                return { Size: sizeObj.Size, quantity: sizeObj.quantity };
+              }
+            );
+            await apiUpdateMerchandise(docId, { sizes: updatedSizes }, session?.jwt);
           }
-        );
+        } catch {}
+      }
 
-        const aftercare = await resp?.json();
-
-        if (aftercare) {
-          const updatedSizes =
-            aftercare.data.quantity - state.cart[i].info.quantity;
-          //   if (sizeObj.Size == state.cart[i].info.clothingSize) {
-          //     return {  quantity: sizeObj.quantity - state.cart[i].info.quantity}; // or any logic
-          //   }
-          //   return { Size: sizeObj.Size, quantity: sizeObj.quantity };
-          // });
-
-          const resp = await fetch(
-            `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/aftercares/${state.cart[i].item.documentId}`,
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session?.jwt}`
-              },
-              body: JSON.stringify({ data: { quantity: updatedSizes } })
-            }
-          );
-
-          if (!resp.ok) {
+      if (cartItem.info.ItemType === 'Aftercare') {
+        try {
+          const aftercare = await getAftercare(docId, session?.jwt);
+          if (aftercare?.data) {
+            const updatedQuantity =
+              aftercare.data.quantity - cartItem.info.quantity;
+            await apiUpdateAftercare(docId, { quantity: updatedQuantity }, session?.jwt);
           }
-        }
+        } catch {}
       }
     }
-
-    // const jewelry = await fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries`)
-    // fetch(`${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/jewelries`,{
-    //   method:"PUT",
-    //   headers :{
-
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${session?.jwt}`,
-
-    // },
-
-    // })
   };
 
   const removeCoupon = async evt => {
     evt.preventDefault();
     try {
-      const removeCouponResp = await fetch(
-        `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/cart-items/${cartId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.jwt}`
-          },
-          body: JSON.stringify({
-            data: {
-              discountValue: null,
-              discountType: '',
-              code: ''
-            }
-          })
-        }
+      await apiUpdateCart(
+        cartId,
+        { data: { discountValue: null, discountType: '', code: '' } },
+        session?.jwt
       );
-
-      if (removeCouponResp.ok) {
-        setCoupon(null);
-      }
+      setCoupon(null);
     } catch (error) {
       throw new Error(`Failed to remove coupon: ${error}`);
     }
@@ -591,34 +439,18 @@ function Page() {
 
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            },
-            body: JSON.stringify(payload)
-          }
-        );
-
-        if (response.ok) {
-          try {
-            await sendConfirmationEmail();
-            setIsSubmitted(false);
-            await reduceQuantity();
-            await endCart();
-            setOrderConfirmed(true);
-            setLoading(true);
-          } catch (error) {
-            setError(error.message);
-          }
-
-          router.push(`/checkout/thank-you?order_id=${orderId}`);
+        await createOrder(payload, session?.jwt);
+        try {
+          await sendConfirmationEmail();
+          setIsSubmitted(false);
+          await reduceQuantity();
+          await endCart();
+          setOrderConfirmed(true);
+          setLoading(true);
+        } catch (error) {
+          setError(error.message);
         }
-        if (!response.ok) {
-        }
+        router.push(`/checkout/thank-you?order_id=${orderId}`);
       } catch (error) {
       }
     }
@@ -641,36 +473,20 @@ function Page() {
 
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            },
-            body: JSON.stringify(payload)
-          }
-        );
-
-        if (response.ok) {
-          try {
-            await sendConfirmationEmail();
-            setIsSubmitted(false);
-            await reduceQuantity();
-            await endCart();
-            setOrderConfirmed(true);
-            setLoading(true);
-          } catch (error) {
-            setError(error.message);
-          }
-
-          router.push(`/checkout/thank-you?order_id=${orderId}&status=success`);
+        await createOrder(payload, session?.jwt);
+        try {
+          await sendConfirmationEmail();
+          setIsSubmitted(false);
+          await reduceQuantity();
+          await endCart();
+          setOrderConfirmed(true);
+          setLoading(true);
+        } catch (error) {
+          setError(error.message);
         }
-        if (!response.ok) {
-          router.push(`/checkout/thank-you?order_id=${orderId}&status=failed`)
-        }
+        router.push(`/checkout/thank-you?order_id=${orderId}&status=success`);
       } catch (error) {
+        router.push(`/checkout/thank-you?order_id=${orderId}&status=failed`);
       }
     }
 
@@ -691,31 +507,12 @@ function Page() {
       };
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SHERRYBERRIES_URL}/api/orders`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.jwt}`
-            },
-            body: JSON.stringify(payload)
-          }
-        );
-
-
-        if (response.ok) {
-          try {
-            //await sendConfirmationEmail()
-            await wiPayAPI();
-            setLoading(true);
-          } catch (error) {
-            setError(error.message);
-          }
-
-          //   router.push(`/checkout/thank-you?orderId=${orderId}`)
-        }
-        if (!response.ok) {
+        await createOrder(payload, session?.jwt);
+        try {
+          await wiPayAPI();
+          setLoading(true);
+        } catch (error) {
+          setError(error.message);
         }
       } catch (error) {
       }
