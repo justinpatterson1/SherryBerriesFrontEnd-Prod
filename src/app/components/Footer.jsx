@@ -1,11 +1,7 @@
-'use client';
-
 import Link from 'next/link';
 import {
-  FaFacebookF,
   FaInstagram,
   FaTiktok,
-  FaXTwitter,
   FaLocationDot,
   FaPhone,
   FaEnvelope,
@@ -13,79 +9,21 @@ import {
   FaHeart,
   FaArrowRight
 } from 'react-icons/fa6';
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 import FadeInSection from './FadeInSection';
+import NewsletterForm from './NewsletterForm';
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const notify = () =>
-    toast('🎉 Email was successfully added!', {
-      position: 'bottom-right',
-      className: 'toast-success'
-    });
-  const failure = () =>
-    toast('❌ Unable to add Email to subscription list', {
-      position: 'bottom-right',
-      className: 'toast-error'
-    });
-  const isExisting = () =>
-    toast('ℹ️ Email already exists in our list', {
-      position: 'bottom-right',
-      className: 'toast-info'
-    });
-
-  const handleSubmit = async evt => {
-    evt.preventDefault();
-    if (!email.trim()) return;
-    
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      });
-
-      if (response.status === 429) {
-        toast.error('Too many requests. Please try again in 1 minute.');
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.status === 201) {
-        notify();
-        setEmail('');
-      } else if (data.status === 200) {
-        isExisting();
-        setEmail('');
-      } else if (data.status === 500) {
-        failure();
-        setEmail('');
-      }
-    } catch (error) {
-      failure();
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <footer className='bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white relative overflow-hidden'>
       {/* Background decorative elements */}
       <div className='absolute inset-0 bg-gradient-to-r from-brand/5 to-pink-600/5'></div>
       <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand to-pink-600'></div>
-      
+
       <div className='relative z-10'>
         {/* Main Footer Content */}
         <div className='container mx-auto py-16 px-4'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12'>
-            
+
             {/* Brand Section */}
             <FadeInSection>
               <div className='space-y-6'>
@@ -99,14 +37,6 @@ export default function Footer() {
                   We Do It Big Here At SherryBerries! Creating beautiful, unique pieces that celebrate your individual style.
                 </p>
                 <div className='flex space-x-4'>
-                  {/* <Link
-                    href='https://www.facebook.com'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand transition-all duration-300 transform hover:scale-110'
-                  >
-                    <FaFacebookF size={18} />
-                  </Link> */}
                   <Link
                     href='https://www.instagram.com/sherryberries_?igsh=MTRzOWF2aTQ4Y3A5OQ%3D%3D&utm_source=qr'
                     target='_blank'
@@ -123,14 +53,6 @@ export default function Footer() {
                   >
                     <FaTiktok size={18} />
                   </Link>
-                  {/* <Link
-                    href='https://www.twitter.com'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-brand transition-all duration-300 transform hover:scale-110'
-                  >
-                    <FaXTwitter size={18} />
-                  </Link> */}
                 </div>
               </div>
             </FadeInSection>
@@ -189,7 +111,7 @@ export default function Footer() {
             <FadeInSection>
               <div className='space-y-6'>
                 <h3 className='text-xl font-bold text-white mb-6'>Stay Connected</h3>
-                
+
                 {/* Contact Info */}
                 <div className='space-y-4 mb-6'>
                   <div className='flex items-center text-gray-300'>
@@ -210,34 +132,7 @@ export default function Footer() {
                   </div>
                 </div>
 
-                {/* Newsletter Signup */}
-                <div className='bg-white/5 rounded-xl p-6 border border-white/10'>
-                  <h4 className='text-lg font-semibold text-white mb-3'>Newsletter</h4>
-                  <p className='text-gray-300 text-sm mb-4'>
-                    Get exclusive offers and updates delivered to your inbox.
-                  </p>
-                  <form onSubmit={handleSubmit} className='space-y-3'>
-                    <input
-                      type='email'
-                      placeholder='Enter your email'
-                      value={email}
-                      onChange={evt => setEmail(evt.target.value)}
-                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-300'
-                      required
-                    />
-                    <button
-                      type='submit'
-                      disabled={isSubmitting}
-                      className='w-full bg-brand hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center'
-                    >
-                      {isSubmitting ? (
-                        <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
-                      ) : (
-                        'Subscribe'
-                      )}
-                    </button>
-                  </form>
-                </div>
+                <NewsletterForm />
               </div>
             </FadeInSection>
           </div>
@@ -270,20 +165,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      
-      <ToastContainer
-        position="bottom-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        toastClassName="custom-toast"
-      />
     </footer>
   );
 }

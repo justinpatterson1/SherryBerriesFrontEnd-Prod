@@ -13,7 +13,6 @@ import { setConfig } from 'next/config';
 import { RxCross2 } from 'react-icons/rx';
 import Jewelry from '../product/jewelry/page';
 import { calculateDiscountedPrice, getCartItem } from '../lib/func';
-import PayPalButton from '../components/paypalButtons/PayPalButton';
 import { getActiveCart, updateCart as apiUpdateCart, findCartCoupon } from '@/lib/api/cart';
 import { findCouponByCode } from '@/lib/api/coupons';
 import { createOrder } from '@/lib/api/orders';
@@ -803,7 +802,6 @@ function Page() {
                       ? 'mt-8 p-4 border border-gray-300 rounded-xl bg-gray-50 text-sm text-gray-700 shadow-sm'
                       : 'hidden'
                   }>
-                    {/* <PayPalButton /> */}
                 </div>
 
                 <div

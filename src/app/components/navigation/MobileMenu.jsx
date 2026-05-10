@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaHeart } from 'react-icons/fa';
+import { FiSearch } from 'react-icons/fi';
 import CartBadge from './CartBadge';
 import { PRODUCT_LINKS } from './productLinks';
 
@@ -19,7 +20,7 @@ function mobileLinkClass(active) {
   }`;
 }
 
-export default function MobileMenu({ open, pathname, onClose }) {
+export default function MobileMenu({ open, pathname, onClose, onOpenSearch }) {
   const { data: session, status } = useSession();
 
   return (
@@ -35,6 +36,16 @@ export default function MobileMenu({ open, pathname, onClose }) {
           <div className='p-4 space-y-4'>
             <div className='flex items-center justify-between py-2 border-b border-gray-100'>
               <div className='flex items-center space-x-4'>
+                {onOpenSearch && (
+                  <button
+                    type='button'
+                    onClick={onOpenSearch}
+                    className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'
+                    aria-label='Search products'
+                  >
+                    <FiSearch className='w-5 h-5' />
+                  </button>
+                )}
                 <Link href='/wishlist' className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'>
                   <FaHeart className='w-5 h-5' />
                 </Link>

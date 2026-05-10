@@ -56,14 +56,6 @@ export const couponSchema = z.object({
   code: z.string().min(1, 'Coupon code is required').max(50)
 });
 
-export const paypalOrderSchema = z.object({
-  cart: z.any()
-});
-
-export const paypalCaptureParamsSchema = z.object({
-  OrderID: z.string().min(1, 'OrderID is required')
-});
-
 /**
  * Helper to validate a request body against a schema.
  * Returns { data, error } where error is a Response to return directly.

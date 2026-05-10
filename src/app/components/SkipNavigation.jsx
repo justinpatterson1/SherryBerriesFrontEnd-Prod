@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * Skip navigation link — visually hidden until focused, then displayed.
  * Anchor-based navigation works reliably across all pages without

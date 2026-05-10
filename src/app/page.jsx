@@ -8,19 +8,35 @@ import Blogs from './components/homepage/Blogs';
 import FadeInSection from './components/FadeInSection';
 import Loader from './components/Loader';
 import { getHomepage } from '@/lib/api/content';
+import { getBlogList } from '@/lib/api/blogs';
+import { getFeaturedJewelries } from '@/lib/api/products';
+
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const homepage = await getHomepage();
-
+  const [homepage, blogList, featuredList] = await Promise.all([
+    getHomepage(),
+    getBlogList({ page: 1, pageSize: 6 }).catch(() => ({ data: [] })),
+    getFeaturedJewelries({ page: 1, pageSize: 8 }).catch(() => ({ data: [] }))
+  ]);
 
   if (!homepage) return <Loader />;
-  
+
+  const blogProp = homepage?.data?.Blogs
+    ? { ...homepage.data.Blogs, blogs: blogList?.data ?? [] }
+    : { Title: 'Latest Blogs', description: '', blogs: blogList?.data ?? [] };
+
+  const featuredProp = {
+    ...(homepage?.data?.featured ?? {}),
+    jewelries: featuredList?.data ?? []
+  };
+
   return (
     <main role="main">
       <FadeInSection>
         <Hero img={homepage?.data?.Hero?.image?.url} />
       </FadeInSection>
-      
+
       <FadeInSection>
         <PopularCategories
           popular_category={homepage?.data?.Popular_Categories}
@@ -29,7 +45,7 @@ export default async function Home() {
       </FadeInSection>
 
       <FadeInSection>
-        <FeaturedProducts featured={homepage?.data?.featured} />
+        <FeaturedProducts featured={featuredProp} />
       </FadeInSection>
 
       <FadeInSection>
@@ -45,7 +61,21 @@ export default async function Home() {
       </FadeInSection>
 
       <FadeInSection>
-        <Blogs blog={homepage?.data?.Blogs} />
+        <Blogs blog={blogProp} />
+      </FadeInSection>
+
+      <FadeInSection>
+        <section className='py-16 px-4'>
+          <div className='container mx-auto'>
+            <iframe
+              src='https://widgets.sociablekit.com/tiktok-feed/iframe/25678407'
+              frameBorder='0'
+              width='100%'
+              height='1000px'
+              title='TikTok feed'
+            />
+          </div>
+        </section>
       </FadeInSection>
     </main>
   );

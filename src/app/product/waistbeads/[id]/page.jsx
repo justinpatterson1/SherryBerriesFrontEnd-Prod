@@ -1,16 +1,24 @@
-'use client';
+import { getWaistbeadsById } from '@/lib/api/products';
 import ProductLayout from '../../../components/ProductLayout';
 
-function Page({ params }) {
-  const productId = params?.id;
-  
+export default async function WaistbeadsDetailPage({ params }) {
+  const resolvedParams = (await params) || {};
+  const productId = resolvedParams.id;
+
+  let product = null;
+  try {
+    const json = await getWaistbeadsById(productId);
+    product = json?.data ?? null;
+  } catch {
+    product = null;
+  }
+
   return (
     <ProductLayout
       productId={productId}
-      productType="waistbead"
-      params={params}
+      productType='waistbead'
+      params={resolvedParams}
+      product={product}
     />
   );
 }
-
-export default Page;

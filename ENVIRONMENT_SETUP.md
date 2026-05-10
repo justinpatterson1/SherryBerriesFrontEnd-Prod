@@ -29,12 +29,6 @@ RESEND_API_KEY=your_resend_api_key
 # Your verified sending domain
 VERIFIED_DOMAIN=sherryberries.com
 
-# PayPal
-# Client ID is public (used by the frontend PayPal button)
-NEXT_PUBLIC_PAYPAL_CLIENT_ID=your_paypal_client_id
-# Client secret must NEVER be public — server-side only
-PAYPAL_CLIENT_SECRET=your_paypal_client_secret
-
 # WiPay
 NEXT_PUBLIC_WIPAY_ACCOUNT_NUMBER=your_wipay_account_number
 # API Key from WiPay Developer portal — server-side only, used for hash verification

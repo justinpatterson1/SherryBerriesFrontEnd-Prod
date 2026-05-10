@@ -5,17 +5,25 @@ import { usePathname } from 'next/navigation';
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaBars, FaTimes, FaHeart } from 'react-icons/fa';
+import { FiSearch } from 'react-icons/fi';
 import NavLinks from './navigation/NavLinks';
 import CartBadge from './navigation/CartBadge';
 import AuthButtons from './navigation/AuthButtons';
 import MobileMenu from './navigation/MobileMenu';
+import SearchOverlay from './navigation/SearchOverlay';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setSearchOpen] = useState(false);
 
   const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
   const toggleMobileMenu = useCallback(() => setMobileMenuOpen(o => !o), []);
+  const openSearch = useCallback(() => {
+    setMobileMenuOpen(false);
+    setSearchOpen(true);
+  }, []);
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   return (
     <>
@@ -35,6 +43,14 @@ export default function Navigation() {
           <NavLinks pathname={pathname} />
 
           <div className='hidden md:flex items-center space-x-3'>
+            <button
+              type='button'
+              onClick={openSearch}
+              className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'
+              aria-label='Search products'
+            >
+              <FiSearch className='w-5 h-5' />
+            </button>
             <Link href='/wishlist' className='relative p-2 text-gray-600 hover:text-brand transition-colors duration-300' aria-label='Wishlist'>
               <FaHeart className='w-5 h-5' />
             </Link>
@@ -42,18 +58,30 @@ export default function Navigation() {
             <AuthButtons />
           </div>
 
-          <button
-            className='md:hidden p-2 text-gray-600 hover:text-brand transition-colors duration-300'
-            onClick={toggleMobileMenu}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <FaTimes className='w-6 h-6' /> : <FaBars className='w-6 h-6' />}
-          </button>
+          <div className='md:hidden flex items-center'>
+            <button
+              type='button'
+              onClick={openSearch}
+              className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'
+              aria-label='Search products'
+            >
+              <FiSearch className='w-5 h-5' />
+            </button>
+            <button
+              className='p-2 text-gray-600 hover:text-brand transition-colors duration-300'
+              onClick={toggleMobileMenu}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <FaTimes className='w-6 h-6' /> : <FaBars className='w-6 h-6' />}
+            </button>
+          </div>
         </div>
 
-        <MobileMenu open={isMobileMenuOpen} pathname={pathname} onClose={closeMobileMenu} />
+        <MobileMenu open={isMobileMenuOpen} pathname={pathname} onClose={closeMobileMenu} onOpenSearch={openSearch} />
       </nav>
+
+      <SearchOverlay open={isSearchOpen} onClose={closeSearch} />
 
       <div className='h-16'></div>
     </>

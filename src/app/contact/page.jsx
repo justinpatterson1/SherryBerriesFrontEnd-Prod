@@ -130,29 +130,26 @@ export default function ContactForm() {
   }, []);
 
   const contactInfo = [
-    // {
-    //   icon: FaLocationDot,
-    //   title: 'Visit Us',
-    //   details: ['123 Fashion Street', 'Your City, State 12345'],
-    //   color: 'text-blue-500'
-    // },
     {
       icon: FaPhone,
       title: 'Call Us',
       details: ['+1 (868) 779-1838'],
-      color: 'text-green-500'
+      iconColor: 'text-green-600',
+      bgColor: 'bg-green-100'
     },
     {
       icon: FaEnvelope,
       title: 'Email Us',
       details: ['info@sherry-berries.com', 'support@sherry-berries.com'],
-      color: 'text-purple-500'
+      iconColor: 'text-purple-600',
+      bgColor: 'bg-purple-100'
     },
     {
       icon: FaClock,
       title: 'Business Hours',
       details: ['Monday - Friday: 10AM - 8PM', 'Saturday: 10AM - 4PM', 'Sunday: Closed'],
-      color: 'text-orange-500'
+      iconColor: 'text-orange-600',
+      bgColor: 'bg-orange-100'
     }
   ];
 
@@ -180,9 +177,10 @@ export default function ContactForm() {
       </FadeInSection>
 
       <div className='container mx-auto py-16 px-4'>
-        <div className='grid lg:grid-cols-3 gap-12'>
-          
+        <div className='grid lg:grid-cols-4 gap-12'>
+
           {/* Contact Information */}
+          <div className='lg:col-span-1'>
           <FadeInSection>
             <div className='space-y-8'>
               <div>
@@ -196,8 +194,8 @@ export default function ContactForm() {
               <div className='space-y-6'>
                 {contactInfo.map((info, index) => (
                   <div key={index} className='flex items-start space-x-4 p-4 bg-white rounded-xl shadow-lg border border-gray-100'>
-                    <div className={`w-12 h-12 ${info.color} bg-current bg-opacity-10 rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <info.icon className={`w-6 h-6 ${info.color}`} />
+                    <div className={`w-12 h-12 ${info.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <info.icon className={`w-6 h-6 ${info.iconColor}`} aria-hidden='true' />
                     </div>
                     <div>
                       <h3 className='font-semibold text-gray-900 mb-1'>{info.title}</h3>
@@ -231,10 +229,12 @@ export default function ContactForm() {
               </div>
             </div>
           </FadeInSection>
+          </div>
 
           {/* Contact Form */}
+          <div className='lg:col-span-3'>
           <FadeInSection>
-            <div className='lg:col-span-2'>
+            <div>
               <div className='bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden'>
                 <div className='p-8'>
                   <div className='mb-8'>
@@ -367,6 +367,7 @@ export default function ContactForm() {
               </div>
             </div>
           </FadeInSection>
+          </div>
         </div>
       </div>
 

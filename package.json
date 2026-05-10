@@ -17,8 +17,6 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@paypal/paypal-server-sdk": "^2.1.0",
-    "@paypal/react-paypal-js": "^8.9.2",
     "@strapi/blocks-react-renderer": "^1.0.1",
     "@strapi/plugin-email": "^4.25.12",
     "@strapi/plugin-users-permissions": "^5.12.3",

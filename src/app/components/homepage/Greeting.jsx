@@ -3,10 +3,16 @@ import React from 'react';
 
 function Greeting({ greeting }) {
   return (
-    <div className='h-[70vh] flex flex-col items-center justify-center my-10 px-4 py-10 mb-20'>
-      <h1 className='text-2xl sm:text-3xl md:text-4xl py-4 text-center'>
-        {greeting?.Title}
-      </h1>
+    <div className='flex flex-col items-center justify-center px-4 py-16 butterfly-bg'>
+      <div className='text-center mb-8'>
+        <span className='inline-block text-sm font-semibold tracking-widest uppercase text-brand mb-3'>
+          Welcome
+        </span>
+        <h2 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
+          Welcome To Sherry Berries
+        </h2>
+        <div className='w-20 h-1 bg-gradient-to-r from-brand to-pink-500 rounded-full mx-auto'></div>
+      </div>
       <video
         controls
         className='rounded-lg w-full max-w-[1020px] h-auto'

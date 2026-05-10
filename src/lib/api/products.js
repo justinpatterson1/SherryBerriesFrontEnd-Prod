@@ -18,6 +18,14 @@ export function getJewelryListPopulated({ page = 1, pageSize = DEFAULT_PAGE_SIZE
   return api.get(path, { signal });
 }
 
+export function getFeaturedJewelries({ page = 1, pageSize = 8, signal } = {}) {
+  const path =
+    '/api/jewelries?populate=*' +
+    '&filters[isFeatured][$eq]=true' +
+    `&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  return api.get(path, { signal });
+}
+
 export function getJewelryById(id, { signal } = {}) {
   return api.get(`/api/jewelries/${id}?populate=*`, { signal });
 }
@@ -111,4 +119,51 @@ export function createAftercare(payload, token) {
 
 export function updateAftercare(documentId, data, token) {
   return api.put(`/api/aftercares/${documentId}`, { data }, { token });
+}
+
+// Cross-collection search.
+// Returns { jewelry, merchandise, waistbeads, aftercare, total }.
+// Each item is the raw Strapi entry plus { _type, _href } for routing/rendering.
+export async function searchProducts(query, { pageSize = 8, signal } = {}) {
+  const trimmed = (query || '').trim();
+  if (!trimmed) {
+    return { jewelry: [], merchandise: [], waistbeads: [], aftercare: [], total: 0 };
+  }
+  const q = encodeURIComponent(trimmed);
+
+  // $or over name and description, case-insensitive contains.
+  // Waistbead schema uses capital `Name`; the others use `name`.
+  const orNameDesc = nameField =>
+    `filters[$or][0][${nameField}][$containsi]=${q}` +
+    `&filters[$or][1][description][$containsi]=${q}`;
+
+  const pag = `&pagination[page]=1&pagination[pageSize]=${pageSize}`;
+
+  const [jewelry, merch, waist, after] = await Promise.all([
+    api.get(`/api/jewelries?populate=*&${orNameDesc('name')}${pag}`, { signal }),
+    api.get(`/api/merchandises?populate=*&${orNameDesc('name')}${pag}`, { signal }),
+    api.get(`/api/waistbeads?populate=*&${orNameDesc('Name')}${pag}`, { signal }),
+    api.get(`/api/aftercares?populate=*&${orNameDesc('name')}${pag}`, { signal })
+  ]);
+
+  const tag = (resp, type, route) =>
+    (resp?.data || []).map(it => ({
+      ...it,
+      _type: type,
+      _href: `/product/${route}/${it.documentId}`,
+      _name: it.name || it.Name || ''
+    }));
+
+  const j = tag(jewelry, 'Jewelry', 'jewelry');
+  const m = tag(merch, 'Clothing', 'clothing');
+  const w = tag(waist, 'Waistbeads', 'waistbeads');
+  const a = tag(after, 'Aftercare', 'aftercare');
+
+  return {
+    jewelry: j,
+    merchandise: m,
+    waistbeads: w,
+    aftercare: a,
+    total: j.length + m.length + w.length + a.length
+  };
 }

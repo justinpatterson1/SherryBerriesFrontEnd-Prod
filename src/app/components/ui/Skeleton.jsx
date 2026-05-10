@@ -113,6 +113,38 @@ export function BlogGridSkeleton() {
   );
 }
 
+export function WishlistGridSkeleton() {
+  return (
+    <main className='bg-white min-h-screen'>
+      <section className='bg-gradient-to-br from-rose-50 to-pink-50 py-16 px-4'>
+        <div className='container mx-auto max-w-3xl text-center space-y-4'>
+          <Skeleton className='h-3 w-24 mx-auto' />
+          <Skeleton className='h-10 w-64 mx-auto' />
+          <Skeleton className='h-1 w-20 mx-auto rounded-full' />
+          <Skeleton className='h-4 w-32 mx-auto mt-2' />
+        </div>
+      </section>
+      <section className='container mx-auto px-4 py-12'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className='bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100'>
+              <Skeleton className='aspect-square w-full rounded-none' />
+              <div className='p-5 space-y-3'>
+                <Skeleton className='h-5 w-3/4' />
+                <Skeleton className='h-4 w-1/3' />
+                <div className='flex justify-between items-center pt-2'>
+                  <Skeleton className='h-6 w-16' />
+                  <Skeleton className='h-9 w-20 rounded-full' />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
 export function DashboardSkeleton() {
   return (
     <div className='max-w-6xl mx-auto px-4 py-8 space-y-6'>

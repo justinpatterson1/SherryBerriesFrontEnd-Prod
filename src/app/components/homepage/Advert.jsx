@@ -1,37 +1,41 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 function Advert({ advert }) {
   return (
-    <div className='h-[70vh] flex items-center justify-center my-10 px-4 py-10 mb-20'>
-      <div className='container '>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-5 justify-center items-center h-full'>
-          <div className='h-full flex flex-col justify-center items-center'>
+    <section className='py-20 px-4'>
+      <div className='container mx-auto max-w-6xl'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center'>
+          <div className='relative flex justify-center'>
+            <div
+              className='absolute inset-0 bg-brand-light rounded-sm -translate-x-4 translate-y-4 md:-translate-x-6 md:translate-y-6'
+              aria-hidden='true'
+            />
             <Image
               src={advert?.image?.formats?.large?.url}
               width={advert?.image?.formats?.large?.width}
               height={advert?.image?.formats?.large?.height}
-              alt='Image of Aftercare'
-              className='max-w-full h-auto'
+              alt={advert?.Title || 'Advert image'}
+              className='relative max-w-full h-auto shadow-lg rounded-sm'
             />
           </div>
-          <div className='h-full flex flex-col justify-center'>
-            <h3 className='text-2xl md:text-3xl lg:text-4xl flex self-start'>
+
+          <div className='flex flex-col'>
+            <h3 className='font-display text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6'>
               {advert?.Title}
             </h3>
-            <p className='text-lg md:text-xl leading-8 md:leading-10'>
+            <p className='text-base md:text-lg leading-relaxed text-gray-600 mb-8'>
               {advert?.description}
             </p>
-            <Link href={'/product/aftercare'}>
-              <div className='cursor-pointer bg-brand mt-5 w-48 h-10 text-white text-center text-xl flex items-center justify-center'>
+            <Link href={'/product/aftercare'} className='self-start'>
+              <div className='cursor-pointer bg-brand hover:bg-brand-hover transition-colors px-10 py-3 text-white text-sm tracking-widest uppercase font-medium'>
                 Shop Now
               </div>
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

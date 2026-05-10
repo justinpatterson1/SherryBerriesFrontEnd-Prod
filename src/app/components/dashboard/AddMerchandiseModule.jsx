@@ -112,7 +112,7 @@ function AddMerchandiseModule({
       <div className='w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative'>
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-xl sm:text-2xl font-semibold text-gray-800'>
-            Add Waistbead
+            Add Merchandise
           </h2>
           <RxCross2
             className='text-2xl text-gray-600 hover:cursor-pointer hover:text-red-500'

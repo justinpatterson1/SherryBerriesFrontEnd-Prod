@@ -24,35 +24,39 @@ function PopularCategories({ popular_category, description }) {
   };
 
   return (
-    <div className='text-center py-16 px-4 bg-gradient-to-br from-white to-gray-50'>
+    <div className='text-center py-16 px-4 butterfly-bg'>
       <div className='container mx-auto'>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className='mb-12'
+          className='text-center mb-12'
         >
-          <h2 className='text-4xl md:text-5xl font-bold text-gray-800 mb-6'>
+          <span className='inline-block text-sm font-semibold tracking-widest uppercase text-brand mb-3'>
+            Categories
+          </span>
+          <h2 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
             Popular Categories
           </h2>
+          <div className='w-20 h-1 bg-gradient-to-r from-brand to-pink-500 rounded-full mx-auto mb-6'></div>
           <p className='text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             {description}
           </p>
         </motion.div>
 
-        <motion.div 
-          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'
+        <motion.div
+          className='flex flex-wrap justify-center gap-8'
           variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial='hidden'
+          whileInView='visible'
           viewport={{ once: true }}
         >
           {popular_category?.map((category, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className='group'
+              className='group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)] xl:w-[calc(25%-1.5rem)] max-w-sm'
             >
               <Link href={`/${category.Slug}`}>
                 <div className='relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white'>

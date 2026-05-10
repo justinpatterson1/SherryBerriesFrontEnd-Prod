@@ -13,6 +13,11 @@ module.exports = {
           hover: '#c83778',
           light: '#ffefef'
         }
+      },
+      fontFamily: {
+        sans: ['var(--font-playfair-display)', 'Georgia', 'Times New Roman', 'serif'],
+        serif: ['var(--font-playfair-display)', 'Georgia', 'Times New Roman', 'serif'],
+        display: ['var(--font-playfair-display)', 'Georgia', 'Times New Roman', 'serif']
       }
     }
   },

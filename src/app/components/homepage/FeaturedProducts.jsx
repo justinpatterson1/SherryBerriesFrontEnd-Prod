@@ -5,14 +5,34 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaHeart, FaShoppingCart, FaEye, FaStar } from 'react-icons/fa';
+import { getFeaturedJewelries } from '@/lib/api/products';
+
+const PAGE_SIZE = 8;
 
 function FeaturedProducts({ featured }) {
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [products, setProducts] = useState(featured?.jewelries ?? []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [wishlistItems, setWishlistItems] = useState(new Set());
   const [hoveredProduct, setHoveredProduct] = useState(null);
 
-  const loadMore = () => {
-    setVisibleCount(prev => prev + 4);
+  const loadMore = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const json = await getFeaturedJewelries({
+        page: currentPage + 1,
+        pageSize: PAGE_SIZE
+      });
+      const more = json?.data ?? [];
+      if (more.length > 0) {
+        setProducts(prev => [...prev, ...more]);
+        setCurrentPage(p => p + 1);
+      }
+    } catch (err) {
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const toggleWishlist = (productId) => {
@@ -52,18 +72,22 @@ function FeaturedProducts({ featured }) {
   };
 
   return (
-    <div className='bg-gradient-to-br from-[#fef2f2] to-[#fce7f3] py-16 px-4'>
+    <div className='butterfly-bg py-16 px-4'>
       <div className='container mx-auto'>
-        <motion.div 
+        <motion.div
           className='text-center mb-12'
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className='text-4xl md:text-5xl font-bold text-gray-800 mb-4'>
+          <span className='inline-block text-sm font-semibold tracking-widest uppercase text-brand mb-3'>
+            Featured
+          </span>
+          <h2 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
             Featured Products
           </h2>
+          <div className='w-20 h-1 bg-gradient-to-r from-brand to-pink-500 rounded-full mx-auto mb-6'></div>
           <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
             Discover our handpicked collection of stunning jewelry pieces, each crafted with love and attention to detail.
           </p>
@@ -76,7 +100,7 @@ function FeaturedProducts({ featured }) {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {featured?.jewelries?.slice(0, visibleCount).map(feature => (
+          {products.map(feature => (
             <motion.article
               key={feature?.id}
               variants={itemVariants}
@@ -181,7 +205,7 @@ function FeaturedProducts({ featured }) {
           ))}
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className='flex justify-center py-12'
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -190,11 +214,12 @@ function FeaturedProducts({ featured }) {
         >
           <motion.button
             onClick={loadMore}
-            className='bg-gradient-to-r from-brand to-pink-500 hover:from-pink-600 hover:to-pink-700 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3'
+            disabled={loadingMore}
+            className='bg-gradient-to-r from-brand to-pink-500 hover:from-pink-600 hover:to-pink-700 disabled:opacity-70 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span>Load More Products</span>
+            <span>{loadingMore ? 'Loading...' : 'Load More Products'}</span>
             <motion.div
               animate={{ x: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}

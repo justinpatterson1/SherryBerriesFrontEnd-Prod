@@ -1,21 +1,26 @@
 'use client';
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import { ToastContainer, toast } from 'react-toastify';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import ImageGallery from './ImageGallery';
 import QuantitySelector from './QuantitySelector';
 import SizeSelector from './SizeSelector';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorDisplay from './ErrorDisplay';
 import RelatedProducts from './RelatedProducts';
-import { useProduct } from '../hooks/useProduct';
 import { useCart } from '../hooks/useCart';
-import Loader from './Loader';
 import { calculateDiscountedPrice } from '../lib/func';
 
 const cartState = { size: '', color: '', quantity: 1 };
+
+const WISHLIST_FIELD_BY_TYPE = {
+  jewelry: 'jewelries',
+  clothing: 'merchandises',
+  aftercare: 'aftercares'
+};
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -36,18 +41,73 @@ const reducer = (state, action) => {
   }
 };
 
-export default function ProductLayout({ 
-  productId, 
-  productType, 
-  params 
+export default function ProductLayout({
+  productId,
+  productType,
+  params,
+  product
 }) {
   const [state, dispatch] = useReducer(reducer, cartState);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  
-  const { product, loading, error, refetch } = useProduct(productId, productType);
+
   const { addToCart, loading: cartLoading } = useCart();
+
+  const wishlistField = WISHLIST_FIELD_BY_TYPE[productType];
+  const wishlistSupported = Boolean(wishlistField);
+
+  useEffect(() => {
+    if (!session?.user?.documentId || !wishlistSupported || !productId) return;
+
+    const controller = new AbortController();
+    fetch('/api/wishlist', { signal: controller.signal })
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => {
+        if (!data) return;
+        const list = data[wishlistField] ?? [];
+        setInWishlist(list.includes(productId));
+      })
+      .catch(() => {
+        // ignore — heart stays in default outline state
+      });
+
+    return () => controller.abort();
+  }, [session?.user?.documentId, productId, wishlistField, wishlistSupported]);
+
+  const handleWishlistToggle = async () => {
+    if (!session) {
+      toast.info('Please sign in to use the wishlist');
+      router.push('/sign-in');
+      return;
+    }
+    if (wishlistLoading || !wishlistSupported) return;
+
+    setWishlistLoading(true);
+    const previous = inWishlist;
+    setInWishlist(!previous);
+
+    try {
+      const res = await fetch('/api/wishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productType, productId })
+      });
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
+      setInWishlist(data.inWishlist);
+      toast.success(
+        data.inWishlist ? 'Added to wishlist' : 'Removed from wishlist'
+      );
+    } catch (err) {
+      setInWishlist(previous);
+      toast.error('Could not update wishlist');
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
 
   // Get the maximum quantity available for the selected size
@@ -177,26 +237,11 @@ export default function ProductLayout({
     return product?.description || product?.Description || '';
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
-  if (error) {
-    return (
-      <ErrorDisplay
-        error={error}
-        title="Product Not Found"
-        onRetry={refetch}
-      />
-    );
-  }
-
   if (!product) {
     return (
       <ErrorDisplay
         error="The product you're looking for doesn't exist or has been removed."
         title="Product Not Found"
-        onRetry={refetch}
       />
     );
   }
@@ -208,17 +253,17 @@ export default function ProductLayout({
         <main className='flex-grow'>
           <div className='container mx-auto px-4'>
             {/* Product Details */}
-            <div className='flex flex-col lg:flex-row lg:space-x-8 py-10'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-10 items-start'>
               {/* Left Column: Images */}
-              <div className='flex-shrink-0 flex justify-center lg:justify-start'>
+              <div className='flex justify-center lg:justify-start w-full'>
                 <ImageGallery
                   images={getProductImages()}
                   alt={getProductName()}
                 />
               </div>
 
-              {/* Right Column: Content */}
-              <div className='flex flex-col space-y-6 lg:space-y-8 mt-6 lg:mt-0'>
+              {/* Right Column: Content + interactive */}
+              <div className='flex flex-col space-y-6 lg:space-y-7'>
                 <h1 className='text-3xl lg:text-4xl font-bold text-gray-900'>
                   {getProductName()}
                 </h1>
@@ -239,6 +284,18 @@ export default function ProductLayout({
                     </>
                   )}
                 </div>
+
+                {/* Description */}
+                {getProductDescription() && (
+                  <div>
+                    <h2 className='text-lg lg:text-xl font-semibold text-gray-900 mb-2'>
+                      Description
+                    </h2>
+                    <p className='text-base text-gray-700 leading-relaxed'>
+                      {getProductDescription()}
+                    </p>
+                  </div>
+                )}
 
                 {/* Size Section */}
                 {productType !== 'aftercare' && (
@@ -285,50 +342,65 @@ export default function ProductLayout({
                   </div>
                 </div>
 
-                {/* Add to Cart Button */}
-                <button
-                  type="button"
-                  className='w-full sm:w-auto bg-brand p-4 lg:p-6 text-center text-white text-lg lg:text-xl font-medium rounded-lg hover:bg-[#d63a7a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
-                  onClick={handleAddToCart}
-                  disabled={isAddingToCart || cartLoading || (!state.size && productType !== 'aftercare') || (state.size && getMaxQuantityForSelectedSize() === 0)}
-                >
-                  {isAddingToCart ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      <span>Adding...</span>
-                    </>
-                  ) : !state.size && productType !== 'aftercare' ? (
-                    `Select a ${productType === 'waistbead' ? 'waist size' : 'size'} first`
-                  ) : state.size && getMaxQuantityForSelectedSize() === 0 ? (
-                    'This size is out of stock'
-                  ) : (
-                    'Add To Cart'
+                {/* Add to Cart + Wishlist */}
+                <div className='flex flex-col sm:flex-row gap-3'>
+                  <button
+                    type="button"
+                    className='flex-1 sm:flex-none bg-brand p-4 lg:p-6 text-center text-white text-lg lg:text-xl font-medium rounded-lg hover:bg-[#d63a7a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart || cartLoading || (!state.size && productType !== 'aftercare') || (state.size && getMaxQuantityForSelectedSize() === 0)}
+                  >
+                    {isAddingToCart ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <span>Adding...</span>
+                      </>
+                    ) : !state.size && productType !== 'aftercare' ? (
+                      `Select a ${productType === 'waistbead' ? 'waist size' : 'size'} first`
+                    ) : state.size && getMaxQuantityForSelectedSize() === 0 ? (
+                      'This size is out of stock'
+                    ) : (
+                      'Add To Cart'
+                    )}
+                  </button>
+
+                  {wishlistSupported && (
+                    <button
+                      type='button'
+                      onClick={handleWishlistToggle}
+                      disabled={wishlistLoading}
+                      aria-pressed={inWishlist}
+                      aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                      className={`p-4 lg:p-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${
+                        inWishlist
+                          ? 'bg-brand text-white hover:bg-[#d63a7a]'
+                          : 'border-2 border-brand text-brand hover:bg-rose-50'
+                      }`}
+                    >
+                      {wishlistLoading ? (
+                        <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-current'></div>
+                      ) : inWishlist ? (
+                        <FaHeart className='w-5 h-5 lg:w-6 lg:h-6' />
+                      ) : (
+                        <FaRegHeart className='w-5 h-5 lg:w-6 lg:h-6' />
+                      )}
+                    </button>
                   )}
-                </button>
+                </div>
+
+                {/* Instructions */}
+                {product?.Instructions && product.Instructions.length > 0 && (
+                  <div>
+                    <h2 className='text-lg lg:text-xl font-semibold text-gray-900 mb-2'>
+                      Instructions
+                    </h2>
+                    <div className='text-base text-gray-700 leading-relaxed'>
+                      <BlocksRenderer content={product.Instructions} />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-
-            {/* Description Section */}
-            {getProductDescription() && (
-              <div className='my-8'>
-                <h2 className='text-2xl lg:text-3xl py-4 font-bold text-gray-900'>Description</h2>
-                <div className='text-base lg:text-lg text-gray-700 leading-relaxed'>
-                  {getProductDescription()}
-                </div>
-              </div>
-            )}
-
-            {/* Instructions Section */}
-            {product?.Instructions && product.Instructions.length > 0 && (
-              <div className='my-8'>
-                <h2 className='text-2xl lg:text-3xl py-4 font-semibold text-gray-900'>
-                  Instructions
-                </h2>
-                <div className='text-base lg:text-lg text-gray-700 leading-relaxed'>
-                  <BlocksRenderer content={product.Instructions} />
-                </div>
-              </div>
-            )}
           </div>
         </main>
 

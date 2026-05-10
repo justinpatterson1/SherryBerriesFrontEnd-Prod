@@ -33,7 +33,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-playfair-display), Georgia, 'Times New Roman', serif;
 }
 
 .container {
@@ -45,6 +45,23 @@ body {
 .advert-image {
   height: 100%;
   width: 100%;
+}
+
+.greeting-textured-bg {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(234, 68, 146, 0.32) 1.5px, transparent 0),
+    linear-gradient(to bottom, #fff1f2, #fdf2f8);
+  background-size: 20px 20px, 100% 100%;
+  background-position: 0 0, 0 0;
+}
+
+.butterfly-bg {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='%23EA4492' fill-opacity='0.13'><ellipse cx='30' cy='25' rx='14' ry='11' transform='rotate(-25,30,25)'/><ellipse cx='50' cy='25' rx='14' ry='11' transform='rotate(25,50,25)'/><ellipse cx='34' cy='42' rx='9' ry='7' transform='rotate(20,34,42)'/><ellipse cx='46' cy='42' rx='9' ry='7' transform='rotate(-20,46,42)'/></g><ellipse cx='40' cy='32' rx='1' ry='9' fill='%23EA4492' fill-opacity='0.22'/><path d='M40,22 Q36,14 32,12' stroke='%23EA4492' stroke-opacity='0.22' stroke-width='0.8' fill='none'/><path d='M40,22 Q44,14 48,12' stroke='%23EA4492' stroke-opacity='0.22' stroke-width='0.8' fill='none'/><g transform='translate(60,60) rotate(35,30,30)'><g fill='%23EA4492' fill-opacity='0.10'><ellipse cx='30' cy='25' rx='12' ry='9' transform='rotate(-25,30,25)'/><ellipse cx='50' cy='25' rx='12' ry='9' transform='rotate(25,50,25)'/><ellipse cx='34' cy='42' rx='8' ry='6' transform='rotate(20,34,42)'/><ellipse cx='46' cy='42' rx='8' ry='6' transform='rotate(-20,46,42)'/></g><ellipse cx='40' cy='32' rx='1' ry='8' fill='%23EA4492' fill-opacity='0.20'/></g></svg>"),
+    linear-gradient(to bottom, #fff1f2, #fdf2f8);
+  background-size: 120px 120px, 100% 100%;
+  background-position: 0 0, 0 0;
+  background-repeat: repeat, no-repeat;
 }
 
 .slick-slide {
@@ -370,6 +387,12 @@ body {
 *:focus {
   outline: 2px solid #EA4492;
   outline-offset: 2px;
+}
+
+/* Reviews section: suppress the global pink focus outline on click,
+   since the testimonial cards aren't interactive targets. */
+.reviews-section *:focus {
+  outline: none;
 }
 
 /* Skip link for accessibility */

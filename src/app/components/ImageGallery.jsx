@@ -57,8 +57,8 @@ export default function ImageGallery({
       <div className="space-y-4">
         {/* Main Image */}
         <div className="relative group">
-          <div 
-            className={`${className} cursor-pointer rounded-lg shadow-lg overflow-hidden`}
+          <div
+            className={`${className} cursor-pointer rounded-lg shadow-lg overflow-hidden border-2 border-rose-200`}
             onClick={handleMainImageClick}
           >
             <Image
